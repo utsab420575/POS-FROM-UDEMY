@@ -1,0 +1,362 @@
+---------Breeze install(video1)----------------
+
+//Breeze Install
+
+//go to this link
+//https://laravel.com/docs/11.x/starter-kits#laravel-breeze
+
+//step1
+composer require laravel/breeze --dev
+
+//step2
+php artisan breeze:install
+
+//step3 install nodejs if not installed in your computer(for one time in pc)
+https://nodejs.org/en
+
+//step4
+npm install && npm run dev
+
+//step5
+connect with database in .env file
+
+//step6
+php artisan migrate
+
+//step7(From Here we can get home page and get redimate login,logout and register page)
+http://127.0.0.1:8000/
+
+
+
+-------------------route list show------------------------------
+
+$ php artisan route:list
+
+  GET|HEAD  / ................................................................................................ 
+  GET|HEAD  confirm-password ...................... password.confirm › Auth\ConfirmablePasswordController@show 
+  POST      confirm-password ........................................ Auth\ConfirmablePasswordController@store 
+  GET|HEAD  dashboard .............................................................................. dashboard 
+  POST      email/verification-notification verification.send › Auth\EmailVerificationNotificationController@… 
+  GET|HEAD  forgot-password ....................... password.request › Auth\PasswordResetLinkController@create 
+  POST      forgot-password .......................... password.email › Auth\PasswordResetLinkController@store 
+  GET|HEAD  login ......................................... login › Auth\AuthenticatedSessionController@create 
+  POST      login .................................................. Auth\AuthenticatedSessionController@store 
+  POST      logout ...................................... logout › Auth\AuthenticatedSessionController@destroy 
+  PUT       password ........................................ password.update › Auth\PasswordController@update  
+  GET|HEAD  profile .................................................... profile.edit › ProfileController@edit  
+  PATCH     profile ................................................ profile.update › ProfileController@update  
+  DELETE    profile .............................................. profile.destroy › ProfileController@destroy  
+  GET|HEAD  register ......................................... register › Auth\RegisteredUserController@create
+  POST      register ..................................................... Auth\RegisteredUserController@store
+  POST      reset-password ................................. password.store › Auth\NewPasswordController@store
+  GET|HEAD  reset-password/{token} ........................ password.reset › Auth\NewPasswordController@create
+  GET|HEAD  storage/{path} ..................................................................... storage.local
+  GET|HEAD  up ...............................................................................................
+  GET|HEAD  verify-email ........................ verification.notice › Auth\EmailVerificationPromptController
+  GET|HEAD  verify-email/{id}/{hash} ........................ verification.verify › Auth\VerifyEmailController
+
+
+
+----------------__DUR__ means----------------------------------
+
+require __DIR__.'/auth.php';
+
+
+require means as like as include
+in web.php file all code inserted from auth.php file
+
+__DIR__ means current directory
+__DIR__.'/auth.php'=====>resource/routes/auth.php
+
+
+----------------------Setup Mailtrap to laravel(Video 3)--------------------------------
+1.Go to the link
+https://mailtrap.io/
+
+2.sign in using gmail
+
+3.go to email testing --->inboxes--->My inbox--->select php-->laravel 7 8--->copy all credential and paste into
+env file
+
+
+MAIL_MAILER=smtp
+MAIL_SCHEME=null
+MAIL_HOST=sandbox.smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=df3bc8d249cecc
+MAIL_PASSWORD=1a074a03f9b5b1
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS="utsab@duet.ac.bd"
+MAIL_FROM_NAME="${APP_NAME}"
+
+
+----------------Password Reset using Mailtrap(Video 3)--------------------------------------
+
+For getting reset password link
+
+1.click foget password to application
+
+2.mail will go to given email(for free: it will go to https://mailtrap.io/inboxes)
+
+3.from here we can reset password
+
+
+
+
+----------------------Email Verify using(Video 4) ------------------------------
+For Email Verfication(if email is verified by user from email than only user can login;only first time)
+
+step1:(default code have in this route;add middleware 'verified')
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+step2:In User model add MustVerfifyEmail
+
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+class User extends Authenticatable implements MustVerifyEmail
+{
+}
+
+
+
+--------------------->throttle user can hit login page 2 times in 1 minute---------------------------------
+If a user click login button with wrong credential 2 times in 60 seconds we can hold login
+
+//step1:go to
+App/Http/Requests/Auth/LoginRequest.php
+
+//step2:
+2=how many times you can enter
+60=in 60seconds you can click submit button
+public function ensureIsNotRateLimited(): void
+    {
+        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 2)) {
+            return;
+        }
+
+        event(new Lockout($this));
+
+        $seconds = RateLimiter::availableIn($this->throttleKey());
+
+        throw ValidationException::withMessages([
+            'email' => trans('auth.throttle', [
+                'seconds' => $seconds,
+                'minutes' => ceil($seconds / 60),
+            ]),
+        ]);
+    }
+
+
+--------------------------change logo(Video 5)--------------------------------------
+1. go to public->logo->log.php(put this picture into that folder)
+
+2.go to app->resource->views->components->application-logo.blade.php
+<img src="{{asset('logo/logo.png')}}" width="50px">
+
+
+
+
+
+
+
+--------------------------user name or email for login(add username for login)(Video 6)--------------------------
+
+Add new column(user_name)
+1.make migration
+php artisan make:migration add_user_name_to_users --table=users
+
+2.create migration file
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('users', function (Blueprint $table) {
+            // Add the user_name column after email_verified_at column
+            $table->string('user_name')->unique()->after('email_verified_at');;
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('users', function (Blueprint $table) {
+            // Remove the user_name column
+            $table->dropColumn('user_name');
+        });
+    }
+};
+
+3.update User Model(Table)
+protected $fillable = [
+    'name',
+    'email',
+    'password',
+    'user_name', // Add this line
+];
+
+here i apply validation rule for user_name,user_name can be email or name can be 'Only letters, numbers, and underscores' and show custom message also for user_name
+
+
+    public function store(Request $request): RedirectResponse
+    {
+        $request->validate(
+            [
+                'name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+                'password' => ['required', 'confirmed', Rules\Password::defaults()],
+                'user_name' => [
+                    'required',
+                    'string',
+                    'unique:users,user_name',
+                    'regex:/^[a-zA-Z0-9_]+$/', // Only letters, numbers, and underscores
+                ],
+            ],
+            [
+                // Custom error messages
+                'user_name.required' => 'The username field is required.',
+                'user_name.unique' => 'This username is already taken. Please choose another.',
+                'user_name.regex' => 'The username may only contain letters, numbers, and underscores.',
+            ]
+        );
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            //newly added
+            'user_name' => $request->user_name,
+        ]);
+
+        event(new Registered($user));
+
+        Auth::login($user);
+
+        return redirect(route('dashboard', absolute: false));
+    }
+}
+
+
+
+4.update register.blade.php add user_name
+ 	
+        <!-- Email Address -->
+        <div class="mt-4">
+            <x-input-label for="email" :value="__('Email')" />
+            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
+            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        </div>
+
+	{{--user name--}}
+        <div class="mt-4">
+            <x-input-label for="user_name" :value="__('User Name')" />
+            <x-text-input id="user_name" class="block mt-1 w-full" type="text" name="user_name" :value="old('user_name')" required autocomplete="username" />
+            <x-input-error :messages="$errors->get('user_name')" class="mt-2" />
+        </div>
+
+
+5.udpate RegisteredUserController
+
+ $request->validate([
+           --
+            //newly added validation
+            'user_name' => ['required', 'string', 'unique:users'],
+        ]);
+
+        $user = User::create([
+           --
+            //newly added
+            'user_name' => $request->user_name,
+        ]);
+
+6.if database have any data in users table than we can't put unique column because of null value;
+  delete all migration and rerun migration
+	
+php artisan migrate:refresh
+
+7.now you can put data in users table by click register button
+
+-----------------------------------now login page update--------------------------------------
+1.update login.blade.php(add email or username field)
+
+    <form method="POST" action="{{ route('login') }}">
+        @csrf
+
+        <!-- Email or Username -->
+        <div>
+            <x-input-label for="email_or_username" :value="__('Email or Username')" />
+            <x-text-input id="email_or_username" class="block mt-1 w-full" type="text" name="email_or_username" :value="old('email_or_username')" required autofocus autocomplete="username" />
+            <x-input-error :messages="$errors->get('email_or_username')" class="mt-2" />
+        </div>
+
+2.go to web.php->auth.php file
+Route::post('login', [AuthenticatedSessionController::class, 'store']);
+
+3.go to AuthenticatedSessionController::class(here i just add LOG file)
+
+public function store(LoginRequest $request): RedirectResponse
+    {
+        // Log the login attempt
+        Log::info('Login attempt started', ['user_name' => $request->input('email')]);
+        $request->authenticate();
+
+        $request->session()->regenerate();
+
+        return redirect()->intended(route('dashboard', absolute: false));
+    }
+
+
+4.from $request->authenticate(); go to LoginRequest and change in rules() method and authenticate() method
+
+    public function rules(): array
+    {
+        return [
+            'email_or_username' => ['required', 'string'],
+            'password' => ['required', 'string'],
+        ];
+    }
+
+    public function authenticate(): void
+    {
+        $this->ensureIsNotRateLimited();
+
+        // Get the input value (email or username)
+        $loginInput = $this->input('email_or_username');
+
+        // Check if the input is an email or username
+        $loginField = filter_var($loginInput, FILTER_VALIDATE_EMAIL) ? 'email' : 'user_name';
+
+        // Attempt to authenticate based on email or user_name
+        $credentials = [
+            $loginField => $loginInput,
+            'password' => $this->input('password'),
+        ];
+
+        Log::info('Attempting authentication', ['field' => $loginField, 'credentials' => $credentials]);
+
+        // Perform authentication
+        if (! Auth::attempt($credentials, $this->boolean('remember'))) {
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'email_or_username' => trans('auth.failed'),
+            ]);
+        }
+
+        RateLimiter::clear($this->throttleKey());
+    }
+
+
+
+
+
+
+
+
+
+
