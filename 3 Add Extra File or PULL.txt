@@ -1,0 +1,2 @@
+1.Open that folder where git is inititalized
+2.git pull origin main

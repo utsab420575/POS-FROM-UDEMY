@@ -1,0 +1,10 @@
+1.create folder which you want to push
+2.go inside that folder
+3.git init
+4.git add .
+5.git commit -m "first commit"
+6.git branch -M main
+7.create repositoy in github same as folder name
+8.git remote add origin (this link from )https://github.com/utsab420575/POS-FROM-UDEMY.git
+9.git push -u origin main
+10.Data will Upload into Repository

@@ -1,0 +1,6 @@
+1.go inside that folder
+3.git status
+4.git add .
+5.git commit -m "message"
+6.git push -u origin main
+7.Data will Upload into Repository
