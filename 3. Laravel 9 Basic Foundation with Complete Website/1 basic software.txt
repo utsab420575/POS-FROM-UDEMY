@@ -1,0 +1,8 @@
+1.xampp
+2.node js
+https://nodejs.org/en
+(Download LTS)
+3.uncomment gd
+;extension=gd
+	to
+extension=gd

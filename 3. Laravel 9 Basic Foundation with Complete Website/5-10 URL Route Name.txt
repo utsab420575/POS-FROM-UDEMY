@@ -1,0 +1,25 @@
+Route::get('/home-utsab-roy-vai',[SimpleController::class,'home'])->name('home');
+//controller
+	public function home(){
+        return view('home');
+    }
+//home view(if not using route name than you need give full url name)
+<body>
+    <h1>This is Home page</h1>
+    <a href="{{ route('about') }}">About</a><br>
+    <br><br>
+    <a href="{{ url('/about-utsab-roy-vai') }}">About</a>
+</body>
+
+Route::get('/about-utsab-roy-vai',[SimpleController::class,'about'])->name('about');
+//controller
+	public function about(){
+        return view('about');
+    }
+//about view(if not using route name than you need give full url name)
+<body>
+    <h1>This is About Page</h1>
+    <a href="{{ route('home') }}">Home</a>
+    <br><br>
+    <a href="{{ url('/home-utsab-roy-vai') }}">Home</a>
+</body>

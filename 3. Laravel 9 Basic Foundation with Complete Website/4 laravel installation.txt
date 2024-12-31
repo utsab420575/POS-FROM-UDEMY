@@ -1,0 +1,21 @@
+1.go to 
+https://getcomposer.org/
+
+2.Download and install composer
+
+3.(Global installation)[only first time][no need after installation]
+composer global require laravel/installer
+
+
+4.Create project
+composer create-project --prefer-dist laravel/laravel basic
+or
+composer create-project laravel/laravel basic
+
+
+5.open project folder using git-bash or vs-code terminal or phpstrome
+
+6.php artisan serve
+
+7.http://127.0.0.1:8000
+
