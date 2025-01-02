@@ -160,7 +160,7 @@ public function ensureIsNotRateLimited(): void
 
 
 
---------------------------user name or email for login(add username for login)(Video 6)--------------------------
+--------------------------user name or email for login(registration page)(add username for login)(Video 6)--------------------------
 
 Add new column(user_name)
 1.make migration
@@ -201,7 +201,7 @@ protected $fillable = [
 ];
 
 here i apply validation rule for user_name,user_name can be email or name can be 'Only letters, numbers, and underscores' and show custom message also for user_name
-
+in RegisteredUserController:
 
     public function store(Request $request): RedirectResponse
     {
@@ -302,7 +302,7 @@ Route::post('login', [AuthenticatedSessionController::class, 'store']);
 public function store(LoginRequest $request): RedirectResponse
     {
         // Log the login attempt
-        Log::info('Login attempt started', ['user_name' => $request->input('email')]);
+        Log::info('Login attempt started', ['user_name' => $request->input('email_or_username')]);
         $request->authenticate();
 
         $request->session()->regenerate();
