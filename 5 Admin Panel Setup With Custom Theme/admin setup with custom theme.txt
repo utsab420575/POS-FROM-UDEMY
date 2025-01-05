@@ -1,0 +1,1231 @@
+--------------------------------Video2(Admin Panel Setup)------------------------------
+
+##########################file copy####################
+
+step1:
+create backend folder into public folder
+
+step2:
+copy assests from downloaded project
+
+step3:
+create admin folder into views
+
+step4:make blade file
+php artisan make:view admin.index
+php artisan make:view admin.admin_master
+
+step5:
+1.copy content of  index.html file from downloaded theme and paste into admin_master(views->admin->admin_master.blade.php file)
+
+########################## make assest folder link ####################
+make all assets under this link:
+
+assest means public folder
+
+{{asset('backend/assets/images/layouts/layout-3.jpg')}}
+means
+public/backend/assets/images/layouts/layout-3.jpg
+
+
+######################## parent(admin_master.blade.php) and child(index.blade.php) made #################
+In Admin Page Total Partition Given Bellow:
+1.Head
+2.page topbar
+3.vertical menu
+4.main/center content
+5.footer
+6.right bar
+
+For All Page/All Menu Fixed thing
+0.Head(all resoruces linkup)
+1.Header
+2.page topbar
+3.vertical menu
+4.right bar
+5.footer
+
+Dynamic/Changed thing for any menu
+
+4.main content
+
+
+now make admin_master.blade.php file 
+transfer <div class="page-content"></div> this div into index.blade.php file
+@yield means here data put by child view
+
+		<div class="main-content">
+
+        		@yield('admin')
+        		<!-- End Page-content -->
+		</div>
+
+
+now make index.blade.php file
+
+@extends('admin.admin_master')
+@section('admin')
+<div class="page-content">
+	center content here;it will change by on demand 
+</div>
+
+
+
+
+--------------------------------------------video3(admin setup part2)---------------------------------
+
+1.make individual component/blade file header,footer,sidebar
+
+php artisan make:view admin.body.header
+php artisan make:view admin.body.footer
+php artisan make:view admin.body.sidebar
+
+
+
+
+2.paste all code from admin_master.blade.php into all individual component 
+
+here is the admin_master.blade.php file here we just include individual component
+
+
+
+
+
+
+
+<body data-topbar="dark">
+
+<!-- <body data-layout="horizontal" data-topbar="dark"> -->
+
+<!-- Begin page -->
+<div id="layout-wrapper">
+
+    <!-- ========== Header Include========== -->
+    @include('admin.body.header')
+
+    <!-- ========== Left Sidebar Include========== -->
+    @include('admin.body.sidebar')
+    <!-- Left Sidebar End -->
+
+
+    <!-- ============================================================== -->
+    <!-- Start right Content here -->
+    <!-- ============================================================== -->
+    <div class="main-content">
+
+        {{--changeable part--}}
+        @yield('admin')
+        <!-- End Page-content -->
+
+        <!-- ========== Footer ========== -->
+        @include('admin.body.footer')
+
+    </div>
+    <!-- end main content-->
+
+</div>
+<!-- END layout-wrapper -->
+
+<!-- Right Sidebar -->
+
+<!-- /Right-bar -->
+	{{--right bar we will add not now--}}
+<!-- Right bar overlay-->
+<div class="rightbar-overlay"></div>
+
+<!-- JAVASCRIPT -->
+<script src="{{asset('backend/assets/libs/jquery/jquery.min.js')}}"></script>
+<script src="{{asset('backend/assets/libs/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+<script src="{{asset('backend/assets/libs/metismenu/metisMenu.min.js')}}"></script>
+<script src="{{asset('backend/assets/libs/simplebar/simplebar.min.js')}}"></script>
+<script src="{{asset('backend/assets/libs/node-waves/waves.min.js')}}"></script>
+
+
+<!-- apexcharts -->
+<script src="{{asset('backend/assets/libs/apexcharts/apexcharts.min.js')}}"></script>
+
+<!-- jquery.vectormap map -->
+<script src="{{asset('backend/assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.min.js')}}"></script>
+<script src="{{asset('backend/assets/libs/admin-resources/jquery.vectormap/maps/jquery-jvectormap-us-merc-en.js')}}"></script>
+
+<!-- Required datatable js -->
+<script src="{{asset('backend/assets/libs/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{asset('backend/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+
+<!-- Responsive examples -->
+<script src="{{asset('backend/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
+<script src="{{asset('backend/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js')}}"></script>
+
+<script src="{{asset('backend/assets/js/pages/dashboard.init.js')}}"></script>
+
+<!-- App js -->
+<script src="{{asset('backend/assets/js/app.js')}}"></script>
+</body>
+
+
+
+
+
+
+--------------------------------------------video4 Header Change(admin setup part3)---------------------------------
+
+
+############################################## Header Clean ############################################ 
+1. mega menu from header remove/comment
+            {{--Mega Menu--}}
+            {{--<div class="dropdown dropdown-mega d-none d-lg-block ms-2">
+		</div>
+	    --}}
+
+2.comment/remove 'Header Language'
+		<button type="button" class="btn header-item waves-effect"
+                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <img class="" src="{{asset('backend/assets/images/flags/us.jpg')}}" alt="Header Language" height="16">
+                </button>
+
+3.notfication remove
+
+4.Setting button remove
+
+############################################## SideBar Clean ############################################
+
+1.remove bellow all of the item from component menu
+<li class="menu-title">Components</li>
+all delete below this li
+
+
+
+1.Remove=>
+
+1.Remove=>Email sent
+2.Remove=>Revenue
+3.Remove=>monthly earning
+
+4.make latest transaction col-12
+		<div class="col-xl-12">
+
+
+
+
+############################################## Footer Clean ############################################
+	  <div class="col-sm-6">
+                <script>document.write(new Date().getFullYear())</script> © Utsabroy.
+            </div>
+            <div class="col-sm-6">
+                <div class="text-sm-end d-none d-sm-block">
+                    Crafted with <i class="mdi mdi-heart text-danger"></i> by Utsab Roy
+                </div>
+            </div>
+
+
+
+
+
+
+
+--------------------------------------------video5 Admin Logout Option(admin setup part4)---------------------------------
+
+1. If we want to change logo we can change from  header.blade.php
+
+2.Logout Work(Route for logout(predefined))
+
+  POST      logout ...................................... logout › Auth\AuthenticatedSessionController@destroy  
+
+we will make a route and make controllter for logout
+1.make controller
+php artisan make:controller AdminController
+
+2.copy destroy method into this controller from(controllers->Auth->AuthenticatedSessionController->destroy )
+
+     /**
+     * Destroy an authenticated session.
+     */
+
+    public function destroy(Request $request): RedirectResponse
+    {
+        Auth::guard('web')->logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+	
+	//change default redirection; after logout redirect to login page
+        return redirect('/dashboard');
+    }
+
+3.now make route(grouping means for every route use Controller)
+
+Route::controller(AdminController::class)->group(function (){
+    Route::get('/admin/logout','destroy')->name('admin.logout');
+});
+
+4.now call this/use this route
+
+ <a class="dropdown-item text-danger"
+	 href="{{route('admin.logout')}}">
+	 <i class="ri-shut-down-line align-middle me-1 text-danger"></i> Logout
+ </a>
+
+
+
+
+
+--------------------------------------------video6 Customize Register(admin setup part5)---------------------------------
+1.copy register.blade.php file make registercopy.blade.php file
+
+2.copy all content of auth-register.html into register.blade.php (E:\Laravel\POS-FROM-UDEMY\Excise_File\Project Theme\Backend Theme\auth-register.html)
+
+3.now edit register.blade.php same name,id place which is from breeze file
+
+		<div class="p-3">
+                    <form class="form-horizontal mt-3" method="POST" action="{{ route('register') }}">
+
+                        @csrf
+                        <!-- Name -->
+                        <!-- autocomplete: It helps the browser identify fields that should be automatically filled -->
+                        <div class="form-group mb-3 row">
+                            <div class="col-12">
+                                <input class="form-control" id="name" type="text" name="name" value="{{ old('name') }}"   placeholder="Name" autocomplete="username" required>
+                                <!-- Display error message for 'name' field -->
+                                @error('name')
+                                    <div class="text-danger mt-2">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <!-- Email Address -->
+                        <div class="form-group mb-3 row">
+                            <div class="col-12">
+                                <input class="form-control" id="email" type="email" name="email" value="{{ old('email') }}"   placeholder="Email"  autocomplete="email" required>
+                                <!-- Display error message for 'email' field -->
+                                @error('email')
+                                    <div class="text-danger mt-2">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <!-- User Name -->
+                        <div class="form-group mb-3 row">
+                            <div class="col-12">
+                                <input class="form-control" id="user_name" type="text" name="user_name" value="{{ old('user_name') }}"   placeholder="User Name"  autocomplete="username" required>
+                                <!-- Display error message for 'user_name' field -->
+                                @error('user_name')
+                                    <div class="text-danger mt-2">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <!-- password -->
+                        <div class="form-group mb-3 row">
+                            <div class="col-12">
+                                <input class="form-control" id="password" type="password" name="password" placeholder="Password" autocomplete="current-password" required>
+                                <!-- Display error message for 'password' field -->
+                                @error('password')
+                                    <div class="text-danger mt-2">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <!-- Confirm password -->
+                        <div class="form-group mb-3 row">
+                            <div class="col-12">
+                                <input class="form-control" id="password_confirmation" type="password" name="password_confirmation" placeholder="Confirm Password" autocomplete="current-password" required>
+                                <!-- Display error message for 'password_confirmation' field -->
+                                @error('password_confirmation')
+                                    <div class="text-danger mt-2">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3 row">
+                            <div class="col-12">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck1">
+                                    <label class="form-label ms-1 fw-normal" for="customCheck1">I accept <a href="#" class="text-muted">Terms and Conditions</a></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group text-center row mt-3 pt-1">
+                            <div class="col-12">
+                                <button class="btn btn-info w-100 waves-effect waves-light" type="submit">Register</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group mt-2 mb-0 row">
+                            <div class="col-12 mt-3 text-center">
+                                <a href="pages-login.html" class="text-muted">Already have account?</a>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- end form -->
+                </div>
+
+
+
+------------------------------------------------------video7(Customize Login Page)--------------------------
+  GET|HEAD  / ........................................................................................................................................................................................................................ 
+  POST      _ignition/execute-solution ................................................................................................................. ignition.executeSolution › Spatie\LaravelIgnition › ExecuteSolutionController 
+  GET|HEAD  _ignition/health-check ............................................................................................................................. ignition.healthCheck › Spatie\LaravelIgnition › HealthCheckController 
+  POST      _ignition/update-config .......................................................................................................................... ignition.updateConfig › Spatie\LaravelIgnition › UpdateConfigController 
+  GET|HEAD  admin/logout ...................................................................................................................................................................... admin.logout › AdminController@destroy 
+  GET|HEAD  api/user .................................................................................................................................................................................................................  
+  GET|HEAD  confirm-password .............................................................................................................................................. password.confirm › Auth\ConfirmablePasswordController@show  
+  POST      confirm-password ................................................................................................................................................................ Auth\ConfirmablePasswordController@store  
+  GET|HEAD  dashboard ...................................................................................................................................................................................................... dashboard  
+  POST      email/verification-notification ................................................................................................................... verification.send › Auth\EmailVerificationNotificationController@store  
+  GET|HEAD  forgot-password ............................................................................................................................................... password.request › Auth\PasswordResetLinkController@create  
+  POST      forgot-password .................................................................................................................................................. password.email › Auth\PasswordResetLinkController@store  
+  GET|HEAD  login ................................................................................................................................................................. login › Auth\AuthenticatedSessionController@create  
+  POST      login .......................................................................................................................................................................... Auth\AuthenticatedSessionController@store  
+  POST      logout .............................................................................................................................................................. logout › Auth\AuthenticatedSessionController@destroy  
+  PUT       password ................................................................................................................................................................ password.update › Auth\PasswordController@update  
+  GET|HEAD  profile ............................................................................................................................................................................ profile.edit › ProfileController@edit  
+  PATCH     profile ........................................................................................................................................................................ profile.update › ProfileController@update  
+  DELETE    profile ...................................................................................................................................................................... profile.destroy › ProfileController@destroy  
+  GET|HEAD  register ................................................................................................................................................................. register › Auth\RegisteredUserController@create  
+  POST      register ............................................................................................................................................................................. Auth\RegisteredUserController@store  
+  POST      reset-password ......................................................................................................................................................... password.store › Auth\NewPasswordController@store  
+  GET|HEAD  reset-password/{token} ................................................................................................................................................ password.reset › Auth\NewPasswordController@create  
+  GET|HEAD  sanctum/csrf-cookie .................................................................................................................................... sanctum.csrf-cookie › Laravel\Sanctum › CsrfCookieController@show  
+  GET|HEAD  verify-email ................................................................................................................................................ verification.notice › Auth\EmailVerificationPromptController  
+  GET|HEAD  verify-email/{id}/{hash} ................................................................................................................................................ verification.verify › Auth\VerifyEmailController  
+
+1.copy login.blade.php file make logincopy.blade.php file
+
+2.copy all content of auth-login.html into login.blade.php (E:\Laravel\POS-FROM-UDEMY\Excise_File\Project Theme\Backend Theme\auth-login.html)
+
+3.now edit login.blade.php same name,id place which is from breeze file
+
+
+ 		<div class="p-3">
+                    <form class="form-horizontal mt-3" method="POST" action="{{ route('login') }}">
+                        @csrf
+                        <!-- Email or Username -->
+                        <div class="form-group mb-3 row">
+                            <div class="col-12">
+                                <input
+                                    class="form-control"
+                                    id="email_or_username"
+                                    type="text"
+                                    name="email_or_username"
+                                    value="{{ old('email_or_username') }}"
+                                    placeholder="Email or Username"
+                                    autocomplete="username"
+                                    required>
+                                <!-- Display error message for 'name' field -->
+                                @error('email_or_username')
+                                <div class="text-danger mt-2">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="form-group mb-3 row">
+                            <div class="col-12">
+                                <input
+                                    class="form-control"
+                                    id="password"
+                                    type="password"
+                                    name="password"
+                                    autocomplete="current-password"
+                                    placeholder="Password"
+                                    required>
+                                <!-- Display error message for 'password' field -->
+                                @error('password')
+                                <div class="text-danger mt-2">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                       {{-- <div class="form-group mb-3 row">
+                            <div class="col-12">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck1">
+                                    <label class="form-label ms-1" for="customCheck1">Remember me</label>
+                                </div>
+                            </div>
+                        </div>--}}
+
+                        <div class="form-group mb-3 text-center row mt-3 pt-1">
+                            <div class="col-12">
+                                <button
+                                    class="btn btn-info w-100 waves-effect waves-light"
+                                    type="submit">Log In</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-0 row mt-2">
+                            <div class="col-sm-7 mt-3">
+                                <a href="{{ route('password.request') }}" class="text-muted"><i class="mdi mdi-lock"></i> Forgot your password?</a>
+                            </div>
+                            <div class="col-sm-5 mt-3">
+                                <a href="{{route('register')}}" class="text-muted"><i class="mdi mdi-account-circle"></i> Create an account</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+
+
+------------------------------------------------------video8(Customize Forgot Password)-------------------------------
+1.copy forgot-password.blade.php file make forgot-passwordcopy.blade.php file
+
+2.copy all content of auth-recoverpw.html into forgot-password.blade.php (E:\Laravel\POS-FROM-UDEMY\Excise_File\Project Theme\Backend Theme\auth-recoverpw.html)
+
+3.now edit forgot-password.blade.php same name,id place which is from breeze file
+
+
+
+<div class="p-3">
+                    <form class="form-horizontal mt-3" method="POST" action="{{ route('password.email') }}">
+                        @csrf
+                        {{--Non-input elements like div or button are not sent to the server because they don't have name and value attributes.--}}
+                        <div class="alert alert-info alert-dismissible fade show" role="alert">
+                            Forgot your <strong>Password</strong>? No problem. Just let us know your email address
+                            and we will email you a password reset link that will allow you to choose a new one.
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <!-- Session Status -->
+                        @if (session('status'))
+                            <div class="alert alert-success mb-4" role="alert">
+                                {{ session('status') }}
+                            </div>
+                        @endif
+
+                        <div class="form-group mb-3">
+                            <div class="col-xs-12">
+                                <input class="form-control" id="email" type="email" name="email"  placeholder="Email" required>
+                                @error('email')
+                                <div class="text-danger mt-2">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group pb-2 text-center row mt-3">
+                            <div class="col-12">
+                                <button class="btn btn-info w-100 waves-effect waves-light" type="submit">Send Email</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+
+
+
+------------------------------------------------------video9 admin_profile_view(Admin profile and image setup)-------------------------------
+1.for admin_profile view extend master layout
+
+1.1 create route 
+Route::controller(AdminController::class)->group(function (){
+    Route::get('/admin/profile','Profile')->name('admin.profile');
+});
+
+1.2 make view
+php artisan make:view admin.admin_profile_view.blade.php
+
+1.3 make method and send data to view
+public function Profile(){
+        /*If no user is authenticated (e.g., the user isn't logged in),
+        calling Auth::user() will return null, and
+        attempting to access ->id will throw an error.
+        To avoid this, you can use: Auth::check()*/
+        if (Auth::check()) {
+            // Auth::user() fetches the current authenticated user's row from the users table as an instance of the User model.
+            //Access Data: You can access the properties of the retrieved User object directly, like $user->id, $user->name, etc.
+            $id = Auth::user()->id;
+            $admin_data=User::find($id);
+            //return $admin_data;
+            return view('admin.admin_profile_view',["admin_data"=>$admin_data]);
+        } else {
+            // Handle unauthenticated state
+        }
+    }
+
+
+2.choose picture card from theme(E:\Laravel\POS-FROM-UDEMY\Excise_File\Project Theme\Backend Theme\ui-cards.html)
+
+3.inspect element and choose picture card which you want to add
+					<div class="row">
+                            <div class="col-lg-4">
+                                <div class="card">
+                                    <img class="card-img-top img-fluid" src="assets/images/small/img-5.jpg" alt="Card image cap">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Card title</h4>
+                                        <p class="card-text">This is a wider card with supporting text below as a
+                                            natural lead-in to additional content. This content is a little bit
+                                            longer.</p>
+                                        <p class="card-text">
+                                            <small class="text-muted">Last updated 3 mins ago</small>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+    
+					</div>
+4.now we want to make add picture style from from theme(E:\Laravel\POS-FROM-UDEMY\Excise_File\Project Theme\Backend Theme\ui-images.html)
+//rounded image
+    <img class="rounded-circle avatar-xl mx-auto d-block mt-2" alt="300x300" data-holder-rendered="true" src="{{ asset('backend/assets/images/small/img-5.jpg') }}">
+
+
+5.recive data in view and show
+
+@extends('admin.admin_master')
+@section('admin')
+    <div class="page-content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card">
+                        <img class="rounded-circle avatar-xl mx-auto d-block mt-2" alt="300x300" data-holder-rendered="true" src="{{ asset('backend/assets/images/small/img-5.jpg') }}">
+                        <div class="card-body">
+                            <h4 class="card-title">Name : {{$admin_data->name}}</h4>
+                            <hr>
+                            <h4 class="card-title">Email : {{$admin_data->email}}</h4>
+                            <hr>
+                            <h4 class="card-title">User Name : {{$admin_data->user_name}}</h4>
+                            <hr>
+                            <a href="" class="btn btn-info btn-rounded waves-effect waves-light">Edit Profile</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+
+------------------------------------------------------video10 Edit Button in admin_profile_view(Admin profile and image setup part2)-------------------------------
+
+0.work for  admin_profile_view and when click 'Edit Profile' go to new view 'admin_profile_edit'
+#####################when click to 'Edit Profile' than go to new view 'admin_profile_edit'
+ <a href="??????????" class="btn btn-info btn-rounded waves-effect waves-light">Edit Profile</a>
+
+1.make route for edit button(which open new view called admin_profile_edit)
+
+  Route::get('/edit/profile','EditProfile')->name('edit.profile');
+ 
+2.Give route link in 'Edit profile' button  and apply buttom class for admin_profile_view 'Edit Profile'
+<a href="{{route('edit.profile')}}" class="btn btn-info btn-rounded waves-effect waves-light">Edit Profile</a>
+
+3.make view for 'admin_profile_edit'
+$ php artisan make:view admin.admin_profile_edit
+
+4.make method EditProfile in AdminController which will send admin data also
+
+	public function EditProfile(){
+        if (Auth::check()) {
+            // Auth::user() fetches the current authenticated user's row from the users table as an instance of the User model.
+            //Access Data: You can access the properties of the retrieved User object directly, like $user->id, $user->name, etc.
+            $id = Auth::user()->id;
+            $edit_data=User::find($id);
+            return view('admin.admin_profile_edit',["admin_data"=>$edit_data]);
+        } else {
+            // Handle unauthenticated state
+        }
+    }
+
+5.now make 'admin_profile_edit' view
+copy 'form element' and paste into admin_profile_edit view(E:\Laravel\POS-FROM-UDEMY\Excise_File\Project Theme\Backend Theme\form-element.html)
+make this view and show data from databse value(which is passed from controller):
+		<div class="row">
+                <div class="col-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Edit Profile Page</h4><br><br>
+                            <form METHOD="POST" action="#">
+                                <div class="row mb-3">
+                                    <label for="name" class="col-sm-2 col-form-label">Name</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text" value="{{$edit_data->name}}" id="name">
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label for="email" class="col-sm-2 col-form-label">Email</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="email" value="{{$edit_data->email}}" id="email">
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label for="user_name" class="col-sm-2 col-form-label">User Name</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text" value="{{$edit_data->user_name}}" id="user_name">
+                                    </div>
+                                </div>
+                                <!-- end row -->
+            
+                            </form>
+
+                        </div>
+                    </div>
+                </div> <!-- end col -->
+        </div>
+		
+
+#####################add file choose option######################
+		<div class="row mb-3">
+			<label for="profile_image" class="col-sm-2 col-form-label"></label>
+			<div class="col-sm-10">
+				<img class="rounded avatar-lg" style="width: 200px; height: 200px;"  alt="300x300" data-holder-rendered="true" src="{{ asset('backend/assets/images/small/img-5.jpg') }}">
+			</div>
+		</div>
+		
+#####################add show picture ########################
+			<div class="row mb-3">
+				<label for="profile_image" class="col-sm-2 col-form-label"></label>
+				<div class="col-sm-10">
+					<img class="rounded avatar-lg" style="width: 200px; height: 200px;"  alt="300x300" data-holder-rendered="true" src="{{ asset('backend/assets/images/small/img-5.jpg') }}">
+				</div>
+			</div>
+
+######################add submit button######################
+This button also from theme(E:\Laravel\POS-FROM-UDEMY\Excise_File\Project Theme\Backend Theme\ui-buttons.html)
+				<div class="mb-2 mt-4 d-flex justify-content-center">
+					<button type="submit" class="btn btn-info btn-rounded waves-effect waves-light"><i class="fas fa-edit"></i> Update Profile</button>
+				</div>
+
+
+
+
+
+
+
+-----------------video11 when choose button click picture shown bellow(Admin profile and image setup part3)-------------------------------
+1.JQuery CDN paste from w3School(https://www.w3schools.com/jquery/jquery_get_started.asp)
+
+@extends('admin.admin_master')
+@section('admin')
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	
+	
+2.write script for when button click image shown bellow dynamically
+
+<!-- For Showing Image When Select Choose Button -->
+    <script>
+        $(document).ready(function () {
+            $('#profile_image_button').on('change', function (e) {
+                // Get the selected file
+                var file = e.target.files[0];
+
+                // Check if a file was selected
+                if (file) {
+                    var reader = new FileReader();
+
+                    // Set the src of the image when the file is loaded
+                    reader.onload = function (e) {
+                        $('#profile_image').attr('src', e.target.result);
+                    };
+
+                    // Read the file as a data URL
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+    </script>
+	
+	
+	
+	
+-----------------video12 Image Upload in database(Admin profile and image setup part4)-------------------------------
+
+1.add profile_image
+	php artisan make:migration add_profile_image_to_users --table=users
+	
+2.now making migration file(added column in database)
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('users', function (Blueprint $table) {
+            //add profile_image column
+            $table->string('profile_image')->nullable()->after('user_name');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('users', function (Blueprint $table) {
+            //drop column for migration rollback
+            $table->dropColumn('profile_image');
+        });
+    }
+};
+
+3.add multipart encryption for file submitssion
+<form METHOD="POST" action="" enctype="multipart/form-data">
+
+4.create route for form action
+Route::controller(AdminController::class)->group(function (){
+    Route::post('/store/profile','StoreProfile')->name('store.profile');
+});
+
+5.now make full admin_profile_edit.blade.php
+					<form METHOD="POST" action="{{route('store.profile')}}" enctype="multipart/form-data">
+                                @csrf
+                                <div class="row mb-3">
+                                    <label for="name" class="col-sm-2 col-form-label">Name</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text" value="{{$edit_data->name}}" id="name" name="name">
+                                        @error('name')
+                                            <div class="text-danger mt-2">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label for="email" class="col-sm-2 col-form-label">Email</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="email" value="{{$edit_data->email}}" id="email" name="email">
+                                        @error('email')
+                                            <div class="text-danger mt-2">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label for="user_name" class="col-sm-2 col-form-label">User Name</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text" value="{{$edit_data->user_name}}" id="user_name" name="user_name">
+                                        @error('user_name')
+                                        <div class="text-danger mt-2">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label for="profile_image_button" class="col-sm-2 col-form-label">Profile Image</label>
+                                    <div class="col-sm-10">
+                                        <input  class="form-control" type="file" id="profile_image_button" name="profile_image_button">
+                                        @error('profile_image_button')
+                                            <div class="text-danger mt-2">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label for="profile_image" class="col-sm-2 col-form-label"></label>
+                                    <div class="col-sm-10">
+                                        <img id="profile_image" class="rounded avatar-lg" style="width: 200px; height: 200px;"  alt="300x300" data-holder-rendered="true" src="{{ asset('backend/assets/images/small/img-5.jpg') }}">
+                                    </div>
+                                </div>
+
+                               <!-- Input using : 1. You need a simple submit button.
+                                          2. No additional styling or complex content is required.-->
+                               {{-- <input type="submit" class="mt-4 btn btn-info btn-rounded waves-effect waves-light" value="Update Profile">--}}
+
+                                <!-- button using : You need more flexibility (e.g., including icons, images, or other content inside the button). -->
+
+                                <div class="mb-2 mt-4 d-flex justify-content-center">
+                                    <button type="submit" class="btn btn-info btn-rounded waves-effect waves-light"><i class="fas fa-edit"></i> Update Profile</button>
+                                </div>
+
+
+                                <!-- end row -->
+
+                    </form>
+5.make StoreProfile METHOD
+public function StoreProfile(Request $request){
+        // Validation
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            // Ignore the current user's email during validation
+            'email' => [
+                'required',
+                'string',
+                'lowercase',
+                'email',
+                'max:255',
+                'unique:users,email,' . Auth::user()->id, // Ignore the current user's email
+            ],
+            // Ignore the current user's username during validation
+            'user_name' => [
+                'required',
+                'string',
+                'unique:users,user_name,' . Auth::user()->id, // Ignore the current user's username
+                'regex:/^[a-zA-Z0-9_]+$/', // Only letters, numbers, and underscores
+            ],
+            'profile_image_button' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        if (Auth::check()) {
+            try{
+                // Auth::user() fetches the current authenticated user's row from the users table as an instance of the User model.
+                //Access Data: You can access the properties of the retrieved User object directly, like $user->id, $user->name, etc.
+                $id = Auth::user()->id;
+                $store_data=User::find($id);
+                $store_data->name=$request->name;
+                $store_data->email=$request->email;
+                $store_data->user_name=$request->user_name;
+
+                // Check image is selected or not
+                if($request->hasFile('profile_image_button')) {
+				
+					// If the old image exists, delete it first
+                    if ($store_data->profile_image && file_exists(public_path('upload/admin_images/' . $store_data->profile_image))) {
+                        unlink(public_path('upload/admin_images/' . $store_data->profile_image));
+                    }
+
+                    //if selected than recive the image
+                    $recive_file = $request->file('profile_image_button');
+
+
+
+                    //make file name unique
+                    //$fileName = time() . '_' . $recive_file->getClientOriginalName();
+                    //here Hmsi_microsecond_imageExtention
+                    $timestamp = date('YmdHis'); // Get the current date and time (Year, Month, Day, Hour, Minute, Second)
+                    $milliseconds = sprintf('%05d', (int) (microtime(true) * 1000) % 1000); // Get the milliseconds
+                    $fileName = $timestamp . '_' . $milliseconds . '_' . $recive_file->getClientOriginalName();
+
+
+                    // Define the destination path for the uploaded file
+                    //make destination path where will file storing
+                    $destinationPath = public_path('upload/admin_images');
+
+                    // Create the directory if it doesn't exist
+                    if (!file_exists($destinationPath)) {
+                        mkdir($destinationPath, 0777, true);
+                    }
+                    // Move the file to the destination path
+                    $recive_file->move($destinationPath,$fileName);
+
+                    //store file name in database
+                    $store_data['profile_image']=$fileName;
+                }
+                //return $store_data;
+                $store_data->save();
+
+                return redirect()->route('admin.profile');
+            }catch (Exception $e){
+                // Log the error
+                Log::error('Error updating user profile: ' . $e->getMessage());
+
+                // Redirect with error message
+                return redirect()->back()->withErrors('Something went wrong. Please try again later.');
+            }
+        } else {
+            // Handle unauthenticated state
+            // Redirect if not authenticated
+            return redirect()->route('login')->withErrors('You need to be logged in to perform this action.');
+        }
+    }
+
+
+
+
+-----------------video13 Profile image shown from database (Admin profile and image setup part4)-------------------------------
+1.Showing Uploaded Picture In Profile(admin_profile_view.blade.php) (if no image in database than show default image otherwise show uploaded image)
+	<img
+		class="rounded-circle avatar-xl mx-auto d-block mt-2"
+		style="width: 200px; height: 200px;"
+		alt="300x300"
+		data-holder-rendered="true"
+		src="{{ empty($admin_data->profile_image) ? url('upload/no_image') : url('upload/admin_images/'.$admin_data->profile_image) }}">
+		
+2.same thing in admin_profile_edit.blade.php
+	 <div class="row mb-3">
+		<label for="profile_image" class="col-sm-2 col-form-label"></label>
+		<div class="col-sm-10">
+			<img
+				id="profile_image"
+				class="rounded avatar-lg"
+				style="width: 200px; height: 200px;"
+				alt="300x300" data-holder-rendered="true"
+				src="{{ empty($edit_data->profile_image) ? url('upload/no_image.jpg') : url('upload/admin_images/'.$edit_data->profile_image) }}">
+		</div>
+	</div>
+	
+
+3.now dynamically change into header part profile picture
+@php
+	$id=\Illuminate\Support\Facades\Auth::user()->id;
+	$admin_data=\App\Models\User::find($id);
+@endphp
+
+	<div class="dropdown d-inline-block user-dropdown">
+		<button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
+				data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			<img
+				class="rounded-circle header-profile-user"
+				src="{{ empty($admin_data->profile_image) ? url('upload/no_image.jpg') : url('upload/admin_images/'.$admin_data->profile_image) }}"
+				alt="Header Avatar">
+			<span class="d-none d-xl-inline-block ms-1">{{$admin_data->name}}</span>
+			<i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
+		</button>
+		
+		
+		
+		
+		
+4.now edit sidebar.blade.php for dynamically showing picture
+@php
+	$id = \Illuminate\Support\Facades\Auth::user()->id;
+	$admin_data=\App\Models\User::find($id);
+@endphp
+        <!-- User details -->
+        <div class="user-profile text-center mt-3">
+            <div class="">
+                <img
+                    src="{{ empty($admin_data->profile_image) ? url('upload/no_image.jpg') : url('upload/admin_images/'.$admin_data->profile_image) }}"
+                    alt=""
+                    class="avatar-md rounded-circle">
+            </div>
+            <div class="mt-3">
+                <h4 class="font-size-16 mb-1">{{$admin_data->name}}</h4>
+                <span class="text-muted"><i class="ri-record-circle-line align-middle font-size-14 text-success"></i> Online</span>
+            </div>
+        </div>
+		
+	
+-----------------video 14 Toaster Adding For View Message-------------------------------
+1.Add Toaster CSS In admin_master.blade.php(In <head>)
+    <!-- Toaster Css-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+	
+2.Add JAVASCRIPT FOR Toaster(JQUERY WE ADDED BEFORE </body>)
+<!-- Toaster js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+3.Add Display Message
+<!-- Display Toastr in Blade -->
+<script>
+    @if(Session::has('message'))
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "5000"
+        };
+
+        var type = "{{ Session::get('alert-type', 'info') }}";
+        switch (type) {
+            case 'info':
+                toastr.info("{{ Session::get('message') }}");
+                break;
+
+            case 'success':
+                toastr.success("{{ Session::get('message') }}");
+                break;
+
+            case 'warning':
+                toastr.warning("{{ Session::get('message') }}");
+                break;
+
+            case 'error':
+                toastr.error("{{ Session::get('message') }}");
+                break;
+        }
+    @endif
+</script>
+
+4.now Tostr showing in Admin Profile Updated Successfully after update
+public function StoreProfile(Request $request){
+
+			//after saving we redirect to another page/route called admin.profile
+			//When we redirect we send session data also using 'with'
+			//After Going to this page ; (ঐ পেইজ দেখবে কোন Session ডাটা আছে কিনা যদি থাকে তা Toaster এ দেখাবে।)
+			$notification=array(
+				"message"=>'Admin Profile Updated Sucessfully',
+				"alert-type"=>'success');
+			return redirect()->route('admin.profile')->with($notification);
+}
+
+
+########################show toastr in login panel after login############
+1.Go to logout url
+ Route::get('/admin/logout','destroy')->name('admin.logout');
+
+2.Go to destroy method in AdminController
+	public function destroy(Request $request): RedirectResponse
+    {
+        Auth::guard('web')->logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+		
+        //After logout redirect to login and send session data for showing tostr message
+        $notification=array(
+            "message"=>'Profile Logout Sucessfully',
+            "alert-type"=>'info');
+        return redirect()->route('login')->with($notification);
+        //return redirect('/login')->with($notification);
+    }
+3.In login page show toastr
+
+Apply 3 steps(add css cdn,js cdn,show message) in login.blade.php
+
+
+
+########################after login showing tostr##################
+1.go to login route
+Route::get('login', [AuthenticatedSessionController::class, 'create'])
+        ->name('login');
+		
+2.go to  AuthenticatedSessionController and send message to dashboard
+	public function store(LoginRequest $request): RedirectResponse
+    {
+        // Log the login attempt
+        Log::info('Login attempt started', ['user_name' => $request->input('email_or_username')]);
+        $request->authenticate();
+
+        $request->session()->regenerate();
+
+        //After login showing Login successfully
+        $notification=array(
+            "message"=>'Profile Login Sucessfully',
+            "alert-type"=>'info');
+
+        return redirect()->intended(RouteServiceProvider::HOME)->with($notification);
+    }
+	
+3.Toastr will showing
+
+
+
+
+-----------------video 15 Change Password-------------------------------
+
+1.in header.blade.php file we change icon and give route name
+	<a 
+		class="dropdown-item" 
+		href="{{route('change.password')}}">
+		<i class="fas fa-key align-middle me-1"></i> Change Password</a>
+
+2.Change Password route
+Route::controller(AdminController::class)->group(function (){
+    Route::post('/change/password','ChangePassword')->name('change.password');
+
+});
+
+3.return change password view from AdminController
+	public function ChangePassword(){
+        return view('admin.admin_change_password');
+    }
+
+4.make view
+php artisan make:view admin.admin_change_password
+
+5.make view admin_change_password and make update password button workable
+@extends('admin.admin_master')
+@section('admin')
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <div class="page-content">
+        <div class="container-fluid">
+            {{--<div class="row justify-content-center">--}}
+            <div class="row">
+                <div class="col-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Edit Profile Page</h4><br><br>
+                            <!-- Display Validation Errors -->
+                            @if ($errors->any())
+                                @foreach ($errors->all() as $error)
+                                    <div class="alert alert-danger" role="alert">
+                                        {{$error}}
+                                    </div>
+                                @endforeach
+                            @endif
+                            <form METHOD="POST" action="{{route('update.password')}}">
+                                @csrf
+
+                                <div class="row mb-3">
+                                    <label for="old_password" class="col-sm-2 col-form-label">Old Password</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="password" value="" id="old_password"
+                                               name="old_password">
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label for="new_password" class="col-sm-2 col-form-label">New Password</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="password" value="" id="new_password"
+                                               name="new_password">
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label for="confirm_password" class="col-sm-2 col-form-label">Confirm
+                                        Password</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="password" value="" id="confirm_password"
+                                               name="confirm_password">
+                                    </div>
+                                </div>
+
+
+                                <!-- Input using : 1. You need a simple submit button.
+                                           2. No additional styling or complex content is required.-->
+                                {{-- <input type="submit" class="mt-4 btn btn-info btn-rounded waves-effect waves-light" value="Update Profile">--}}
+
+                                <!-- button using : You need more flexibility (e.g., including icons, images, or other content inside the button). -->
+
+                                <div class="mb-2 mt-4 d-flex justify-content-center">
+                                    <button type="submit" class="btn btn-info btn-rounded waves-effect waves-light"><i
+                                            class="fas fa-edit"></i> Update Password
+                                    </button>
+                                </div>
+
+                                <!-- end row -->
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div> <!-- end col -->
+            </div>
+        </div>
+    </div>
+@endsection
+
+6.update password route and controller method
+Route::controller(AdminController::class)->group(function (){
+    Route::post('/update/password','UpdatePassword')->name('update.password');
+});
+
+
+7.controller method
+	public function UpdatePassword(Request $request){
+        $request->validate([
+            'old_password' => 'required',
+            'new_password' => 'required|min:5',
+            'confirm_password' => 'required|min:5|same:new_password',
+        ], [
+            'confirm_password.same' => 'The confirm password does not match the new password.',
+        ]);
+
+        $id=Auth::user()->id;
+        $user=User::find($id);
+        if(!Hash::check($request->old_password,$user->password)){
+            //Flash message for old password not correct
+            return redirect()->back()->with([
+                'message' => 'The old password is incorrect.',
+                'alert-type' => 'error'
+            ]);
+           // session()->flash('message', 'The old password is incorrect.');
+           // return redirect()->back();
+        }
+        // Update the password
+        $user->update(['password' => Hash::make($request->new_password)]);
+        // Success message
+        return redirect()->back()->with([
+            'message' => 'Data saved successfully!',
+            'alert-type' => 'success'
+        ]);
+    }
