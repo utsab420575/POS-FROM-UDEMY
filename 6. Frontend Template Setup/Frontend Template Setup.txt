@@ -22,7 +22,7 @@ footer.blade.php(copy footer content from frontend_master.blade.php to footer.bl
 
 
 5.make frontend_master.blade.php file and include component here 
-	<!doctype html>
+<!doctype html>
 <html class="no-js" lang="en">
 	<head>
 		
