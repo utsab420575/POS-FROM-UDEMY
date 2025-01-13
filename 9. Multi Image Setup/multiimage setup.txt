@@ -1,0 +1,693 @@
+------------------------------------------1. Backend Add Multi Image in About Page Part 1----------------------------------------
+------------------------------------------2. Backend Add Multi Image in About Page Part 2----------------------------------------
+
+1.Add sub menu in sidebar for add multi image
+ {{--About Setup menu--}}
+	<li>
+		<a href="javascript: void(0);" class="has-arrow waves-effect">
+			<i class="ri-mail-send-line"></i>
+			<span>About Page Setup</span>
+		</a>
+		<ul class="sub-menu" aria-expanded="false">
+			{{-- <li><a href="http://127.0.0.1:8000/home/slide">Home Slide</a></li>--}}
+			<li><a href="{{route('about.page')}}">About</a> </li>
+
+			<li><a href="{{route('about.multi.image')}}">About Multi Image</a> </li>
+
+
+		</ul>
+	</li>
+
+2.add route
+Route::controller(AboutController::class)->group(function(){
+    Route::get('/about/multi/image','AboutMultiImage')->name('about.multi.image');
+    Route::post('/store/multi/image','StoreMultiImage')->name('store.multi.image');
+});
+
+3.add method in controller
+public function AboutMultiImage(){
+
+}
+public function StoreMultiImage(){
+
+}
+
+4.create view
+php artisan make:view admin.about_page.multimage
+
+5.now return view from method
+	public function AboutMultiImage(){
+        return view('admin.about_page.multimage');
+    }
+
+6.make this view 
+@extends('admin.admin_master')
+@section('admin')
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <div class="page-content">
+        <div class="container-fluid">
+            {{--<div class="row justify-content-center">--}}
+            <div class="row">
+                <div class="col-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Add Multi Image</h4><br><br>
+                            <!-- multipart/form-data is necessary when your form includes file inputs.
+                            It ensures that the file data and other form fields are sent as separate parts in the HTTP request.-->
+                            <form METHOD="POST" action="{{route('store.multi.image')}}" enctype="multipart/form-data">
+                                @csrf
+                                {{--we use 1st id as slider option--}}
+                                <input type="hidden" name="id" value="">
+
+                                {{--image button--}}{{--
+                                <div class="row mb-3">
+                                    <label for="about_multi_image_button" class="col-sm-3 col-form-label">About Multi Image</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control" type="file" id="about_multi_image_button"
+                                               name="about_multi_image_button[]" multiple>
+                                        @error('about_multi_image_button')
+                                        <div class="text-danger mt-2">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                --}}{{--image showing--}}{{--
+                                <div class="row mb-3">
+                                    <label for="about_multi_image" class="col-sm-3 col-form-label"></label>
+                                    <div class="col-sm-9">
+                                        <img
+                                            id="about_multi_image"
+                                            class="rounded avatar-lg"
+                                            style="width: 200px; height: 200px;"
+                                            alt="300x300" data-holder-rendered="true"
+
+                                            --}}{{--src="{{ empty($aboutpage->about_image) ? url('upload/no_image.jpg') : asset($aboutpage->about_image) }}"--}}{{--
+                                        >
+                                    </div>
+                                </div>--}}
+
+                                {{-- Image button --}}
+                                <div class="row mb-3">
+                                    <label for="about_multi_image_button" class="col-sm-3 col-form-label">About Multi Image</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control" type="file" id="about_multi_image_button"
+                                               name="about_multi_image_button[]" multiple>
+                                        @error('about_multi_image_button')
+                                        <div class="text-danger mt-2">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                {{-- Image preview container --}}
+                                <div class="row mb-3">
+                                    <label for="about_multi_image" class="col-sm-3 col-form-label"></label>
+                                    <div class="col-sm-9">
+                                        <div id="about_multi_image" class="d-flex flex-wrap gap-2">
+                                            {{-- Previewed images will be appended here --}}
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <!-- Input using : 1. You need a simple submit button.
+                                           2. No additional styling or complex content is required.-->
+                                {{-- <input type="submit" class="mt-4 btn btn-info btn-rounded waves-effect waves-light" value="Update Profile">--}}
+
+                                <!-- button using : You need more flexibility (e.g., including icons, images, or other content inside the button). -->
+
+                                <div class="mb-2 mt-4 d-flex justify-content-center">
+                                    <button type="submit" class="btn btn-info btn-rounded waves-effect waves-light"><i
+                                            class="fas fa-edit"></i> Update About
+                                    </button>
+                                </div>
+
+
+                                <!-- end row -->
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div> <!-- end col -->
+            </div>
+        </div>
+    </div>
+
+    <!-- For Showing Image When Select Choose Button -->
+    <script>
+        $(document).ready(function () {
+            // Temporary array to keep track of selected files
+            let fileList = [];
+
+            // When the file input changes (i.e., the user selects files)
+            $('#about_multi_image_button').on('change', function (e) {
+                // Convert the FileList object to an array and get the selected files
+                const files = Array.from(e.target.files);
+
+                // Add the new selected files to the fileList array
+                fileList = fileList.concat(files);
+
+                // Clear the existing previews to render the updated ones
+                $('#about_multi_image').html('');
+
+                // Call function to render the image previews
+                renderPreview();
+            });
+
+            // Function to render the image previews based on the current fileList
+            function renderPreview() {
+                // Clear the preview container before rendering the new previews
+                $('#about_multi_image').html('');
+
+                // Loop through the files in the fileList array
+                fileList.forEach((file, index) => {
+                    // Only proceed if the file is an image
+                    if (file.type.startsWith('image/')) {
+                        // Create a new FileReader to read the selected image file
+                        const reader = new FileReader();
+
+                        reader.onload = function (e) {
+                            // Create a wrapper div for the image and the close button
+                            const wrapper = $('<div>')
+                                .addClass('position-relative')
+                                .css({
+                                    display: 'inline-block',
+                                    margin: '5px',
+                                    width: '100px',
+                                    height: '100px',
+                                    border: '1px solid #ddd',
+                                    borderRadius: '8px',
+                                    overflow: 'hidden',
+                                    position: 'relative',
+                                });
+
+                            // Create an <img> tag to display the selected image
+                            const img = $('<img>')
+                                .attr('src', e.target.result)
+                                .css({
+                                    width: '100%', // Ensures the image fills the wrapper
+                                    height: '100%', // Ensures the image fills the wrapper
+                                    objectFit: 'cover', // Keeps aspect ratio intact and fills the box
+                                });
+
+                            // Create a close button to remove the image
+                            const closeBtn = $('<button>')
+                                .html('&times;') // HTML for the close symbol (×)
+                                .addClass('btn btn-sm btn-danger') // Styling for the close button
+                                .css({
+                                    position: 'absolute', // Position the button on top-right corner
+                                    top: '5px', // 5px from the top
+                                    right: '5px', // 5px from the right
+                                    borderRadius: '50%', // Make the button circular
+                                    lineHeight: '10px', // Center the "×" symbol
+                                    width: '20px', // Size of the close button
+                                    height: '20px', // Size of the close button
+                                    padding: 0, // Remove padding
+                                    textAlign: 'center', // Center align the text
+                                })
+                                .on('click', function () {
+                                    // Remove the image from the fileList array
+                                    fileList.splice(index, 1);
+
+                                    // Re-render the previews and update the file input
+                                    renderPreview();
+                                    updateFileInput();
+                                });
+
+                            // Append the image and close button to the wrapper
+                            wrapper.append(img).append(closeBtn);
+
+                            // Append the wrapper to the preview container
+                            $('#about_multi_image').append(wrapper);
+                        };
+
+                        // Read the image file as a data URL to display it
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            // Function to update the file input based on the current fileList
+            function updateFileInput() {
+                // Create a new DataTransfer object, which can be used to manipulate files
+                const dataTransfer = new DataTransfer();
+
+                // Add the remaining files from fileList to the DataTransfer object
+                fileList.forEach(file => dataTransfer.items.add(file));
+
+                // Update the file input element with the new file list
+                $('#about_multi_image_button')[0].files = dataTransfer.files;
+
+                // Optional: Log the updated file count for debugging purposes
+                console.log('Updated file count:', dataTransfer.files.length);
+            }
+        });
+    </script>
+
+
+
+
+
+@endsection
+
+
+7.multi image store in database (create model and migration)
+php artisan make:model MultiImage -m
+
+
+8.make migration file
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('multi_images', function (Blueprint $table) {
+            $table->id();
+            $table->string('multi_image')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('multi_images');
+    }
+};
+
+9.make Model
+
+class MultiImage extends Model
+{
+    use HasFactory;
+    protected $fillable=[
+        'multi_image'
+    ];
+}
+
+10.migration done
+php artisan migrate
+
+11.store recived image into database
+
+	public function StoreMultiImage(Request $request)
+    {
+        // Validate the request
+        $request->validate([
+            'about_multi_image_button' => 'required|array', // Ensure it's an array
+            'about_multi_image_button.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Each file should be an image
+        ]);
+
+        try {
+            // Check image is selected or not
+            if ($request->hasFile('about_multi_image_button')) {
+                //retrive single image from all of the image
+                foreach ($request->file('about_multi_image_button') as $single_file) {
+
+                    // create image manager with desired driver
+                    $manager = new ImageManager(new Driver());
+
+                    // read image from file system
+                    $image = $manager->read($single_file);
+
+                    // resize image proportionally to 300px width
+                    $image->scale(220, 220);
+
+
+                    //make file name unique
+                    //$fileName = time() . '_' . $recive_file->getClientOriginalName();
+                    //here Hmsi_microsecond_imageExtention
+                    $timestamp = date('YmdHis'); // Get the current date and time (Year, Month, Day, Hour, Minute, Second)
+                    $milliseconds = sprintf('%05d', (int)(microtime(true) * 1000) % 1000); // Get the milliseconds
+                    $fileName = $timestamp . '_' . $milliseconds . '_' . $single_file->getClientOriginalName();
+
+
+                    // Define the destination path for the uploaded file
+                    //make destination path where will file storing
+                    //$destinationPath = public_path('upload/home_slide');
+                    $relativePath = 'upload/multimage';
+                    //absolute path for store in directory
+                    $destinationPath = public_path('upload/multimage');
+
+                    // Create the directory if it doesn't exist
+                    if (!file_exists($destinationPath)) {
+                        mkdir($destinationPath, 0777, true);
+                    }
+
+
+                    // Move the file to the destination path
+                    $image->save($destinationPath . DIRECTORY_SEPARATOR . $fileName);
+
+                    //store file name in database
+                    MultiImage::create([
+                        'multi_image'=>$relativePath.'/'.$fileName,
+                        'created_at'=>Carbon::now()
+                    ]);
+
+                    //feedback message
+                    $notification = array(
+                        'message' => 'Uploaded Image Successfully',
+                        'alert-type' => 'success'
+                    );
+                }
+            } else {
+                $notification = array(
+                    'message' => 'No Image Uploaded',
+                    'alert-type' => 'info'
+                );
+            }
+
+            //stay in same page and show notification
+            return back()->with($notification);
+
+        } catch (Exception $e) {
+            // Log the error
+            Log::error('Error updating user profile: ' . $e->getMessage());
+
+            // Redirect with error message
+            return redirect()->back()->withErrors('Something went wrong. Please try again later.');
+        }
+
+    }
+
+
+
+
+
+
+
+------------------------3.1 Backend Add Multi Image in About Page Part 3(Datatable data from database)-------------------------------------
+For MultiImage Showing From Database
+
+1.add new menu in sidebar
+ <ul class="sub-menu" aria-expanded="false">
+    <li><a href="{{route('all.multi.image')}}">All Multi Image</a> </li>
+ </ul>
+ 
+2.create route for this route
+
+Route::controller(AboutController::class)->group(function(){
+    Route::get('all/multi/image','AllMultiImage')->name('all.multi.image');
+});
+
+
+3.add method in controller and send data in view
+	public function AllMultiImage(){
+        $allMultiImage=MultiImage::all();
+        return view('admin.about_page.all_multiimage',['allMultiImage'=>$allMultiImage]);
+    }
+
+4.make this view
+php artisan make:view admin.about_page.all_multiimage
+
+
+5.add <script> in admin_master.blade.php file(added button also)
+(this datatable copied from E:\Laravel\POS-FROM-UDEMY\Excise_File\Project Theme\Backend Theme\tables-datatable.html)
+
+<!-- Required datatable js -->
+<script src="{{asset('backend/assets/libs/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{asset('backend/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+
+<!-- Datatable init js -->
+<script src="{{asset('backend/assets/js/pages/datatables.init.js')}}"></script>
+
+
+
+6.now make view(all_multiimage.blade.php)
+button image icon copy from (E:\Laravel\POS-FROM-UDEMY\Excise_File\Project Theme\Backend Theme\icons-fontawesome.html)
+
+@extends('admin.admin_master')
+@section('admin')
+    <div class="page-content">
+        <div class="container-fluid">
+
+
+
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+
+                            <h4 class="card-title">Default Datatable</h4>
+                            <p class="card-title-desc">DataTables has most features enabled by
+                                default, so all you need to do to use it with your own tables is to call
+                                the construction function: <code>$().DataTable();</code>.
+                            </p>
+
+                            <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                <thead>
+                                <tr>
+                                    <th>Sl</th>
+                                    <th>About Multi Image</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+
+
+                                <tbody>
+                                @php($i=1)
+                                    @foreach($allMultiImage as $singleImage)
+                                        <tr>
+                                            <td>{{$i++}}</td>
+                                            <td><img src="{{asset($singleImage->multi_image)}}" width="60px" height="50px"></td>
+                                            <td>
+                                                <a href="" class="btn btn-info sm"><i class="fas fa-edit"></i></a>
+                                                <a href="" class="btn btn-danger sm"><i class="fas fa-trash-alt"></i></a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div> <!-- end col -->
+            </div> <!-- end row -->
+        </div>
+    </div>
+@endsection
+
+
+----------------------------------------------4.1 Backend Add Multi Image in About Page Part 4(Edit Button Workable)-------------------------------------
+1.create route for specific image open and store
+Route::controller(AboutController::class)->group(function(){
+    Route::get('edit/multi/image/{id}','EditMultiImage')->name('edit.multi.image');
+    Route::get('update/multi/image','UpdateMultiImage')->name('update.multi.image');
+});
+
+2.change route in datatable(all_multiimage.blade.php)
+<a href="{{route('edit.multi.image',$singleImage->id)}}" class="btn btn-info sm"><i class="fas fa-edit"></i></a>
+
+3.now retrive specific id data from database
+	public function EditMultiImage($id){
+        $multiImage=MultiImage::findOrFail($id);
+        return view('admin.about_page.edit_multi_image',['multiImage'=>$multiImage]);
+    }
+
+4.make view
+artisan make:view admin.about_page.edit_multi_image
+
+5.add code into this view
+@extends('admin.admin_master')
+@section('admin')
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <div class="page-content">
+        <div class="container-fluid">
+            {{--<div class="row justify-content-center">--}}
+            <div class="row">
+                <div class="col-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Edit Multi Image</h4><br><br>
+                            <!-- multipart/form-data is necessary when your form includes file inputs.
+                            It ensures that the file data and other form fields are sent as separate parts in the HTTP request.-->
+                            <form METHOD="POST" action="{{route('update.multi.image')}}" enctype="multipart/form-data">
+                                @csrf
+                                {{--we use 1st id as slider option--}}
+                                 <input type="hidden" name="id" value="{{$multiImage->id}}">
+								 
+                                {{--image button--}}
+                                <div class="row mb-3">
+                                    <label for="edit_multi_image_button" class="col-sm-2 col-form-label">Change Image</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="file" id="edit_multi_image_button"
+                                               name="edit_multi_image_button">
+                                        @error('edit_multi_image_button')
+                                        <div class="text-danger mt-2">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                {{--image showing--}}
+                                <div class="row mb-3">
+                                    <label for="edit_multi_image_preview" class="col-sm-2 col-form-label"></label>
+                                    <div class="col-sm-10">
+                                        <img
+                                            id="edit_multi_image_preview"
+                                            class="rounded avatar-lg"
+                                            style="width: 200px; height: 200px;"
+                                            alt="300x300" data-holder-rendered="true"
+                                            {{--src="{{ empty($homeslide->home_slide) ? url('upload/no_image.jpg') : url('upload/home_slide/'.$homeslide->home_slide) }}">--}}
+                                            src="{{ empty($multiImage->multi_image) ? url('upload/no_image.jpg') : asset($multiImage->multi_image) }}">
+                                    </div>
+                                </div>
+
+
+                                <!-- Input using : 1. You need a simple submit button.
+                                           2. No additional styling or complex content is required.-->
+                                {{-- <input type="submit" class="mt-4 btn btn-info btn-rounded waves-effect waves-light" value="Update Profile">--}}
+
+                                <!-- button using : You need more flexibility (e.g., including icons, images, or other content inside the button). -->
+
+                                <div class="mb-2 mt-4 d-flex justify-content-center">
+                                    <button type="submit" class="btn btn-info btn-rounded waves-effect waves-light"><i
+                                            class="fas fa-edit"></i> Update About
+                                    </button>
+                                </div>
+
+
+                                <!-- end row -->
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div> <!-- end col -->
+            </div>
+        </div>
+    </div>
+
+    <!-- For Showing Image When Select Choose Button -->
+    <script>
+        $(document).ready(function () {
+            $('#edit_multi_image_button').on('change', function (e) {
+                // Get the selected file
+                var file = e.target.files[0];
+
+                // Check if a file was selected
+                if (file) {
+                    var reader = new FileReader();
+
+                    // Set the src of the image when the file is loaded
+                    reader.onload = function (e) {
+                        $('#edit_multi_image_preview').attr('src', e.target.result);
+                    };
+
+                    // Read the file as a data URL
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+    </script>
+@endsection
+
+//add update code into controller method
+	public function UpdateMultiImage(Request $request){
+
+         $validated = $request->validate([
+            'edit_multi_image_button' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Image validation
+        ],[
+            'edit_multi_image_button'=>'Please Select Image File For Update(jpeg,png,jpg,gif,svg)'
+        ]);
+
+        $multi_image_id=$request->id;
+        //this id from form(where field is hidden)
+        $stored_multi_image_data = MultiImage::find($multi_image_id);
+
+        //here database involved that's why if() include otherwise we can start with try{}catch(){}
+        if ($stored_multi_image_data) {
+            //store data into database/update into databasae
+            try {
+                // Check image is selected or not
+                if ($request->hasFile('edit_multi_image_button')) {
+
+                    // If the old image exists, delete it first
+                    if ($stored_multi_image_data->multi_image && file_exists(public_path($stored_multi_image_data->multi_image))) {
+                        unlink(public_path($stored_multi_image_data->multi_image));
+                    }
+
+                    //if selected than recive the image
+                    $recive_file = $request->file('edit_multi_image_button');
+
+                    // create image manager with desired driver
+                    $manager = new ImageManager(new Driver());
+
+                    // read image from file system
+                    $image = $manager->read($recive_file);
+
+                    // resize image proportionally to 300px width
+                    $image->scale(220, 220);
+
+
+                    //make file name unique
+                    //$fileName = time() . '_' . $recive_file->getClientOriginalName();
+                    //here Hmsi_microsecond_imageExtention
+                    $timestamp = date('YmdHis'); // Get the current date and time (Year, Month, Day, Hour, Minute, Second)
+                    $milliseconds = sprintf('%05d', (int)(microtime(true) * 1000) % 1000); // Get the milliseconds
+                    $fileName = $timestamp . '_' . $milliseconds . '_' . $recive_file->getClientOriginalName();
+
+
+                    // Define the destination path for the uploaded file
+                    //make destination path where will file storing
+                    //$destinationPath = public_path('upload/home_slide');
+                    $relativePath = 'upload/multimage';
+                    $destinationPath = public_path('upload/multimage');
+
+                    // Create the directory if it doesn't exist
+                    if (!file_exists($destinationPath)) {
+                        mkdir($destinationPath, 0777, true);
+                    }
+
+
+                    // Move the file to the destination path
+                    $image->save($destinationPath . DIRECTORY_SEPARATOR . $fileName);
+
+                    //store file name in database
+                    $stored_multi_image_data['multi_image'] = $relativePath . '/' . $fileName;
+
+                    //feedback message
+                    $notification = array(
+                        'message' => 'Image Updated Successfully',
+                        'alert-type' => 'success'
+                    );
+                } else {
+                    $notification = array(
+                        'message' => 'Updated without Image Successfully',
+                        'alert-type' => 'info'
+                    );
+                }
+                //return $store_data;
+                $stored_multi_image_data->save();
+
+                //return back()->with($notification);
+                return redirect()->route('all.multi.image')->with($notification);
+
+            } catch (Exception $e) {
+                // Log the error
+                Log::error('Error updating user profile: ' . $e->getMessage());
+
+                // Redirect with error message
+                return redirect()->back()->withErrors('Something went wrong. Please try again later.');
+            }
+
+        } else {
+            return back()->with([
+                'message' => 'No Data Found',
+                'alert-type' => 'info',
+            ]);
+        }
+
+    }
+
+
+
+
+
+----------------------------------------------5.1 Backend Add Multi Image in About Page Part 5(Delete Button Work)-------------------------------------
