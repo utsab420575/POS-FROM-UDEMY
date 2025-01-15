@@ -1,0 +1,139 @@
+-----------------------------------------1.1 Backend Portfolio Page Setup Part 1---------------------------------
+1.add protfolio menu
+
+{{--Protfolio Setup menu--}}
+	<li>
+		<a href="javascript: void(0);" class="has-arrow waves-effect">
+			<i class="ri-mail-send-line"></i>
+			<span> Portfolio Page Setup</span>
+		</a>
+		<ul class="sub-menu" aria-expanded="false">
+			<li><a href="{{route('all.portfolio')}}">All Proftfolio</a> </li>
+			<li><a href="">Add Protfolio</a> </li>
+
+		</ul>
+	</li>
+
+
+2.create controller for PortfolioController
+
+php artisan make:controller Home/PortfolioController
+
+
+
+3.make route
+//ProtfolioController
+Route::controller(PortfolioController::class)->group(function(){
+   Route::get('/all/portfolio','AllPortfolio')->name('all.portfolio');
+});
+
+4.create migration and model  for store portfolio information
+
+php artisan make:model Portfolio -m
+
+5. create migration
+
+	public function up(): void
+    {
+        Schema::create('portfolios', function (Blueprint $table) {
+            $table->id();
+            $table->string('portfolio_name')->nullable();
+            $table->string('portfolio_title')->nullable();
+            $table->string('portfolio_image')->nullable();
+            $table->text('portfolio_description')->nullable();
+            $table->timestamps();
+        });
+    }
+	
+6.Model coding
+class Portfolio extends Model
+{
+    use HasFactory;
+    protected $fillable=[
+        'portfolio_name',
+        'portfolio_title',
+        'portfolio_image',
+        'portfolio_description',
+    ];
+}
+
+7.create view for showing all view
+
+php artisan make:view admin.protfolio.protfolio_all
+
+
+8.now add code in controller
+class PortfolioController extends Controller
+{
+     public function AllPortfolio(){
+        //ORDER BY created_at DESC
+        $allPortfolio=Portfolio::latest()->get();
+        return view('admin.protfolio.protfolio_all',['allPortfolio'=>$allPortfolio]);
+    }
+}
+
+9.showing view protfolio_all.blade.php
+
+@extends('admin.admin_master')
+@section('admin')
+    <div class="page-content">
+        <div class="container-fluid">
+
+            <!-- start page title -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                        <h4 class="mb-sm-0">Portfolio All</h4>
+                    </div>
+                </div>
+            </div>
+            <!-- end page title -->
+
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+
+                            <h4 class="card-title">Protfolio All Data</h4>
+                            <p class="card-title-desc">
+                                All of the multiple images showing from databases
+                            </p>
+
+                            <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                <thead>
+                                <tr>
+                                    <th>Sl</th>
+                                    <th>Protfolio Name</th>
+                                    <th>Protfolio Title</th>
+                                    <th>Protfolio Image</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+
+
+                                <tbody>
+                                @php($i=1)
+                                @foreach($allPortfolio as $singlePortfolio)
+                                    <tr>
+                                        <td>{{$i++}}</td>
+                                        <td>{{$singlePortfolio->portfolio_name}}</td>
+                                        <td>{{$singlePortfolio->portfolio_title}}</td>
+                                        <td><img src="{{asset($singlePortfolio->portfolio_image)}}" width="60px" height="50px"></td>
+                                        <td>
+                                            <a href="{{route('edit.multi.image',$singleImage->id)}}" class="btn btn-info sm"><i class="fas fa-edit"></i></a>
+
+                                            <a href="{{route('delete.multi.image',$singleImage->id)}}" class="btn btn-danger delete sm"><i class="fas fa-trash-alt"></i></a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div> <!-- end col -->
+            </div> <!-- end row -->
+        </div>
+    </div>
+@endsection

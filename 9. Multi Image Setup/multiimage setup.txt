@@ -690,4 +690,105 @@ artisan make:view admin.about_page.edit_multi_image
 
 
 
-----------------------------------------------5.1 Backend Add Multi Image in About Page Part 5(Delete Button Work)-------------------------------------
+----------------------------------------------5.1 Backend Add Multi Image in About Page Part 5(Delete Button Work Sweetalert)-------------------------------------
+
+1.add route for delete button(all_multiimage.blade.php file)
+<td>
+	<a href="{{route('delete.multi.image',$singleImage->id)}}" class="btn btn-danger delete sm"><i class="fas fa-trash-alt"></i></a>
+</td>
+
+2.create route
+Route::controller(AboutController::class)->group(function(){
+    Route::get('delete/multi/image/{id}','DeleteMultiImage')->name('delete.multi.image');
+});
+
+3.create method
+
+	public function DeleteMultiImage($id){
+        $multiImageData=MultiImage::find($id);
+        if($multiImageData){
+            $image_path=$multiImageData->multi_image;
+            if($image_path && file_exists(public_path($image_path))){
+                unlink(public_path($image_path));
+                $multiImageData->delete();
+                return redirect()->back()->with(
+                    [
+                        'message'=>'Delete Image Successfully',
+                        'alert-type'=>'success'
+                    ]);
+            }else{
+                $multiImageData->delete();
+                return redirect()->back()->with(
+                    [
+                        'message'=>'Database entry deleted,Image Not Found',
+                        'alert-type'=>'info'
+                    ]);
+            }
+        }else{
+            return redirect()->back()->withErrors(
+                [
+                    'message'=>'This Id have no data',
+                    'alert-type'=>'error'
+                ]);
+        }
+    }
+	
+4.add sweetalert in admin_master.blade.php
+<!-- sweetalert2 cdn -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- Add Script Data(You can write it any javascript file and than just import this js) -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('click', function (event) {
+            // Check if the clicked element or its parent has the 'delete' class
+            const target = event.target.closest('.delete');
+            if (target) {
+                event.preventDefault(); // Prevent default action
+
+                // Get the deletion URL
+                const deleteUrl = target.getAttribute('href');
+
+                // Show SweetAlert2 confirmation
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "This action cannot be undone!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes, delete it!",
+                    cancelButtonText: "Cancel",
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#3085d6",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Redirect to the deletion URL
+                        window.location.href = deleteUrl;
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+
+
+-------------------------------6. Frontend  Show Multi Image(show data in frontend)-----------------------------
+(frontend/home_all.blade.php)
+
+@php
+$about_data=\App\Models\About::find(1);
+$allMultiImage=\App\Models\MultiImage::all();
+@endphp
+<section id="aboutSection" class="about">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <ul class="about__icons__wrap">
+                    @foreach($allMultiImage as $singleMultiImage)
+                        <li>
+                            <img class="light" src="{{asset($singleMultiImage->multi_image)}}" alt="XD">
+                        </li>
+                    @endforeach
+
+                </ul>
+            </div>
