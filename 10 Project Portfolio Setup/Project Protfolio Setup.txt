@@ -137,3 +137,570 @@ class PortfolioController extends Controller
         </div>
     </div>
 @endsection
+
+
+--------------------------2. Backend Portfolio Page Setup Part 2(Add Protfolio Work)----------------------------------
+
+1.Add Protfolio Sub Menu Add 
+
+<ul class="sub-menu" aria-expanded="false">
+	<li><a href="{{route('add.protfolio')}}">Add Protfolio</a> </li>
+</ul>
+
+2.Route add
+Route::controller(PortfolioController::class)->group(function(){
+    Route::get('/add/portfolio', 'AddPortfolio')->name('add.portfolio');
+});
+
+3.now create method in controller
+	public function AddPortfolio(){
+        return view('admin.portfolio.portfolio_add');
+    }
+4.create view
+php artisan make:view admin.portfolio.portfolio_add
+
+5.add code in view
+
+@extends('admin.admin_master')
+@section('admin')
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <div class="page-content">
+        <div class="container-fluid">
+            {{--<div class="row justify-content-center">--}}
+            <div class="row">
+                <div class="col-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Portfolio Page</h4><br><br>
+                            <!-- multipart/form-data is necessary when your form includes file inputs.
+                            It ensures that the file data and other form fields are sent as separate parts in the HTTP request.-->
+                            <form method="POST" action="{{ route('store.portfolio') }}" enctype="multipart/form-data">
+                                @csrf
+
+                                {{-- Portfolio Name --}}
+                                <div class="row mb-3">
+                                    <label for="portfolio_name" class="col-sm-2 col-form-label">Portfolio Name</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text" value="{{ old('portfolio_name') }}" id="portfolio_name" name="portfolio_name">
+                                        @error('portfolio_name')
+                                        <div class="text-danger mt-2">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                {{-- Portfolio Title --}}
+                                <div class="row mb-3">
+                                    <label for="portfolio_title" class="col-sm-2 col-form-label">Portfolio Title</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text" value="{{ old('portfolio_title') }}" id="portfolio_title" name="portfolio_title">
+                                        @error('portfolio_title')
+                                        <div class="text-danger mt-2">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                {{-- Long Description --}}
+                                <div class="row mb-3">
+                                    <label for="portfolio_description" class="col-sm-2 col-form-label">Long Description</label>
+                                    <div class="col-sm-10">
+                                        <textarea id="elm1" name="portfolio_description">{{ old('portfolio_description') }}</textarea>
+                                        @error('portfolio_description')
+                                        <div class="text-danger mt-2">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                {{-- Portfolio Image Button --}}
+                                <div class="row mb-3">
+                                    <label for="portfolio_image_button" class="col-sm-2 col-form-label">Portfolio Image</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="file" id="portfolio_image_button" name="portfolio_image_button">
+                                        @error('portfolio_image_button')
+                                        <div class="text-danger mt-2">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                {{-- Image Showing --}}
+                                <div class="row mb-3">
+                                    <label for="portfolio_slider_image" class="col-sm-2 col-form-label"></label>
+                                    <div class="col-sm-10">
+                                        <img
+                                            id="portfolio_slider_image"
+                                            class="rounded avatar-lg"
+                                            style="width: 200px; height: 200px;"
+                                            alt="300x300" data-holder-rendered="true"
+                                            src="{{ old('portfolio_image_button') ? asset('upload/portfolio/' . old('portfolio_image_button')) : asset('upload/no_image.jpg') }}">
+                                    </div>
+                                </div>
+
+                                {{-- Submit Button --}}
+                                <div class="mb-2 mt-4 d-flex justify-content-center">
+                                    <button type="submit" class="btn btn-info btn-rounded waves-effect waves-light"><i class="fas fa-edit"></i>Add Portfolio</button>
+                                </div>
+
+                            </form>
+
+
+                        </div>
+                    </div>
+                </div> <!-- end col -->
+            </div>
+        </div>
+    </div>
+
+    <!-- For Showing Image When Select Choose Button -->
+    <script>
+        $(document).ready(function () {
+            $('#portfolio_image_button').on('change', function (e) {
+                // Get the selected file
+                var file = e.target.files[0];
+
+                // Check if a file was selected
+                if (file) {
+                    var reader = new FileReader();
+
+                    // Set the src of the image when the file is loaded
+                    reader.onload = function (e) {
+                        $('#portfolio_slider_image').attr('src', e.target.result);
+                    };
+
+                    // Read the file as a data URL
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+    </script>
+@endsection
+
+ 
+ 
+6.now after click 'add portfolio' data need to store into databases
+Route::controller(PortfolioController::class)->group(function(){
+   Route::get('/store/portfolio', 'StorePortfolio')->name('store.portfolio');
+});
+
+
+--------------3. Backend Portfolio Page Setup Part 3(Storing Portfolio Data into database)-------------------------
+7.create method in controller
+	public function StorePortfolio(Request $request){
+        //return $request->all();
+        // Validation rules
+        $validatedData = $request->validate([
+            'portfolio_name' => 'required|string|max:255',
+            'portfolio_title' => 'required|string|max:255',
+            'portfolio_description' => 'required|string',
+            'portfolio_image_button' => 'required|image|mimes:jpg,jpeg,png|max:2048', //must be an image
+        ]);
+
+        try {
+            // Check image is selected or not
+            if ($request->hasFile('portfolio_image_button')) {
+                //if selected than recive the image
+                $recive_file = $request->file('portfolio_image_button');
+
+                // create image manager with desired driver
+                $manager = new ImageManager(new Driver());
+
+                // read image from file system
+                $image = $manager->read($request->file('portfolio_image_button'));
+
+                // resize image proportionally to 300px width
+                $image->scale(1020,519);
+
+
+                //make file name unique
+                //$fileName = time() . '_' . $recive_file->getClientOriginalName();
+                //here Hmsi_microsecond_imageExtention
+                $timestamp = date('YmdHis'); // Get the current date and time (Year, Month, Day, Hour, Minute, Second)
+                $milliseconds = sprintf('%05d', (int)(microtime(true) * 1000) % 1000); // Get the milliseconds
+                $fileName = $timestamp . '_' . $milliseconds . '_' . $recive_file->getClientOriginalName();
+
+
+                // Define the destination path for the uploaded file
+                //make destination path where will file storing
+                //$destinationPath = public_path('upload/home_slide');
+                $relativePath = 'upload/portfolio';
+                $destinationPath = public_path('upload/portfolio');
+
+                // Create the directory if it doesn't exist
+                if (!file_exists($destinationPath)) {
+                    mkdir($destinationPath, 0777, true);
+                }
+
+
+                // Move the file to the destination path
+                $image->save($destinationPath . DIRECTORY_SEPARATOR . $fileName);
+
+                //store file name in database
+                //give in later
+
+            } else {
+                $notification = array(
+                    'message' => 'No Image Selected',
+                    'alert-type' => 'error'
+                );
+                return redirect()->back()->withErrors($notification);
+            }
+
+            //return $request->all();
+            Portfolio::create([
+               'portfolio_name'=>$request->portfolio_name,
+               'portfolio_title'=>$request->portfolio_title,
+               'portfolio_description'=>$request->portfolio_description,
+               'portfolio_image'=>$relativePath.'/'.$fileName,
+                'created_at'=>Carbon::now()
+            ]);
+
+            $notification = array(
+                'message' => 'Portfolio Data Updated Successfully',
+                'alert-type' => 'success'
+            );
+
+
+            return redirect()->back()->with($notification);
+
+        } catch (Exception $e) {
+            // Log the error
+            Log::error('Error updating user profile: ' . $e->getMessage());
+
+            // Redirect with error message
+            return redirect()->back()->withErrors('Something went wrong. Please try again later.');
+        }
+
+
+
+    }
+
+
+-------------------------------------4.1 Backend Portfolio Page Setup Part 4(Edit & Update in portfolio)----------------------------
+1.create route for edit/update
+Route::controller(PortfolioController::class)->group(function(){
+   Route::post('/edit/portfolio/{id}','EditPortfolio')->name('edit.portfolio');
+   Route::post('/update/portfolio','UpdatePortfolio')->name('update.portfolio');
+});
+
+2.change in 
+ <tbody>
+	@php($i=1)
+	@foreach($allPortfolio as $singlePortfolio)
+		<tr>
+			<td>{{$i++}}</td>
+			<td>{{$singlePortfolio->portfolio_name}}</td>
+			<td>{{$singlePortfolio->portfolio_title}}</td>
+			<td><img src="{{asset($singlePortfolio->portfolio_image)}}" width="60px" height="50px"></td>
+			<td>
+				<a href="{{route('edit.portfolio',$singlePortfolio->id)}}" class="btn btn-info sm"><i class="fas fa-edit"></i></a>
+
+				<a href="{{route('delete.portfolio',$singlePortfolio->id)}}" class="btn btn-danger delete sm"><i class="fas fa-trash-alt"></i></a>
+			</td>
+		</tr>
+	@endforeach
+</tbody>
+
+
+3.now create method in controller  & make view
+php artisan make:view admin.portfolio.portfolio_edit
+
+
+	public function EditPortfolio($id){
+        $portfolio_data=Portfolio::find($id);
+       // return $portfolio_data;
+        if($portfolio_data){
+            return view('admin.portfolio.portfolio_edit',['portfolio_data'=>$portfolio_data]);
+        }else{
+            return redirect()->back()->withErrors('Data Not Available');
+        }
+    }
+	
+
+4.now code for view dmin.portfolio.portfolio_edit.blade.php
+
+@extends('admin.admin_master')
+@section('admin')
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <div class="page-content">
+        <div class="container-fluid">
+            {{--<div class="row justify-content-center">--}}
+            <div class="row">
+                <div class="col-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Portfolio Page</h4><br><br>
+                            <!-- multipart/form-data is necessary when your form includes file inputs.
+                            It ensures that the file data and other form fields are sent as separate parts in the HTTP request.-->
+                            <form method="POST" action="{{ route('update.portfolio') }}" enctype="multipart/form-data">
+                                @csrf
+
+                                <input type="hidden" name="id" value="{{$portfolio_data->id}}">
+
+                                {{-- Portfolio Name --}}
+                                <div class="row mb-3">
+                                    <label for="portfolio_name" class="col-sm-2 col-form-label">Portfolio Name</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text" value="{{$portfolio_data->portfolio_name}}" id="portfolio_name" name="portfolio_name">
+                                        @error('portfolio_name')
+                                        <div class="text-danger mt-2">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                {{-- Portfolio Title --}}
+                                <div class="row mb-3">
+                                    <label for="portfolio_title" class="col-sm-2 col-form-label">Portfolio Title</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text" value="{{ $portfolio_data->portfolio_title }}" id="portfolio_title" name="portfolio_title">
+                                        @error('portfolio_title')
+                                        <div class="text-danger mt-2">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                {{-- Long Description --}}
+                                <div class="row mb-3">
+                                    <label for="portfolio_description" class="col-sm-2 col-form-label">Long Description</label>
+                                    <div class="col-sm-10">
+                                        <textarea id="elm1" name="portfolio_description">{{ $portfolio_data->portfolio_description }}</textarea>
+                                        @error('portfolio_description')
+                                        <div class="text-danger mt-2">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                {{-- Portfolio Image Button --}}
+                                <div class="row mb-3">
+                                    <label for="portfolio_image_button" class="col-sm-2 col-form-label">Portfolio Image</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="file" id="portfolio_image_button" name="portfolio_image_button">
+                                        @error('portfolio_image_button')
+                                        <div class="text-danger mt-2">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                {{-- Image Showing --}}
+                                <div class="row mb-3">
+                                    <label for="portfolio_slider_image" class="col-sm-2 col-form-label"></label>
+                                    <div class="col-sm-10">
+                                        <img
+                                            id="portfolio_slider_image"
+                                            class="rounded avatar-lg"
+                                            style="width: 200px; height: 200px;"
+                                            alt="300x300" data-holder-rendered="true"
+                                            src="{{ empty($portfolio_data->portfolio_image) ? url('upload/no_image.jpg') : asset($portfolio_data->portfolio_image) }}">
+                                    </div>
+                                </div>
+
+                                {{-- Submit Button --}}
+                                <div class="mb-2 mt-4 d-flex justify-content-center">
+                                    <button type="submit" class="btn btn-info btn-rounded waves-effect waves-light"><i class="fas fa-edit"></i>Update Portfolio</button>
+                                </div>
+
+                            </form>
+
+
+                        </div>
+                    </div>
+                </div> <!-- end col -->
+            </div>
+        </div>
+    </div>
+
+    <!-- For Showing Image When Select Choose Button -->
+    <script>
+        $(document).ready(function () {
+            $('#portfolio_image_button').on('change', function (e) {
+                // Get the selected file
+                var file = e.target.files[0];
+
+                // Check if a file was selected
+                if (file) {
+                    var reader = new FileReader();
+
+                    // Set the src of the image when the file is loaded
+                    reader.onload = function (e) {
+                        $('#portfolio_slider_image').attr('src', e.target.result);
+                    };
+
+                    // Read the file as a data URL
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+    </script>
+@endsection
+
+
+5.now when click in 'update portfolio' than store into database
+	public function UpdatePortfolio(Request $request){
+        $validatedData = $request->validate([
+            'portfolio_name' => 'required|string|max:255',
+            'portfolio_title' => 'required|string|max:255',
+            'portfolio_description' => 'required|string',
+            'portfolio_image_button' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', //must be an image
+        ]);
+
+        $portfolio_retrive_id=$request->id;
+        $portfolio_data=Portfolio::find($portfolio_retrive_id);
+        if ($portfolio_data) {
+            //store data into database/update into databasae
+            $portfolio_data->portfolio_name = $request->portfolio_name;
+            $portfolio_data->portfolio_title = $request->portfolio_title;
+            $portfolio_data->portfolio_description = $request->portfolio_description;
+
+            try {
+                // Check image is selected or not
+                if ($request->hasFile('portfolio_image_button')) {
+
+                    // If the old image exists, delete it first
+                    if ($portfolio_data->portfolio_image && file_exists(public_path($portfolio_data->portfolio_image))) {
+                        unlink(public_path($portfolio_data->portfolio_image));
+                    }
+
+                    //if selected than recive the image
+                    $recive_file = $request->file('portfolio_image_button');
+
+                    // create image manager with desired driver
+                    $manager = new ImageManager(new Driver());
+
+                    // read image from file system
+                    $image = $manager->read($request->file('portfolio_image_button'));
+
+                    // resize image proportionally to 300px width
+                    $image->scale(1020,519);
+
+
+                    //make file name unique
+                    //$fileName = time() . '_' . $recive_file->getClientOriginalName();
+                    //here Hmsi_microsecond_imageExtention
+                    $timestamp = date('YmdHis'); // Get the current date and time (Year, Month, Day, Hour, Minute, Second)
+                    $milliseconds = sprintf('%05d', (int)(microtime(true) * 1000) % 1000); // Get the milliseconds
+                    $fileName = $timestamp . '_' . $milliseconds . '_' . $recive_file->getClientOriginalName();
+
+
+                    // Define the destination path for the uploaded file
+                    //make destination path where will file storing
+                    //$destinationPath = public_path('upload/home_slide');
+                    $relativePath = 'upload/portfolio';
+                    $destinationPath = public_path('upload/portfolio');
+
+                    // Create the directory if it doesn't exist
+                    if (!file_exists($destinationPath)) {
+                        mkdir($destinationPath, 0777, true);
+                    }
+
+
+                    // Move the file to the destination path
+                    $image->save($destinationPath . DIRECTORY_SEPARATOR . $fileName);
+
+                    //store file name in database
+                    $portfolio_data['portfolio_image'] = $relativePath . '/' . $fileName;
+
+                    //feedback message
+                    $notification = array(
+                        'message' => 'Portfolio Page Updated with Image Successfully',
+                        'alert-type' => 'info'
+                    );
+                } else {
+                    $notification = array(
+                        'message' => 'Portfolio Page Updated without Image Successfully',
+                        'alert-type' => 'info'
+                    );
+                }
+                //return $store_data;
+                $portfolio_data->save();
+
+               //return back()->with($notification);
+                return redirect()->route('all.portfolio')->with($notification);
+
+            } catch (Exception $e) {
+                // Log the error
+                Log::error('Error updating Portfolio: ' . $e->getMessage());
+
+                // Redirect with error message
+                return redirect()->back()->withErrors('Something went wrong. Please try again later.');
+            }
+
+        } else {
+            return back()->with([
+                'message' => 'Database is empty please insert first data from admin',
+                'alert-type' => 'info',
+            ]);
+        }
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+---------------------------------5. Backend Portfolio Page Setup Part 5-------------------------------------------
+0. Reminder For showing Sweetalert you need to give id 'delete' (For details information see text file 6.1 sweetalert delete.txt)
+<a href="{{route('delete.portfolio',$singlePortfolio->id)}}" class="btn btn-danger delete sm"><i class="fas fa-trash-alt"></i></a>
+
+
+1.create route for delete
+Route::controller(PortfolioController::class)->group(function(){
+   Route::get('/delete/portfolio/{id}','DeletePortfolio')->name('delete.portfolio');
+});
+
+2.now work  in controller for delete from database
+
+public function DeletePortfolio($id) {
+    // Find the portfolio data by its ID
+    $portfolio_data = Portfolio::find($id);
+    
+    // Check if the portfolio exists
+    if ($portfolio_data) {
+        // Get the image path of the portfolio
+        $image_path = $portfolio_data->portfolio_image;
+
+        // Check if the image exists in the specified path and is a valid file
+        if ($image_path && file_exists(public_path($image_path))) {
+            // If the image exists, delete it from the public directory
+            unlink(public_path($image_path));
+            
+            // Delete the portfolio record from the database
+            $portfolio_data->delete();
+            
+            // Prepare success notification message when image and data are deleted
+            $notifications = [
+                'message' => 'Image With Data Deleted Successfully',
+                'alert-type' => 'success', // Alert type success for positive feedback
+            ];
+        } else {
+            // If image does not exist, just delete the data
+            $portfolio_data->delete();
+            
+            // Prepare success notification message when only data is deleted (no image found)
+            $notifications = [
+                'message' => 'Data Deleted Successfully(Image Not Found)',
+                'alert-type' => 'success', // Alert type success for positive feedback
+            ];
+        }
+
+        // Redirect back to the previous page with the success notification
+        return redirect()->back()->with($notifications);
+    } else {
+        // If no portfolio is found for the given ID, prepare error notification
+        return redirect()->back()->withErrors(
+            [
+                'message' => 'This Id have no data', // Error message if ID is not found
+                'alert-type' => 'error' // Alert type error for negative feedback
+            ]
+        );
+    }
+}
+
+
+
+
