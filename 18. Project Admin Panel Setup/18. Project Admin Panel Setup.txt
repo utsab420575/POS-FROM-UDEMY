@@ -257,7 +257,7 @@ Route::post('/admin/profile/store', [AdminController::class, 'AdminProfileStore'
 
 
 
--------------------------13. Display Login and Logout Message in Toster-----------------
+-------------------------12. Adding Toster In For View Message-----------------
 এখানে আমরা ডাটা আপডেট হলে Toast message show করাব।
 
 1.toasr link in admin_dashboard.blade
@@ -302,6 +302,51 @@ Route::post('/admin/profile/store', [AdminController::class, 'AdminProfileStore'
         return redirect()->back()->with($notification);
 
 4.header এ যে লগইন করছে তার নাম দেখাব ডাটাবেস থেকে।(commit এ গিয়ে দেখ)
+
+
+
+
+
+
+
+
+
+
+
+--------------------------------13. Display Login and Logout Message in Toster-----------------------------
+1.logout করলে toast message show হবে।
+
+	Route::get('admin/logout',[AdminController::class,'AdminDestroy'])->name('admin.logout');
+	public function AdminDestroy(Request $request): RedirectResponse
+    {
+        $notification = array(
+             'message' => 'Admin Logout Successfully',
+             'alert-type' => 'info'
+         );
+        //redirect to login page after logout
+        return redirect('/logout-success')->with('$notification');
+    }
+	
+2.admin.logout page এ যেহেতু toastr script নাই সেগুলো add করতে হবে।
+
+
+3.এরপর লগইন করলে toast দেখাব।(AuthenticatedSessionController এ মেসেজ পাঠাব)
+	public function store(LoginRequest $request): RedirectResponse
+    {
+        $request->authenticate();
+
+        $request->session()->regenerate();
+
+
+       $notification = array(
+           'message' => 'Admin Login Successfully',
+           'alert-type' => 'info'
+       );
+
+        return redirect()->intended(route('dashboard', absolute: false))->with($notification);
+    }
+
+
 
 
 	
