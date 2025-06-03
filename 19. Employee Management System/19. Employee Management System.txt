@@ -186,6 +186,38 @@ Route::post('/update/employee','UpdateEmployee')->name('employee.update');
 				@csrf
 
 				<input type="hidden" name="id" value="{{ $employee->id }}">
+				
+				
+
+
+
+
+--------------------------------10. Employee Management Part 9----------------------------------
+এখন ডিলিট এর কাজ করব:
+
+1.route create
+Route::get('/delete/employee/{id}','DeleteEmployee')->name('delete.employee');
+
+
+2.controller create; এখানে ডাটাবেস থেকে রেকর্ডটি ডিলিট করা হবে।
+public function DeleteEmployee($id){}
+
+
+3.all_employee.blade.php file এ ডিলিট বাটন এ লিংক হিসেবে আইডি দিয়ে দিব।
+<a href="{{route('delete.employee',$item->id)}}" id="delete" class="btn btn-danger rounded-pill waves-effect waves-light">Delete</a>
+
+
+
+4.sweetalert এর জন্য কাজ করব।
+ backend->assets->js->code.js file বানাব(এখানে sweetalert এর কোড কপি করব।)
+
+ admin_dashboard.blade.php file এ script add করব। 
+ 
+ 
+ 
+ 
+
+
 
 
 		
