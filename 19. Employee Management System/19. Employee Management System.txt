@@ -1,0 +1,32 @@
+*****************************************19. Employee Management System*************************
+----------------------1. Employee Management Part 1-------------------------
+এখানে Employee Table migration এর মাধ্যমে ডাটাবেসে টেবিল তৈরি করব:
+
+1.migration
+php artisan make:migration create_employees_table
+
+2.migration complete
+	public function up(): void
+    {
+        Schema::create('employees', function (Blueprint $table) {
+           
+        });
+    }
+3.model create
+php artisan make:model Employee
+
+class Employee extends Model
+{
+    use HasFactory;
+    //this is for fillable all column in Employee Table
+	//or use fillable and use all column name
+    protected $guarded = [];
+}
+
+
+4.controller make
+$ php artisan make:controller EmployeeController
+
+
+
+5.sidebar এ পরিবর্তন করেছি(All Employee ,Add Employee)
