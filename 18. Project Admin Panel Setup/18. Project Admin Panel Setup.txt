@@ -236,6 +236,20 @@ dynamically  database থেকে ডাটা আসবে।
 2.script file add হয়েছে।
 
 
+----------------------------11. Admin Profile & Image Update Part 4------------------
+এখানে admin এর ডাটা গুলো ডাটাবেসে স্টোর করব।(commit এ দেখ।)
+
+1.route বানাব:
+Route::post('/admin/profile/store', [AdminController::class, 'AdminProfileStore'])->name('admin.profile.store');
+2.controller বানাব:
+ public function AdminProfileStore(Request $request){}
+ 
+3.admin_profile_view.blade file থেকে ডাটা গুলো যাবে এজন্য form নিব ও route দিব।
+					<form method="POSt" action="{{route('admin.profile.store')}}" enctype="multipart/form-data">
+                        @csrf
+
+
+
 
 
 
