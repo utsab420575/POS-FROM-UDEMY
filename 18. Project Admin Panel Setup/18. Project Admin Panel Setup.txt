@@ -384,13 +384,33 @@ Route::get('/change/password', [AdminController::class, 'ChangePassword'])->name
 
 
 4.header এ change password এর option দিয়ে দিব।
-					<!-- item-->
-                    <a href="{{route('change.password')}}" class="dropdown-item notify-item">
-                        <i class="fe-lock"></i>
-                        <span>Change Password</span>
-                    </a>
+	<!-- item-->
+	<a href="{{route('change.password')}}" class="dropdown-item notify-item">
+		<i class="fe-lock"></i>
+		<span>Change Password</span>
+	</a>
 
 
+
+
+---------------------------16. Admin Profile Change Password Part 2---------------------
+এখানে আমরা password database এ ঢুকাব
+Typical Form Inputs Expected(পূর্বের ফরম এ input field এর name এভাবে দিব:):
+old_password
+
+new_password
+
+new_password_confirmation
+
+1.save button এ প্রেস করলে ডাটা প্রসেসিং এর জন্য controller এ পাঠাব:
+Route::post('/update/password', [AdminController::class, 'UpdatePassword'])->name('update.password');
+
+
+2.controller এ validation এবং ডাটা সেভ হবে ডাটাবেসে।
+ public function UpdatePassword(Request $request){}
+ 
+3.change_password blade এ url পরিবর্তন করব
+<form method="post" action="{{ route('update.password') }}">
 
 
 
