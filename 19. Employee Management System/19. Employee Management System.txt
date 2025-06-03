@@ -139,6 +139,12 @@ Route::post('/store/employee','StoreEmployee')->name('employee.store');
 
 
 
+---------------------------7. Employee Management Part 6.mp4----------------------------
+এখানে add_employee.blade.php এর জন্য validation করা হয়েছে।
+  blade ও controller এ।
+ 
+
+
 
 		
 		
