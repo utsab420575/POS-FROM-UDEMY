@@ -63,3 +63,19 @@ php artisan migrate
 	<li>
 		<a href="{{route('all.employee')}}">All Employee</a>
 	</li>
+	
+	
+	
+
+
+----------------------------------3. Employee Management Part 3------------------------------
+1.here we showing all employee in all_employee.blade.php 
+
+2.insert some demo database
+INSERT INTO employees (name, email, phone, address, experience, image, salary, vacation, city, created_at, updated_at) VALUES
+('Utsab Roy', 'utsab@example.com', '01712345678', 'Dhaka, Bangladesh', '3 years', 'utsab.jpg', '40000', '10', 'Dhaka', NOW(), NOW()),
+('Tanvir Hossain', 'tanvir@example.com', '01812345678', 'Chittagong, Bangladesh', '2 years', 'tanvir.jpg', '35000', '8', 'Chittagong', NOW(), NOW()),
+('Rahim Uddin', 'rahim@example.com', '01912345678', 'Khulna, Bangladesh', NULL, 'rahim.jpg', NULL, '5', 'Khulna', NOW(), NOW());
+
+
+
