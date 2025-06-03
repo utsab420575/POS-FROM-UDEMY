@@ -236,6 +236,8 @@ dynamically  database থেকে ডাটা আসবে।
 2.script file add হয়েছে।
 
 
+
+
 ----------------------------11. Admin Profile & Image Update Part 4------------------
 এখানে admin এর ডাটা গুলো ডাটাবেসে স্টোর করব।(commit এ দেখ।)
 
@@ -252,6 +254,54 @@ Route::post('/admin/profile/store', [AdminController::class, 'AdminProfileStore'
 
 
 
+
+
+
+-------------------------13. Display Login and Logout Message in Toster-----------------
+এখানে আমরা ডাটা আপডেট হলে Toast message show করাব।
+
+1.toasr link in admin_dashboard.blade
+<!-- Toastr -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" >
+
+2.toasr link in admin_dashboard.blade
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<script>
+    @if(Session::has('message'))
+    var type = "{{ Session::get('alert-type','info') }}"
+    switch(type){
+        case 'info':
+            toastr.info(" {{ Session::get('message') }} ");
+            break;
+
+        case 'success':
+            toastr.success(" {{ Session::get('message') }} ");
+            break;
+
+        case 'warning':
+            toastr.warning(" {{ Session::get('message') }} ");
+            break;
+
+        case 'error':
+            toastr.error(" {{ Session::get('message') }} ");
+            break;
+    }
+    @endif
+</script>
+
+3.AdminController এ toastr show করাব:
+
+		return redirect()->back();
+			$notification = array(
+				'message' => 'Admin Profile Updated Successfully',
+				'alert-type' => 'success'
+			);
+
+        return redirect()->back()->with($notification);
+
+4.header এ যে লগইন করছে তার নাম দেখাব ডাটাবেস থেকে।(commit এ গিয়ে দেখ)
 
 
 	
