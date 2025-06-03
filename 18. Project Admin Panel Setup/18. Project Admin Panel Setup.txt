@@ -348,9 +348,47 @@ Route::post('/admin/profile/store', [AdminController::class, 'AdminProfileStore'
 
 
 
+---------------------------14. How to Display Login Credentials Message-----------------
 
+1.login.blade এ email , password ভুল দিলে error message show করাব।
+
+						@if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul class="mb-0">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
+
+
+
+
+
+
+
+
+
+-----------------------15. Admin Profile Change Password Part 1-------------------------
+1.route বানাব change password এর জন্য
+Route::get('/change/password', [AdminController::class, 'ChangePassword'])->name('change.password');
+
+2.controller থেকে chage password blade view করাব
+	public function ChangePassword(){More actions
+        return view('admin.change_password');
+    }// End Method 
 	
-	
+3.view টি বানাব
+
+
+4.header এ change password এর option দিয়ে দিব।
+					<!-- item-->
+                    <a href="{{route('change.password')}}" class="dropdown-item notify-item">
+                        <i class="fe-lock"></i>
+                        <span>Change Password</span>
+                    </a>
 
 
 
