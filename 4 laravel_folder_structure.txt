@@ -1,0 +1,108 @@
+
+Laravel Folder Structure - Responsibilities and Commands
+========================================================
+
+1. app/
+---------
+Core application logic.
+
+a) app/Models/
+   - Represents database tables
+   - Defines relationships
+   - Business logic
+   Command: php artisan make:model ModelName
+
+b) app/Http/Controllers/
+   - Handles HTTP requests
+   - Connects models and views
+   Command: php artisan make:controller ControllerName
+
+c) app/Exceptions/
+   - Handles custom exception logic
+   - Modify render/report logic
+
+d) app/Mail/
+   - Mailables for sending emails
+   - Uses views or Markdown templates
+   Command: php artisan make:mail MailClass
+
+e) app/Rules/
+   - Custom validation rules
+   Command: php artisan make:rule RuleName
+
+f) app/Jobs/
+   - Background/queued jobs
+   Command: php artisan make:job JobName
+
+g) app/Console/
+   - Custom Artisan commands
+   - Task scheduling
+   Command: php artisan make:command CommandName
+
+h) app/Policies/
+   - Authorization logic
+   Command: php artisan make:policy PolicyName
+
+i) app/Providers/
+   - Service bootstrapping
+   - Register bindings/listeners/macros
+
+2. routes/
+----------
+- web.php    : Routes for web (with sessions, CSRF)
+- api.php    : Stateless API routes
+- console.php: Artisan CLI commands
+- channels.php: Broadcast channels
+
+3. resources/
+--------------
+- views/     : Blade templates
+- lang/      : Language files
+- js/, css/  : Frontend assets
+
+4. database/
+-------------
+- migrations/: Table structure
+- seeders/   : Insert sample data
+- factories/ : Generate fake/test data
+Commands:
+php artisan make:migration create_table
+php artisan make:seeder SeederName
+php artisan make:factory FactoryName
+
+5. config/
+----------
+- Application settings (app.php, database.php, etc.)
+
+6. public/
+----------
+- Entry point (index.php)
+- Accessible assets (images, CSS, JS)
+
+7. storage/
+------------
+- Logs, cache, uploads
+Command: php artisan storage:link
+
+8. tests/
+----------
+- Unit and feature tests
+Command: php artisan make:test TestName
+Run tests: php artisan test
+
+9. bootstrap/
+--------------
+- Framework bootstrapping
+- Contains app.php and cache files
+
+10. vendor/
+------------
+- Composer-installed packages (do not edit)
+
+Recommended Learning Order:
+---------------------------
+1. Models, Controllers, Views
+2. Routes, Migrations, Seeders
+3. Validation, Mail, Jobs
+4. Policies, Middleware
+5. Queues, Events, Listeners, Service Providers, Testing

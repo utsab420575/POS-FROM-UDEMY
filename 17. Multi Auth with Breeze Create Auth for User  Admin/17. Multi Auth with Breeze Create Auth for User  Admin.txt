@@ -1,0 +1,242 @@
+********************************Breeze install(video1-3)***********************
+
+//Breeze Install
+
+//go to this link(no need)
+//https://laravel.com/docs/11.x/starter-kits#laravel-breeze
+
+//step1
+composer require laravel/breeze --dev
+
+//step2
+php artisan breeze:install
+
+
+
+blade → ✔️ great for traditional apps
+
+yes to dark mode → ✔️ nice UX feature
+
+PHPUnit → ✔️ standard and robust testing
+
+
+
+//step3 install nodejs if not installed in your computer(for one time in pc)
+https://nodejs.org/en
+
+//step4
+npm install && npm run dev
+
+(press enter or ctrl+c after executing)
+
+//step5
+connect with database in .env file
+
+//step6
+php artisan migrate
+
+//step7(From Here we can get home page and get redimate login,logout and register page)
+http://127.0.0.1:8000/
+
+
+
+---------------------------------after install breeze-----------------------------
+in web.php
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+
+in view->auth folder
+confirm-password.blade.php
+forgot-password.blade.php
+----etc. created
+
+
+
+all work of auth:
+resource->route->auth.php
+
+---------------------------------change in users table-----------------------------
+
+//add phone,photo in users table
+  public function up(): void
+    {
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('phone')->nullable();
+            $table->string('photo')->nullable();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->rememberToken();
+            $table->timestamps();
+        });
+		
+		
+
+//add phoneno,photo in User model
+ protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'photo',
+        'phone'
+    ];
+
+//migration done
+php artisan migrate
+
+
+
+-----------------------------4. Login With Name Email Phone Part 1---------------------
+এখানে Register blade কে পরিবর্তন করব(নতুন ফিল্ড ফোন নাম্বার add করব,controller এ ডাটা রিসিভ করব,ডাটাবেস এ স্টোর করব।):
+//1.add phone field in register blade(resource->views->auth->register.blade.php)
+
+		<!-- Phone Number -->
+        <div class="mt-4">
+            <x-input-label for="phone" :value="__('Phone')" />
+            <x-text-input id="phone" class="block mt-1 w-full" type="tel" name="phone" :value="old('phone')" required autocomplete="tel" />
+            <x-input-error :messages="$errors->get('phone')" class="mt-2" />
+        </div>
+
+
+//2.change in App->Http->Controller->Auth->RegisteredUserController
+
+  public function store(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'phone' => [
+                'required',
+                'unique:users,phone',
+                'regex:/^(\+8801|8801|01)[0-9]{9}$/'
+            ],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'password' => Hash::make($request->password),
+        ]);
+
+
+
+
+----------------------------------5. Login With Name Email Phone Part 2---------------------------------------
+এখানে login blade কে পরিবর্তন করব(email কে login বানাব এখানে যে ইনপুট দিব তা  controller এ পাঠাব এবং email/phone এবং password match করলে Login করতে পারবে।):
+//go to resource->views->auth->login.blade.php
+		<!-- Email  Address -->
+        <div>
+            <x-input-label for="email" :value="__('Email')" />
+            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        </div>
+		
+		//change to(Email and phone)
+		 <!-- Email  Address -->
+        <div>
+            <x-input-label for="login" :value="__('Email or Phone')" />
+            <x-text-input id="login" class="block mt-1 w-full" type="text" name="login" :value="old('login')" required autofocus autocomplete="username" />
+            <x-input-error :messages="$errors->get('login')" class="mt-2" />
+        </div>
+
+
+//now we need to recive email or phoneno
+//in login blade data send to this route
+<form method="POST" action="{{ route('login') }}">
+
+//for find this route go to resource->route->auth.php
+Route::post('login', [AuthenticatedSessionController::class, 'store']);
+
+//than, go to app->Http->Controller->Auth->AuthenticatedSessionController and click  $request->authenticate();
+	public function store(LoginRequest $request): RedirectResponse
+    {
+        $request->authenticate();//now click here
+
+        $request->session()->regenerate();
+
+        return redirect()->intended(route('dashboard', absolute: false));
+    }
+
+//in app->Http->Request->LoginRequest->
+//from $request->authenticate(); go to LoginRequest and change in rules() method and authenticate() method
+
+	public function rules(): array
+    {
+        //this is for login form validation; login must be filled with string and can't empty
+        return [
+            'login' => ['required', 'string'],
+            'password' => ['required', 'string'],
+        ];
+    }
+	
+	
+	public function authenticate(): void
+    {
+        $this->ensureIsNotRateLimited();
+
+        //recive email or phone number
+        $user=User::where('email',$this->login)
+                    ->orWhere('phone',$this->login)
+                    ->first();
+        if (!$user || !Hash::check($this->password,$user->password)) {
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'login' => trans('auth.failed'),
+            ]);
+        }
+
+        /*
+        Auth::login($user)
+        This logs in the given $user object.
+        Laravel stores the user ID in the session, so they are considered "authenticated."
+
+        $this->boolean('remember')
+        If remember is true, Laravel will create a long-term remember token (cookie) to keep the user logged in even after closing the browser.*/
+
+        Auth::login($user,$this->boolean('remember'));
+        RateLimiter::clear($this->throttleKey());
+    }
+	
+	
+
+
+
+$ php artisan route:list
+
+  GET|HEAD  / ................................................................................................ 
+  GET|HEAD  confirm-password ...................... password.confirm › Auth\ConfirmablePasswordController@show 
+  POST      confirm-password ........................................ Auth\ConfirmablePasswordController@store 
+  GET|HEAD  dashboard .............................................................................. dashboard 
+  POST      email/verification-notification verification.send › Auth\EmailVerificationNotificationController@… 
+  GET|HEAD  forgot-password ....................... password.request › Auth\PasswordResetLinkController@create 
+  POST      forgot-password .......................... password.email › Auth\PasswordResetLinkController@store 
+  GET|HEAD  login ......................................... login › Auth\AuthenticatedSessionController@create 
+  POST      login .................................................. Auth\AuthenticatedSessionController@store 
+  POST      logout ...................................... logout › Auth\AuthenticatedSessionController@destroy 
+  PUT       password ........................................ password.update › Auth\PasswordController@update  
+  GET|HEAD  profile .................................................... profile.edit › ProfileController@edit  
+  PATCH     profile ................................................ profile.update › ProfileController@update  
+  DELETE    profile .............................................. profile.destroy › ProfileController@destroy  
+  GET|HEAD  register ......................................... register › Auth\RegisteredUserController@create
+  POST      register ..................................................... Auth\RegisteredUserController@store
+  POST      reset-password ................................. password.store › Auth\NewPasswordController@store
+  GET|HEAD  reset-password/{token} ........................ password.reset › Auth\NewPasswordController@create
+  GET|HEAD  storage/{path} ..................................................................... storage.local
+  GET|HEAD  up ...............................................................................................
+  GET|HEAD  verify-email ........................ verification.notice › Auth\EmailVerificationPromptController
+  GET|HEAD  verify-email/{id}/{hash} ........................ verification.verify › Auth\VerifyEmailController
+

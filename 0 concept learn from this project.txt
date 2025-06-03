@@ -1,0 +1,55 @@
+--------------------install project---------------------------
+1.download composer(if not installed)
+check composer and php
+
+php -v
+composer -V
+https://getcomposer.org/download/
+
+
+2.create project 
+composer create-project laravel/laravel my-project
+
+
+------------------------------Breeze Install----------------------------
+---------Breeze install(video1-3)----------------
+
+//Breeze Install
+
+//go to this link(no need)
+//https://laravel.com/docs/11.x/starter-kits#laravel-breeze
+
+//step1
+composer require laravel/breeze --dev
+
+//step2
+php artisan breeze:install
+
+
+
+blade → ✔️ great for traditional apps
+
+yes to dark mode → ✔️ nice UX feature
+
+PHPUnit → ✔️ standard and robust testing
+
+
+
+//step3 install nodejs if not installed in your computer(for one time in pc)
+https://nodejs.org/en
+
+//step4
+npm install && npm run dev
+
+(press enter or ctrl+c after executing)
+
+//step5
+connect with database in .env file
+
+//step6
+php artisan migrate
+
+//step7(From Here we can get home page and get redimate login,logout and register page)
+http://127.0.0.1:8000/
+
+

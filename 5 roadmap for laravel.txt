@@ -1,0 +1,104 @@
+===============================
+  LARAVEL LEARNING ROADMAP
+===============================
+
+PHASE 1: Project Setup & Basics
+-------------------------------
+$ composer create-project laravel/laravel blog
+$ cd blog
+$ php artisan serve
+
+// Environment setup
+- Edit `.env` file (DB, Mail, App URL)
+$ php artisan config:cache
+$ php artisan key:generate
+
+PHASE 2: Routing & Controllers
+-------------------------------
+$ php artisan make:controller PostController
+// Define routes
+- routes/web.php → Route::get(), Route::post(), etc.
+- Resource routes: Route::resource('posts', PostController::class);
+
+PHASE 3: Blade Templating
+-------------------------------
+- Use Blade syntax: @if, @foreach, @extends, @include
+- Layouts and partials in /resources/views
+- Example file: resources/views/posts/index.blade.php
+
+PHASE 4: Models & Database
+-------------------------------
+$ php artisan make:model Post -m
+$ php artisan migrate
+$ php artisan db:seed
+$ php artisan tinker
+
+// Eloquent:
+- Relationships: hasOne, hasMany, belongsTo, belongsToMany
+- Accessors & Mutators
+
+PHASE 5: CRUD Operations
+-------------------------------
+$ php artisan make:request StorePostRequest
+- Form validation
+- Store/update/delete logic in controllers
+- Redirects and flash messages
+
+PHASE 6: Authentication
+-------------------------------
+$ composer require laravel/breeze --dev
+$ php artisan breeze:install
+$ npm install && npm run dev
+$ php artisan migrate
+
+PHASE 7: Forms & Validation
+-------------------------------
+- Old input, error messages: @error, old('field')
+- Custom validation rules
+$ php artisan make:rule ValidPhone
+
+PHASE 8: File Uploads & Storage
+-------------------------------
+- Setup storage link:
+$ php artisan storage:link
+- Use Storage facade for uploads
+
+PHASE 9: Email & Notifications
+-------------------------------
+$ php artisan make:mail UserWelcome
+- Configure MAIL settings in `.env`
+- Markdown-based email: --markdown=emails.welcome
+
+PHASE 10: Jobs & Queues
+-------------------------------
+$ php artisan make:job ProcessPodcast
+- Setup queue driver in `.env`
+- Run worker: $ php artisan queue:work
+
+PHASE 11: Policies & Gates (Authorization)
+-------------------------------
+$ php artisan make:policy PostPolicy --model=Post
+- Register in AuthServiceProvider
+
+PHASE 12: Middleware
+-------------------------------
+$ php artisan make:middleware CheckRole
+- Use route middleware in routes/web.php
+
+PHASE 13: Events & Listeners
+-------------------------------
+$ php artisan make:event NewPostCreated
+$ php artisan make:listener SendPostNotification
+
+PHASE 14: Testing
+-------------------------------
+$ php artisan make:test PostTest
+$ php artisan test
+
+PHASE 15: Advanced Topics
+-------------------------------
+- Service Providers
+- Repositories
+- API Resources
+- Broadcasting (Laravel Echo, Pusher)
+- Laravel Packages

@@ -1,0 +1,236 @@
+*****************************************18. Project Admin Panel Setup******************************
+------------------------2. Admin Template Setup---------------------
+1.make blade file in resource->views
+   admin_dashboard.blade.php
+   index.blade.php
+
+2.copy asset folder(ডাউনলোডকৃত ফোল্ডার এ আছে,\2.1 Excise Files\Excise Files\Backend Theme\material\assets) into public->backend(newly create)
+      public->backen->assets(এর ভিতরে সব ফোল্ডার থাকবে।)
+
+
+3. Excise Files\Excise Files\Backend Theme\material এর ভিতরের index.html ফাইল এর কোডগুলো admin_dashboard.blade ফাইল এ কপি করে ফেলব।
+
+4.এরপর ‍admin_dashboard.blade file এ assets folder এর লিংক পরিবর্তন করে দিব:
+   <link href="assets/libs/flatpickr/flatpickr.min.css" rel="stylesheet" type="text/css" />
+                     To
+   <link href="{{asset('backend/assets/libs/flatpickr/flatpickr.min.css')}}" rel="stylesheet" type="text/css" />
+
+
+5.content part এ yield দিয়ে দিব এবং content এর সব ডাটা নিয়ে যাব ‍index.blade file এ
+     <div class="content-page">
+        @yield('admin')
+		
+		
+6.content এর সব ডাটা নিয়ে যাব ‍index.blade file এ
+
+@extends('admin_dashboard')
+@section('admin')
+	<div class="content">
+	</div>
+@endsection
+
+
+
+------------------------3. Dashboard Page Segmentation--------------------
+1.chage 'light' theme to 'dark' theme
+<body data-layout-mode="default" data-theme="dark" data-topbar-color="dark" data-menu-position="fixed" data-leftbar-color="dark" data-leftbar-size='default' data-sidebar-user='false'>
+
+2.make another folder body->header/footer/sidebar(header,footer,sidebar কে মেইন blade(admin_dashboard.blade) থেকে আলাদা করা হয়েছে )
+	<!-- Topbar Start -->
+		@include('body.header')
+    <!-- end Topbar -->
+
+    <!-- ========== Left Sidebar Start ========== -->
+		@include('body.sidebar')
+    <!-- Left Sidebar End -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        @yield('admin')
+
+        <!-- Footer Start -->
+			@include('body.footer')
+        <!-- end Footer -->
+
+    </div>
+	
+3.we clear header
+	remove create menu, mega menu , right-sidebar,language etc.
+	
+	
+	
+	
+	
+	
+	
+--------------------------------4. Admin Logout Option----------------------
+1. (logout এ ক্লিক করলে logout হয়ে যাবে:) logout work(views->body->header)
+					<!-- item-->
+                    <a href="{{route('admin.logout')}}" class="dropdown-item notify-item">
+                        <i class="fe-log-out"></i>
+                        <span>Logout</span>
+                    </a>
+	
+	
+	এরপর controller বানাব,:
+	php artisan make:controller AdminController
+	
+	route বানাব:
+	Route::get('admin/logout',[AdminController::class,'AdminDestroy'])->name('admin.logout');
+	
+	
+	make controller code for logout(এই logout এর code copy করছি->  logout ...................................... logout › Auth\AuthenticatedSessionController@destroy ): থেকে।
+	class AdminController extends Controller
+	{
+		public function AdminDestroy(Request $request): RedirectResponse
+		{
+			//destroy current session;You're logging out a user who is logged in via session-based authentication
+			Auth::guard('web')->logout();
+
+			$request->session()->invalidate();
+
+			$request->session()->regenerateToken();
+
+			//redirect to login page after logout; if you want to home page return redirect('/');
+			return redirect('/login');
+		}
+	}
+	
+	
+
+
+
+------------------------------------------------5. Customize Login Form------------------------------------
+1.copy auth_login(Excise Files\Backend Theme\material) file to resourse->views->login.blade.php file
+
+
+2.default email,password এর নাম পরিবর্তন করব:
+						@if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul class="mb-0">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+						<form method="POST" action="{{ route('login') }}">
+                            @csrf
+                            <div class="mb-3">
+                                <label for="login" class="form-label">Email address/Phone Number</label>
+                                <input class="form-control" type="text" id="login" name="login" required="" placeholder="Enter your email/phone number">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <div class="input-group input-group-merge">
+                                    <input type="password" id="password" class="form-control"  name="password" placeholder="Enter your password">
+                                    <div class="input-group-text" data-password="false">
+                                        <span class="password-eye"></span>
+                                    </div>
+                                </div>
+                            </div>
+						</from>
+	
+
+
+3.error message(match না হলে)(app->http->request->LoginRequest)
+	public function authenticate(): void
+    {
+        $this->ensureIsNotRateLimited();
+
+        //recive email or phone number
+        $user=User::where('email',$this->login)
+                    ->orWhere('phone',$this->login)
+                    ->first();
+        if (!$user || !Hash::check($this->password,$user->password)) {
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                //'login' => trans('auth.failed'),
+                'login' => 'Invalid email or phone number, or incorrect password.',
+            ]);
+        }
+		
+		
+
+
+----------------------------------------6. Customize Logout Page---------------------------------
+এখানে আমরা Logout এ ক্লিক করলে Logout এর পাশাপাশি+আরেকটি custom logout page show করাব।
+1.route বানাব:
+// Route to show logout success message/page
+Route::get('/logout-success', [AdminController::class, 'AdminLogoutPage'])->name('logout.success');
+
+2.controller এ code লিখব:
+	public function AdminLogoutPage(){
+        return view('admin.admin_logout');
+    }
+	
+3.view বানাব:(Excise Files\Backend Theme\material\auth-logout.blade) থেকে কপি করে view->admin->admin_logout.blade এ কপি করব:
+
+
+4.logout বা ‍session destroy হওয়ার পর যাতে /logout-success কল হয়:(app/Http/Controller/AdminController/)
+	public function AdminDestroy(Request $request): RedirectResponse
+    {
+		-----
+        //redirect to login page after logout
+        return redirect('/logout-success');
+    }
+	
+
+----------------------------------7. Refresh Admin Template-----------------------
+1.here we remove unneccessary option from left sidebar,header,main dashboard(index page)
+
+
+2.clear left sidebar
+				<li>
+                    <a href="{{url('/dashboard')}}" data-bs-toggle="collapse">
+                        <i class="mdi mdi-view-dashboard-outline"></i>
+                        <span> Dashboards </span>
+                    </a>
+                </li>
+
+3.clear index.blade(dashboard)
+
+
+
+
+---------------------------------8. Admin Profile & Image Update Part 1----------------
+1.create route
+Route::get('/admin/profile', [AdminController::class, 'AdminProfile'])->name('admin.profile');
+
+2.method in controller
+	public function AdminProfile(){
+
+        $id = Auth::user()->id;
+        $adminData = User::find($id);
+        return view('admin.admin_profile_view',compact('adminData'));
+    }
+
+3.change in header(My account)
+					<!-- item-->
+                    <a href="{{url('/admin/profile')}}" class="dropdown-item notify-item">
+                        <i class="fe-user"></i>
+                        <span>My Account</span>
+                    </a>
+4.make blade admin_profile_view(copy code from 2.1 Excise Files\Excise Files\Backend Theme\material\contacts-profile.html)
+(যেহেতু header,sidebar,footer admin_dashboard থেকে আসবে তাই শুধু content গুলো কপি করব।)
+
+
+
+---------------------------9. Admin Profile & Image Update Part 2---------------------
+1.admin.admin_profile_view.blade file কে পরিবর্তন করেছি।
+
+
+
+
+	
+	
+
+
+
+
+
