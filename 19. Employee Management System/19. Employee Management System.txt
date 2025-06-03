@@ -105,7 +105,7 @@ Route::get('/add/employee','AddEmployee')->name('add.employee');
 -------------------------------5. Install image intervention Package-------------------------
 Installation Process
 1.give composer command
-composer require intervention/image:^2
+composer require intervention/image:^3
 
 2.যা হবে এরপর সব automatically store হবে
 composer.json ফাইল এ intervention file store হবে:
@@ -124,6 +124,17 @@ to
 extension=gd
 
 
+--------------------------------6. Employee Management Part 5----------------------------------
+add_employee.blade.php file এ save button এ ক্লিক করলে ডাটাবেসে স্টোর হওয়ার কাজ করব।
+1.route create
+Route::post('/store/employee','StoreEmployee')->name('employee.store');
+
+2.StoreEmployee() method বানাব
+ public function StoreEmployee(Request $request){
+ 
+ }
+3.add_employee.blade.php file এ  store এর লিংক দিয়ে দিব
+<form method="post" action="route('employee.store') " enctype="multipart/form-data">
 
 
 
