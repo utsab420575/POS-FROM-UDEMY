@@ -27,6 +27,39 @@ class Employee extends Model
 4.controller make
 $ php artisan make:controller EmployeeController
 
-
+5.table create in database
+php artisan migrate
 
 5.sidebar এ পরিবর্তন করেছি(All Employee ,Add Employee)
+
+
+
+
+
+
+
+
+---------------------------------2. Employee Management Part 2-----------------------------
+1.route তৈরি করব all employee এর জন্য 
+ //all route should be use auth middleware
+    Route::controller(EmployeeController::class)->group(function(){
+        Route::get('/all/employee','AllEmployee')->name('all.employee');
+    });
+
+
+2.make method in controller
+	public function AllEmployee(){
+		
+		return view('backend.employee.all_employee',compact('employee'));
+        
+    } // End Method 
+
+3.datatable script গুলো add করব admin_dashboard.blade.php তে
+	---
+
+4.Project Theme\Backend Theme\tables-datatable.html থেকে all_employee.blade.php বানালাম
+
+5.sidebar  all_employee এর route দিয়ে দিলাম।
+	<li>
+		<a href="{{route('all.employee')}}">All Employee</a>
+	</li>
