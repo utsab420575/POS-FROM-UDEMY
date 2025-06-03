@@ -139,9 +139,33 @@ Route::post('/store/employee','StoreEmployee')->name('employee.store');
 
 
 
----------------------------7. Employee Management Part 6.mp4----------------------------
+---------------------------7. Employee Management Part 6----------------------------
 এখানে add_employee.blade.php এর জন্য validation করা হয়েছে।
   blade ও controller এ।
+  
+  
+  
+  
+----------------------------8. Employee Management Part 7---------------------------
+এখন edit button এর কাজ করা হবে:
+1.route বানাব:
+Route::get('/edit/employee/{id}','EditEmployee')->name('edit.employee');
+
+
+2.controller method এ উক্ত আইডি এর তথ্য বের করব এবং blade এ পাঠাব।
+	public function EditEmployee($id){
+        $employee = Employee::findOrFail($id);
+        return view('backend.employee.edit_employee',compact('employee'));
+
+    } // End Method 
+
+3.view বানাব,যেখানে সকল তথ্য প্রদর্শন হবে , যা ডাটবেস থেকে দেখাবে।
+
+
+2.add_employee.blade.php file এ প্রত্যেক employee এর লিংক দিয়ে দিব:
+<a href="{{ route('edit.employee',$item->id) }}" class="btn btn-blue rounded-pill waves-effect waves-light">Edit</a>
+
+
  
 
 
