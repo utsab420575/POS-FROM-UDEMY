@@ -223,7 +223,17 @@ Route::get('/admin/profile', [AdminController::class, 'AdminProfile'])->name('ad
 
 ---------------------------9. Admin Profile & Image Update Part 2---------------------
 1.admin.admin_profile_view.blade file কে পরিবর্তন করেছি।
+first name,last name,photo ইত্যাদি add করেছি।
+dynamically  database থেকে ডাটা আসবে।
 (কি কি পরিবর্তন করেছি তা github এ commit এ গেলে দেখতে পারব।)
+
+
+
+
+----------------------------10. Admin Profile & Image Update Part 3--------------------
+1. এখানে choose button এর কাজ করা হয়েছে।
+
+2.script file add হয়েছে।
 
 
 
