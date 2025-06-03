@@ -79,6 +79,9 @@ INSERT INTO employees (name, email, phone, address, experience, image, salary, v
 
 
 
+
+
+
 --------------------------------4. Employee Management Part 4--------------------------------
 1.route বানাব employee add করার জন্য
 Route::get('/add/employee','AddEmployee')->name('add.employee');
@@ -96,6 +99,36 @@ Route::get('/add/employee','AddEmployee')->name('add.employee');
 			<a href="{{route('add.employee')}}">Add Employee</a>
 		</li>
 		
+		
+
+
+-------------------------------5. Install image intervention Package-------------------------
+Installation Process
+1.give composer command
+composer require intervention/image:^2
+
+2.যা হবে এরপর সব automatically store হবে
+composer.json ফাইল এ intervention file store হবে:
+ "require": {
+        "intervention/image": "^3.10", 
+    },
+
+vendor->intervention ফোল্ডার automatically তৈরি হবে।
+
+3.now in php.ini file change 
+
+C:\xampp\php\php.ini
+যদি কমেন্ট করা থাকে কমেন্ট অফ করে দিব।
+;extension=gd
+to
+extension=gd
+
+
+
+
+
+
+
 		
 		
 
