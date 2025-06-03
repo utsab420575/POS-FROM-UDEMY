@@ -223,6 +223,9 @@ Route::get('/admin/profile', [AdminController::class, 'AdminProfile'])->name('ad
 
 ---------------------------9. Admin Profile & Image Update Part 2---------------------
 1.admin.admin_profile_view.blade file কে পরিবর্তন করেছি।
+(কি কি পরিবর্তন করেছি তা github এ commit এ গেলে দেখতে পারব।)
+
+
 
 
 
