@@ -79,3 +79,27 @@ INSERT INTO employees (name, email, phone, address, experience, image, salary, v
 
 
 
+--------------------------------4. Employee Management Part 4--------------------------------
+1.route বানাব employee add করার জন্য
+Route::get('/add/employee','AddEmployee')->name('add.employee');
+
+
+2.controller এ blade show করাব,employee add এর field সহ:
+	public function AddEmployee(){
+        return view('backend.employee.add_employee');
+    } 
+
+3.add_employee বানাব
+
+4.sidebar ও  all_employee.blade.php  এ employee add এর route add করব:			
+		<li>
+			<a href="{{route('add.employee')}}">Add Employee</a>
+		</li>
+		
+		
+		
+
+
+
+
+
