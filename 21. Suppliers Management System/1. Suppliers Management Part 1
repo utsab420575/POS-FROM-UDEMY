@@ -1,0 +1,32 @@
+****************************Suppliers Management System**************************************
+পূর্বে আমরা customer এর জন্য করেছি এখন করব supplier এর জন্য।
+
+
+-----------------------------1. Suppliers Management Part 1-----------------------------------
+1.model(model এর ভিতরে fillable করব অবশ্যই),migration,controller বানাব।
+php artisan make:model Supplier -m
+
+$ php artisan make:controller SupplierController
+
+$php artisan migrate
+
+2.all employee show এর জন্য route বানাব, controller থেকে ডাটা blade এ পাঠাব এবং blade এ show করাব।
+	route:
+		 Route::controller(SupplierController::class)->group(function(){
+			Route::get('/all/supplier','AllSupplier')->name('all.supplier');
+		});
+	controller:
+		class SupplierController extends Controller
+		{
+			public function AllSupplier(){
+				$supplier = Supplier::latest()->get();
+				return view('backend.supplier.all_supplier',compact('supplier'));
+			} // End Method 
+		}
+	blade:
+		all_supplier.blade বানাব ‍all_customer.blade থেকে কপি করে।
+	
+3.sidebar এ ‍all_customer এর মেনু add করব।
+		<li>
+			<a href="{{ route('all.supplier') }}">All Supplier</a>
+		</li>
