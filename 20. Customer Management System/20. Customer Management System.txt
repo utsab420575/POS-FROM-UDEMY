@@ -33,6 +33,36 @@ $php artisan migrate
 			<a href="{{ route('all.customer') }}">All Customer</a>
 		</li>
 	
+	
+	
+
+
+------------------------------2. Customer Management Part 2-----------------------
+এখানে add customer করার জন্য form show করাব, form এ submit করলে ডাটা ডাটাবেসে ঢুকবে।
+
+1.route বানাব:
+Route::get('/add/customer','AddCustomer')->name('add.customer');
+Route::post('/store/customer','StoreCustomer')->name('customer.store'); 
+
+2.controller বানাব:
+	form show:
+	public function AddCustomer(){
+         return view('backend.customer.add_customer');
+    }
+	
+	form submit এর জন্য:
+	public function StoreCustomer(Request $request){
+	
+	}
+
+3.add_customer.blade বানাব যা কপি করে বানাব(employee এর জন্য কাজ করছিলাম),এখান থেকে ডাটা যাবে controller এ।
+
+
+
+
+
+
+
 
 
 
