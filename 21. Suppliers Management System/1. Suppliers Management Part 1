@@ -96,3 +96,31 @@ Route::post('/store/supplier','StoreSupplier')->name('supplier.store');
 4.edit , delete এ প্রত্যেক supplier এর আইডি দিয়ে ‍দিব।
 	<a href="{{ route('edit.supplier',$item->id) }}" class="btn btn-blue rounded-pill waves-effect waves-light">Edit</a>
 	<a href="{{ route('delete.supplier',$item->id) }}" class="btn btn-danger rounded-pill waves-effect waves-light" id="delete">Delete</a>
+	
+	
+	
+	
+	
+
+
+----------------------------------4. Suppliers Details Page View--------------------------
+এখানে আমরা নতুন একটু বাটন(detail) add করব ‍all supplier.blade এ যাতে করে এখানে ক্লিক করলে উক্ত supplier এর সকল তথ্য view করা যায়।
+
+1.Route
+Route::get('/details/supplier/{id}','DetailsSupplier')->name('details.supplier');
+
+2.controller method
+public function DetailsSupplier($id){
+
+        $supplier = Supplier::findOrFail($id);
+        return view('backend.supplier.details_supplier',compact('supplier'));
+
+    } // End Method 
+	
+
+
+3.details_supplier.blade.php file বানাব যেখানে সকল তথ্য view হবে।
+
+
+4.all_supplier.blade file এ name('details.supplier'); route দিয়ে দিব
+<a href="{{ route('details.supplier',$item->id) }}" class="btn btn-info rounded-pill waves-effect waves-light">Details</a>
