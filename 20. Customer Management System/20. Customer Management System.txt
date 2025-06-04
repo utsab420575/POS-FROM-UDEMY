@@ -1,0 +1,41 @@
+******************************************20. Customer Management System1******************************
+পূর্বে আমরা employee এর জন্য করেছি এখন করব customer এর জন্য।
+
+
+
+----------------------------------------1. Customer Management Part 1-------------------------------
+1.model(model এর ভিতরে fillable করব অবশ্যই),migration,controller বানাব।
+php artisan make:model Customer -m
+
+$ php artisan make:controller CustomerController
+
+$php artisan migrate
+
+2.all employee show এর জন্য route বানাব, controller থেকে ডাটা blade এ পাঠাব এবং blade এ show করাব।
+	route:
+		Route::controller(EmployeeController::class)->group(function(){
+			 Route::get('/all/customer','AllCustomer')->name('all.customer');
+		});
+	controller:
+		class CustomerController extends Controller
+		{
+			public function AllEmployee(){
+				//latest employee show first
+				$customer = Customer::latest()->get();
+				return view('backend.customer.all_customer',compact('customer'));
+			} // End Method
+		}
+	blade:
+		all_customer.blade বানাব ‍all_employee.blade থেকে কপি করে।
+	
+3.sidebar এ ‍all_customer এর মেনু add করব।
+		<li>
+			<a href="{{ route('all.customer') }}">All Customer</a>
+		</li>
+	
+
+
+
+
+
+ 

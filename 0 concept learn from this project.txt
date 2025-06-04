@@ -1,5 +1,5 @@
 ---------------all commit--------
-https://github.com/easylearningbd/laravel-point-of-sale/commit
+https://github.com/easylearningbd/laravel-point-of-sale
 
 --------------------install project---------------------------
 1.download composer(if not installed)
