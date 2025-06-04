@@ -30,3 +30,34 @@ $php artisan migrate
 		<li>
 			<a href="{{ route('all.supplier') }}">All Supplier</a>
 		</li>
+		
+		
+		
+
+
+
+----------------------------2. Suppliers Management Part 2---------------------------------
+এখানে add supplier করার জন্য form show করাব, form এ submit করলে ডাটা ডাটাবেসে ঢুকবে।
+
+1.route বানাব:
+Route::get('/add/supplier','AddSupplier')->name('add.supplier');
+Route::post('/store/supplier','StoreSupplier')->name('supplier.store'); 
+
+2.controller বানাব:
+
+
+	form show:
+	public function AddSupplier(){
+         return view('backend.supplier.add_supplier');
+    }
+	
+	form submit এর জন্য:
+	public function StoreSupplier(Request $request){
+	
+	}
+
+3.add_supplier.blade বানাব যা কপি করে বানাব(customer এর জন্য কাজ করছিলাম),এখান থেকে ডাটা যাবে controller এ।
+
+
+4.sidebar এ লিংক দিয়ে দিব:
+<a href="{{ route('add.supplier') }}">Add Supplier</a>
