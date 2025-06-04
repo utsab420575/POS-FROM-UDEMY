@@ -61,3 +61,38 @@ Route::post('/store/supplier','StoreSupplier')->name('supplier.store');
 
 4.sidebar এ লিংক দিয়ে দিব:
 <a href="{{ route('add.supplier') }}">Add Supplier</a>
+
+
+
+
+
+-------------------------------3. Supplier Management Part 3---------------------------
+এখানে edit Supplier করার জন্য form show করাব, form এ submit করলে ডাটা ডাটাবেসে ঢুকবে।
+এবং ডিলিট বাটনে press করলে ডাটা ডিলিট করব ডাটাবেস থেকে।
+
+1.route বানাব:
+		Route::get('/edit/supplier/{id}','EditCustomer')->name('edit.supplier');
+        Route::post('/update/supplier','UpdateCustomer')->name('supplier.update');
+        Route::get('/delete/supplier/{id}','DeleteCustomer')->name('delete.supplier');
+		
+2.controller এ মেথড বানাব:
+	
+	//form show
+	public function EditCustomer($id){
+        $supplier = Supplier::findOrFail($id);
+        return view('backend.supplier.edit_customer',compact('supplier'));
+
+    } // End Method
+	
+	//data store from form
+	public function UpdateCustomer(Request $request){}
+	
+	//delete supplier
+	public function DeleteCustomer($id){}
+
+
+3.edit_customer.blade বানাব:
+
+4.edit , delete এ প্রত্যেক supplier এর আইডি দিয়ে ‍দিব।
+	<a href="{{ route('edit.supplier',$item->id) }}" class="btn btn-blue rounded-pill waves-effect waves-light">Edit</a>
+	<a href="{{ route('delete.supplier',$item->id) }}" class="btn btn-danger rounded-pill waves-effect waves-light" id="delete">Delete</a>
