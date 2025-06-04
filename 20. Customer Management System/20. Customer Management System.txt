@@ -59,6 +59,19 @@ Route::post('/store/customer','StoreCustomer')->name('customer.store');
 
 
 
+-------------------------------3. Customer Management Part 3---------------------------
+এখানে edit customer করার জন্য form show করাব, form এ submit করলে ডাটা ডাটাবেসে ঢুকবে।
+এবং ডিলিট বাটনে press করলে ডাটা ডিলিট করব ডাটাবেস থেকে।
+
+1.route বানাব:
+		Route::get('/edit/customer/{id}','EditCustomer')->name('edit.customer');
+        Route::post('/update/customer','UpdateCustomer')->name('customer.update');
+        Route::get('/delete/customer/{id}','DeleteCustomer')->name('delete.customer');
+		
+2.
+
+
+
 
 
 
