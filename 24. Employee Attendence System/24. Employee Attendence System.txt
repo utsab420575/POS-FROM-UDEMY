@@ -25,8 +25,37 @@ $php artisan migrate
 			<a href="{{route('employee.attend.list')}}">Employee Attendance List </a>
 		</li>
 		
-
-
 		
+		
+		
+-------------------------------------------------2. Employee Attendance Option Part 2-----------------------
+এখানে attendancelist showing form show হবে।
+attendance add এর option দেখাবে।
+
+
+1.controller method:(Attendance table থেকে ডাটা প্রত্যেক date এর গ্রুপ টা  প্রদর্শন হবে।
+					(for many employee attendance date is same) show only one date)
+					
+	public function EmployeeAttendanceList(){
+        $allData = Attendance::select('date')->groupBy('date')->orderBy('id','desc')->get();
+        return view('backend.attendance.view_employee_attend',compact('allData'));
+    } // End Method
+
+2.view বানাব:
+	view_employee_attend.blade.php
+	
+3.view_employee_attend.blade এ একটা বাটন আছে ‍add attendance; তার জন্য route , controller method, blade বানাব:
+
+	route:
+		 Route::get('/add/employee/attend','AddEmployeeAttendance')->name('add.employee.attend');
+	
+	method:
+		public function AddEmployeeAttendance(){
+			$employees = Employee::all();
+			return view('backend.attendence.add_employee_attend',compact('employees'));
+		}// End Method
+	
+	
+	blade: next video
 
 
