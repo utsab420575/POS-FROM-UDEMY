@@ -40,3 +40,32 @@ $php artisan migrate
                         <span class="menu-arrow"></span>
                     </a>
                     <div class="collapse" id="salary">
+					
+
+
+
+------------------------------------3. Advance Salary Option Part 3--------------------------------
+এখানে add_advance_salary.blade এ submit করলে ডাটা ডাটাবেসে ঢুকবে।
+
+এর আগে Employee এবং AdvanceSalary এর relation বানাই ফেলব।
+	public function advanceSalaries()
+    {
+        return $this->hasMany(AdvanceSalary::class);
+    }
+	
+	
+	 public function employee()
+    {
+        return $this->belongsTo(Employee::class);
+    }
+	
+	
+
+1.route বানাব  ডাটাবেসে ডাটা ঢুকানোর জন্য:
+       Route::post('/advance/salary/store','AdvanceSalaryStore')->name('advance.salary.store');
+
+2.controller বানাব:
+	form submit এর জন্য:
+	ppublic function AdvanceSalaryStore(Request $request){
+	
+	}

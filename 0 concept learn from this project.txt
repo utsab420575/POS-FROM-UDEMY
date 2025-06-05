@@ -1,6 +1,17 @@
 ---------------all commit--------
 https://github.com/easylearningbd/laravel-point-of-sale
 
+
+Laravel Naming Conventions Recap
+
+| Type                | Example                      | Notes                               |
+|---------------------|-------------------------------|--------------------------------------|
+| Model class         | AdvanceSalary                | PascalCase (studly caps)             |
+| Table name          | advance_salaries             | snake_case plural                    |
+| Relationship method | advanceSalaries()            | camelCase plural (for hasMany)       |
+| BelongsTo method    | employee()                   | camelCase singular                   |
+
+
 --------------------install project---------------------------
 1.download composer(if not installed)
 check composer and php
