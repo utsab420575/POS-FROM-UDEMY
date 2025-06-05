@@ -85,6 +85,42 @@ blade:
 3.add_employee_attend.blade এ Attendance List button এর লিংক দিয়ে দিলাম।
 			<a href="{{ route('employee.attend.list') }}" class="btn btn-primary p-2 ps-4 pe-4 mb-2"><i class="fas fa-list"></i>
 			Attendance List</a>
+			
+			
+
+
+
+
+----------------------------------5. Employee Attendance Option Part 5------------------------------
+এখানে view_employee_attend.blade file এর Edit button এর কাজ করব।
+
+1.route:
+Route::get('/edit/employee/attend/{date}','EditEmployeeAttendence')->name('employee.attend.edit'); 
+
+
+2.blade এ লিংক:
+<a href="{{ route('employee.attend.edit',$item->date) }}" class="btn btn-blue rounded-pill waves-effect waves-light">Edit</a>
+
+3.controller method:
+	public function EditEmployeeAttendence($date){
+         $employees = Employee::all();
+         $editData = Attendance::where('date',$date)->get();
+         $attendanceData = $editData->keyBy('employee_id');
+         return view('backend.attendance.edit_employee_attend',compact('employees','attendanceData','date'));
+
+    }// End Method
+
+4.edit button এর প্রেস করলে নতুন blade/form open হবে আপডেট করার জন্য।
+	edit_employee_attend.blade.php
+	
+	
+	
+
+
+
+
+
+
 
 
 
