@@ -109,3 +109,31 @@ $ php artisan make:migration fix_employee_foreign_key_in_advance_salaries
 		</td>
 		<td> {{ $item->salary }} </td>
 		<td>{{$advanceAmount>0? $advanceAmount:'No Advance'}}</td>
+		
+		
+		
+
+
+
+----------------------------------------------3. Employee Pay Salary Option Part 3-------------------------------
+এখানে আমরা paynow তে ক্লিক করলে একটা ফরম প্রদর্শন হবে এবং উক্ত Form এর employee এর ‍salary,due,advance show হবে।
+এখানে আমরা paynow এর সাথে employee id এর পাশাপাশি month,salary পাঠাইছি।
+
+pay_salary.blade থেকে employee id, month,salary পাঠালাম:
+	 <td>
+		<a href="{{ route('pay.now.salary',$item->id) }}?month={{ $month }}&year={{ $year }}"
+		   class="btn btn-blue rounded-pill waves-effect waves-light">Pay Now</a>
+
+	</td>
+
+route:
+ Route::get('/pay/now/salary/{id}','PayNowSalary')->name('pay.now.salary');
+
+
+controller method:month,year recive,ফরম এ ডাটা সেন্ড:
+	 public function PayNowSalary($id,Request $request){
+        $month=$request->month;
+        $year=$request->year;
+        $single_employee = Employee::findOrFail($id);
+        return view('backend.salary.paid_salary',compact('single_employee','month','year'));
+    }// End Method
