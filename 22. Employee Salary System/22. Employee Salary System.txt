@@ -1,0 +1,28 @@
+***************************************Advance Salary Option Part**********************************
+
+------------------------------------------1. Advance Salary Option Part 1-------------------------
+1.model(model এর ভিতরে fillable করব অবশ্যই),migration,controller বানাব।
+php artisan make:model AdvanceSalary  -m
+
+$ php artisan make:controller SalaryController
+
+$php artisan migrate
+
+2.all employee show এর জন্য route বানাব
+	route:
+		Route::controller(SalaryController::class)->group(function () {
+			Route::get('/add/advance/salary', 'AddAdvanceSalary')->name('add.advance.salary');
+		});
+	controller:
+		public function AddAdvanceSalary(){
+			$employee = Employee::latest()->get();
+			return view('backend.salary.add_advance_salary',compact('employee'));
+		}// End Method 
+	blade:
+		add_advance_salary.blade বানাব ‍।
+	
+	
+3.sidebar এ ‍add/advance/salary এর মেনু add করব।
+		 <li>
+			<a href="{{route('add.advance.salary')}}">Add Advance Salary</a>
+		</li>
