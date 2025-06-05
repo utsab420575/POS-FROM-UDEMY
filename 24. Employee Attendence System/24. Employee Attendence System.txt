@@ -1,0 +1,29 @@
+****************************************24. Employee Attendence System**************************************
+
+---------------------------------------1. Employee Attendance Option Part 1---------------------------------
+1.model(model এর ভিতরে fillable করব অবশ্যই),migration,controller বানাব।
+php artisan make:model Attendence -m
+
+$ php artisan make:controller AttendanceController
+
+$php artisan migrate
+
+2.attendance show এর জন্য route বানাব
+	route:
+		Route::controller(AttendanceController::class)->group(function () {
+			 Route::get('/employee/attend/list','EmployeeAttendanceList')->name('employee.attend.list');
+		});
+	controller:
+		public function EmployeeAttendenceList(){
+
+		}
+	
+	
+	
+3.sidebar এ ‍add/advance/salary এর মেনু add করব।
+		<li>
+			<a href="{{route('add.advance.salary')}}">Employee Attendence List </a>
+		</li>
+		
+
+

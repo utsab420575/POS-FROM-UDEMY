@@ -10,6 +10,8 @@ Laravel Naming Conventions Recap
 | Table name          | advance_salaries             | snake_case plural                    |
 | Relationship method | advanceSalaries()            | camelCase plural (for hasMany)       |
 | BelongsTo method    | employee()                   | camelCase singular                   |
+| has method          | attendance()                 | camelCase singular                   |
+
 
 
 --------------------install project---------------------------
