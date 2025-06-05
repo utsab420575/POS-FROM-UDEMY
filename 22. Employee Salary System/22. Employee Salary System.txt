@@ -69,3 +69,35 @@ $php artisan migrate
 	ppublic function AdvanceSalaryStore(Request $request){
 	
 	}
+	
+	
+
+
+
+
+--------------------------4. Advance Salary Option Part 4-----------------------------
+এখানে যে সকল employee advance salary নিছে তাদের প্রদর্শন করাব।all_advance_salary
+
+1.route
+ Route::get('/all/advance/salary','AllAdvanceSalary')->name('all.advance.salary');
+ 
+ 
+2.sidebar
+	 <a href="{{ route('all.advance.salary') }}">All Advance Salary</a>
+	 
+3.controller থেকে blade এ ডাটা পাঠাব সকল advance salary show করার জন্য।
+	public function AllAdvanceSalary(){
+
+        $salary = AdvanceSalary::latest()->get();
+        return view('backend.salary.all_advance_salary',compact('salary'));
+
+    }// End Method 
+
+4.blade বাানাব; এই blade এ salary দিয়ে employee infomration দেখানো হয়েছে।
+
+
+
+
+
+
+
