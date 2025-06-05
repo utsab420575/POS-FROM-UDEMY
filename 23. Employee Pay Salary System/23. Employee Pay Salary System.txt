@@ -57,6 +57,31 @@ $php artisan migrate
 
 //এখানে আমরা advance_salaries table কে আপডেট করে ফেলছি।(foreign key দেয়া ছিল না কিন্তু এখানে দিয়ে দিছি।)
 $ php artisan make:migration fix_employee_foreign_key_in_advance_salaries
+
+	public function up(): void
+    {
+        Schema::table('advance_salaries', function (Blueprint $table) {
+            // Drop old column if it exists
+            $table->dropColumn('employee_id');
+
+            // Recreate with correct type
+            $table->foreignId('employee_id')
+                ->constrained('employees')
+                ->onDelete('cascade');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('advance_salaries', function (Blueprint $table) {
+            $table->dropForeign(['employee_id']);
+            $table->dropColumn('employee_id');
+            $table->integer('employee_id'); // restore original
+        });
+    }
  
  
 
