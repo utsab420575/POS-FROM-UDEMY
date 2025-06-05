@@ -131,7 +131,23 @@ edit_employee_attend.blade.php এর udpate এ ক্লিক করলে �
 
 
 
+-------------------------------------7. Employee Attendance Option Part 7----------------
+এখানে view_employee_attend.blade file এ view এর কাজ করব।(জাস্ট ডেইট ওয়াইস attendance view করতে পারবে।)
 
+
+1.route:
+	Route::get('/view/employee/attend/{date}','ViewEmployeeAttendence')->name('employee.attend.view'); 
+2.controller method	
+	public function ViewEmployeeAttendence($date){
+        $details = Attendence::where('date',$date)->get();
+        return view('backend.attendence.details_employee_attend',compact('details'));
+    }// End Method
+	
+3.details_employee_attend.blade বানাব।
+
+
+4.link করে দিব view_employee_attend.blade এ।
+	<a href="{{route('employee.attend.view',$item->date)}}" class="btn btn-danger rounded-pill waves-effect waves-light" >View</a>
 
 
 	
