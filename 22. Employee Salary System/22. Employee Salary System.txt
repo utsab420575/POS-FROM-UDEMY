@@ -26,3 +26,17 @@ $php artisan migrate
 		 <li>
 			<a href="{{route('add.advance.salary')}}">Add Advance Salary</a>
 		</li>
+		
+		
+
+
+
+--------------------------------------2. Advance Salary Option Part 2-----------------------------
+এখানে add_advance_salary.blade বানাব এবং sidebar টা ঠিক করব:
+
+				<a href="#salary" data-bs-toggle="collapse">
+                        <i class="mdi mdi-email-multiple-outline"></i>
+                        <span> Employee Salary </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse" id="salary">
