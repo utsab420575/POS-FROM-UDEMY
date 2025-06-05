@@ -1,0 +1,47 @@
+**********************************23. Employee Pay Salary System****************************
+
+-----------------------------------1. Employee Pay Salary Option Part 1---------------------
+1.model(model এর ভিতরে fillable করব অবশ্যই),migration বানাব।
+php artisan make:model PaySalary   -m
+
+
+$php artisan migrate
+
+2.all employee show এর জন্য route বানাব
+	route:
+		Route::controller(SalaryController::class)->group(function(){
+			Route::get('/pay/salary','PaySalary')->name('pay.salary');
+		});
+	Model গুলোর relation বানালাম।
+		Employee:
+		public function paySalary()
+		{
+			return $this->hasMany(PaySalary::class);
+		}
+		
+		PaySalary:
+		public function Employee(){
+			$this->belongsTo(Employee::class);
+		}
+	
+	controller(blade এ সকল employee দেখাব):
+		public function PaySalary(Request $request){
+			$month = $request->month;
+			$year = $request->year;
+
+			$employee = [];
+
+			if ($month && $year) {
+			   $employee=Employee::latest()->get();
+			}
+
+			return view('backend.salary.pay_salary', compact('employee', 'month', 'year'));
+		}// End Method
+	blade:
+		pay_salary.blade বানাব ‍।
+	
+	
+3.sidebar এ ‍add/advance/salary এর মেনু add করব।
+		  <li>
+			<a href="{{ route('pay.salary') }}">Pay Salary</a>
+		  </li>
