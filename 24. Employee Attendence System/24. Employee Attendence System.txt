@@ -20,10 +20,13 @@ $php artisan migrate
 	
 	
 	
-3.sidebar এ ‍add/advance/salary এর মেনু add করব।
+3.sidebar এ ‍attendent list show এর মেনু add করব।
 		<li>
-			<a href="{{route('add.advance.salary')}}">Employee Attendence List </a>
+			<a href="{{route('employee.attend.list')}}">Employee Attendance List </a>
 		</li>
+		
+
+
 		
 
 
