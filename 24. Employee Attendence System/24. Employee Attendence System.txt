@@ -72,3 +72,21 @@ blade:
 
 
 
+
+
+---------------------------------4. Employee Attendance Option Part 4-----------------------------
+এখানে ‍save button এ click করলে ডাটা স্টোর হবে ডাটাবেসে,সবার attendance জমা হবে ডাটাবেসে।
+
+1.route:
+	Route::post('/employee/attend/store','EmployeeAttendenceStore')->name('employee.attend.store'); 
+2.controller method:
+	 public function EmployeeAttendenceStore(Request $request){}
+
+3.add_employee_attend.blade এ Attendance List button এর লিংক দিয়ে দিলাম।
+			<a href="{{ route('employee.attend.list') }}" class="btn btn-primary p-2 ps-4 pe-4 mb-2"><i class="fas fa-list"></i>
+			Attendance List</a>
+
+
+
+
+
