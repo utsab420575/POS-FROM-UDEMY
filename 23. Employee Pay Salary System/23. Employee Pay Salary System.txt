@@ -45,3 +45,42 @@ $php artisan migrate
 		  <li>
 			<a href="{{ route('pay.salary') }}">Pay Salary</a>
 		  </li>
+		  
+		  
+		  
+		  
+		  
+		  
+--------------------------------2. Employee Pay Salary Option Part 2------------------------
+এখানে আমরা pay_salary.blade.php file এ advance(AdvanceSalary Table থেকে) কত নিছি তা দেখাব এবং কত পাব(Due) তা দেখাব।
+
+
+//এখানে আমরা advance_salaries table কে আপডেট করে ফেলছি।(foreign key দেয়া ছিল না কিন্তু এখানে দিয়ে দিছি।)
+$ php artisan make:migration fix_employee_foreign_key_in_advance_salaries
+ 
+ 
+
+//এখানে Employee model এ  Employee এর advance salary বের করছি AdvanceSalary  Table থেকে।
+	public function getAdvanceSalary($month, $year)
+    {
+        return $this->advanceSalaries()
+            ->where('month', $month)
+            ->where('year', $year)
+            ->first();
+    }
+	
+//blade এ:employee দের advance salary দেখানো হয়েছে।
+   @foreach($employee as $key=> $item)
+	@php
+		$advance = $item->getAdvanceSalary($month, $year);
+		$advanceAmount = $advance?->advance_salary ?? 0;
+		$due = $item->salary - $advanceAmount;
+	@endphp
+	<tr>
+		<td>{{ $key+1 }}</td>
+		<td><img src="{{ asset($item->image) }}" style="width:50px; height: 40px;"></td>
+		<td>{{ $item->name }}</td>
+		<td><span class="badge bg-info"> {{ $month }} </span>
+		</td>
+		<td> {{ $item->salary }} </td>
+		<td>{{$advanceAmount>0? $advanceAmount:'No Advance'}}</td>
