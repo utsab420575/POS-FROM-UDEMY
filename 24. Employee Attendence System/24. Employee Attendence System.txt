@@ -115,6 +115,27 @@ Route::get('/edit/employee/attend/{date}','EditEmployeeAttendence')->name('emplo
 	
 	
 	
+	
+	
+	
+------------------------------------6. Employee Attendance Option Part 6---------------
+edit_employee_attend.blade.php এর udpate এ ক্লিক করলে ডাটা স্টোর হবে ডাটাবেসে।
+
+
+1.route
+	 Route::post('/employee/attendance/update', 'UpdateEmployeeAttendenceStore')->name('employee.attendance.update');
+2.form এ লিংক দিয়ে দিব:
+	<form action="{{route('employee.attendance.update')}}" method="POST" id="attendanceForm">
+3.controller method:
+	public function UpdateEmployeeAttendenceStore(Request $request){}
+
+
+
+
+
+
+	
+	
 
 
 
