@@ -57,5 +57,18 @@ attendance add এর option দেখাবে।
 	
 	
 	blade: next video
+	
+	
+
+
+
+
+
+
+-------------------------------3. Employee Attendance Option Part 3-------------------------------
+blade:
+	radio togle button বানালাম।
+
+
 
 
