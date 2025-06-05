@@ -98,6 +98,44 @@ $php artisan migrate
 
 
 
+---------------------------------5. Advance Salary Option Part 5-----------------------------
+
+এখানে edit Advance Salary করার জন্য form show করাব, form এ submit করলে ডাটা ডাটাবেসে ঢুকবে।
+এবং ডিলিট বাটনে press করলে ডাটা ডিলিট করব ডাটাবেস থেকে।
+
+1.route বানাব:
+		Route::get('/edit/advance/salary/{id}','EditAdvanceSalary')->name('edit.advance.salary');
+        Route::post('/advance/salary/update','AdvanceSalaryUpdate')->name('advance.salary.update');
+        Route::post('/delete/advance/salary/{id}','DeleteAdvanceSalary')->name('delete.advance.salary');
+		
+2.controller এ মেথড বানাব:
+	
+	//form show
+	
+    public function EditAdvanceSalary($id){
+        //$employee = Employee::latest()->get();
+        $salary = AdvanceSalary::findOrFail($id);
+        $employee=$salary->employee;
+        return view('backend.salary.edit_advance_salary',compact('salary','employee'));
+
+    }// End Method
+	
+	//data store from form
+	public function UpdateAdvanceSalary(Request $request){}
+	
+	//delete supplier
+	public function DeleteCustomer($id){}
+
+
+3.edit_advance_salary.blade বানাব:
+
+4.edit , delete এ প্রত্যেক supplier এর আইডি দিয়ে ‍দিব all_advance_salary.blade এ ।
+	<a href="{{ route('edit.advance.salary',$item->id) }}"class="btn btn-blue rounded-pill waves-effect waves-light">Edit</a>
+    <a href="{{ route('delete.advance.salary',$item->id) }}"class="btn btn-danger rounded-pill waves-effect waves-light" id="delete">Delete</a>
+
+
+
+
 
 
 
