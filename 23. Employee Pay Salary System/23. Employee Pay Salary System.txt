@@ -137,3 +137,67 @@ controller method:month,year recive,ফরম এ ডাটা সেন্ড:
         $single_employee = Employee::findOrFail($id);
         return view('backend.salary.paid_salary',compact('single_employee','month','year'));
     }// End Method
+	
+	
+
+
+-------------------------------4. Employee Pay Salary Option Part 4---------------------------------
+এখানে আমরা কিছু মজাদার কাজ করছি:
+	.pay_salary.blade.php তে 'pay now' button থাকবে যদি paid না হয় অন্যথায় ’already paid’ থাকবে।
+	কিভাবে হল:
+		employee model এ মেথড বানালাম :
+		    public function hasPaidSalary($month, $year)
+			{
+				return $this->paySalaries()
+					->where('salary_month', $month)
+					->where('salary_year', $year)
+					->exists();
+			}
+		
+		blade এ:
+		@php                      
+			//for check already paid or not
+			$alreadyPaid = $item->hasPaidSalary($month, $year);
+		@endphp
+		<td>
+			@if($alreadyPaid)
+				<button class="btn btn-secondary rounded-pill" disabled>Already Paid</button>
+			@else
+				<a href="{{ route('pay.now.salary', $item->id) }}?month={{ $month }}&year={{ $year }}"
+				   class="btn btn-blue rounded-pill waves-effect waves-light">Pay Now</a>
+			@endif
+		</td>
+		
+
+এখন আমরা paid button এ ক্লিক করলে ডাটা গুলো pay_salaries এ ঢুকে যাবে।
+pay_salaries table এ একটা কলাম salary_year add করছি।:
+$ php artisan make:migration add_salary_year_to_pay_salaries_table --table=pay_salaries
+	public function up(): void
+    {
+        Schema::table('pay_salaries', function (Blueprint $table) {
+            $table->string('salary_year')->nullable()->after('salary_month');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('pay_salaries', function (Blueprint $table) {
+            $table->dropColumn('salary_year');
+        });
+    }
+
+route:
+	 /// Pay Salary All Route More actions
+    Route::controller(SalaryController::class)->group(function(){
+        Route::post('/employee/salary/store','EmployeeSalaryStore')->name('employee.salary.store');
+    });
+
+controller:
+	public function EmployeeSalaryStore(Request $request)
+	{
+		
+	}
+
