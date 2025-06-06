@@ -38,5 +38,7 @@ submit click করলে।
 	Route::post('/store/category','StoreCategory')->name('category.store');
 	
 2.modal made:
-	all_category.blade এ modal open এবং modal design এবং route call এর কাজ করা হয়। 
+	all_category.blade এ modal open এবং modal design এবং route call এর কাজ করা হয়।
+
+	
 	
