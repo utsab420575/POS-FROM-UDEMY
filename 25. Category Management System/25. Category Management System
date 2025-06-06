@@ -1,0 +1,28 @@
+**************************************25. Category Management System****************************
+
+--------------------------------------1. Category Management System Part 1----------------------
+1.model(model এর ভিতরে fillable করব অবশ্যই),migration,controller বানাব।
+php artisan make:model Category  -m
+
+$ php artisan make:controller CategoryController
+
+$php artisan migrate
+
+2.attendance show এর জন্য route বানাব
+	route:
+		 Route::controller(CategoryController::class)->group(function(){
+			Route::get('/all/category','AllCategory')->name('all.category');
+		});
+	controller:
+		public function AllCategory(){
+			$category = Category::latest()->get();
+			return view('backend.category.all_category',compact('category'));
+		}// End Method
+	
+3.sidebar এ ‍attendent list show এর মেনু add করব।
+		<li>
+			<a href="{{route('employee.attend.list')}}">Employee Attendance List </a>
+		</li>
+4.make view
+	$php artisan make:view backend.category.all_category
+	
