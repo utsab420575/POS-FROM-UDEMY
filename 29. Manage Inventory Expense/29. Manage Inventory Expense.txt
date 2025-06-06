@@ -24,3 +24,23 @@ $php artisan migrate
 4.make view
 	php artisan make:view backend.expense.add_expense
 	
+	
+	
+
+
+
+----------------------------------------2. Manage Inventory Expense Part 2--------------------
+এখানে add_expense.blade এর কাজ হবে + expense store এর জন্য কাজ হবে।
+
+
+1.add_expense.blade done
+
+2.store এর জন্য:
+	1.route:
+		Route::post('/store/expense','StoreExpense')->name('expense.store');
+	2.controller method:
+		 public function StoreExpense(Request $request){}
+	
+	3.give store route link to button:
+		<form method="post" action="{{ route('expense.store') }}" enctype="multipart/form-data">
+		
