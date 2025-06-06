@@ -84,3 +84,46 @@ $php artisan migrate
 
 4.give route link for edit in today_expense.blade
 	 <a href="{{ route('edit.expense',$item->id) }}" class="btn btn-blue rounded-pill waves-effect waves-light">Edit</a>
+	 
+	 
+	 
+	 
+
+
+---------------------------------5. Manage Inventory Expense Part 5-------------------------
+এখানে month,year expense গুলো দেখানো হবে।
+
+1.route:
+	Route::get('/month/expense','MonthExpense')->name('month.expense');More actions
+	Route::get('/year/expense','YearExpense')->name('year.expense');
+
+2.controller method:
+	public function MonthExpense(){
+
+        $month = date("F");
+        $monthexpense = Expense::where('month',$month)->get();
+        return view('backend.expense.month_expense',compact('monthexpense'));
+
+    }// End Method
+
+
+    public function YearExpense(){
+
+        $year = date("Y");
+        $yearexpense = Expense::where('year',$year)->get();
+        return view('backend.expense.year_expense',compact('yearexpense'));
+
+    }// End Method
+
+
+3.view made:
+	php artisan make:view backend.expense.month_expense
+	php artisan make:view backend.expense.year_expense
+
+4.sidebar link update
+	<li>
+		<a href="{{ route('month.expense') }}">Monthly Expense</a>
+	</li>
+	<li>
+		<a href="{{ route('year.expense') }}">Yearly Expense</a>
+	</li>
