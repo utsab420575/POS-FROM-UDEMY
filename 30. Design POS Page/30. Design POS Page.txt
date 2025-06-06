@@ -32,3 +32,16 @@
 5.make view:
 	php artisan make:view backend.pos.pos_page
 
+
+
+
+---------------------------2. Design POS Page Part 2-----------------------
+এখানে left side এর কাজ করা হবে।।
+
+
+1.customer send from controller:
+	$customer = Customer::latest()->get();
+
+
+2.left এর কাজ করা হয়েছে।	
+	
