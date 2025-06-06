@@ -48,7 +48,7 @@ $php artisan migrate
 		
 
 
---------------------------------------2.1 Manage Inventory Expense Part 2------------------------
+--------------------------------------3. Manage Inventory Expense Part 3------------------------
 এখানে today তে যেসকল expense হয়েছে সেগুলো show করব।
 
 1.route:
