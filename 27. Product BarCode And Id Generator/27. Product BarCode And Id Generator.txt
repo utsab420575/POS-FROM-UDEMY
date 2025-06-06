@@ -36,3 +36,11 @@
 এখানে এটা ensure করে যে একটা টেবিল এ একটা আইডি generate হবে একটা প্রোডাক্ট এর জন্য।
 
 
+1.composer install:
+	composer require haruncpi/laravel-id-generator
+
+2.add এবং edit product blade এ product code input field বাদ দিব । কেননা এটা automatically generate হবে।
+	
+	
+
+

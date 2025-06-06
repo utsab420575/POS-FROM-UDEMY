@@ -1,0 +1,89 @@
+*******************************28. Product Import and Export From Excel File***********************************
+
+
+------------------------------1. Product Import and Export From Excel File Introduction--------------------------------
+https://docs.laravel-excel.com/3.1/getting-started/
+
+
+
+1.Step 1: Install the package:
+composer require maatwebsite/excel
+
+
+2.Step 2: Create an Export class(কোন টেবিল থেকে export হবে তা ডিফাইন করা হয়েছে:)
+	php artisan make:export ProductsExport --model=Product
+	
+ Purpose: Creates a class where you define what data to export. It uses the Product model.
+
+
+3.Step 3: Define export logic(কোন কোন column export হবে এবং excel file এর heading কি হবে তা এখানে দিয়ে দিব।)
+
+
+Open app/Exports/ProductsExport.php and update like this:
+namespace App\Exports;
+
+use App\Models\Product;
+use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+
+class ProductsExport implements FromCollection, WithHeadings
+{
+    public function collection()
+    {
+        return Product::select(
+            'product_name',
+            'category_id',
+            'supplier_id',
+            'product_code',
+            'product_garage',
+            'product_image',
+            'product_store',
+            'buying_date',
+            'expire_date',
+            'buying_price',
+            'selling_price'
+        )->get();
+    }
+
+    public function headings(): array
+    {
+        return [
+            'Product Name',
+            'Category ID',
+            'Supplier ID',
+            'Product Code',
+            'Product Garage',
+            'Product Image',
+            'Product Store',
+            'Buying Date',
+            'Expire Date',
+            'Buying Price',
+            'Selling Price'
+        ];
+    }
+}
+
+purpose:
+collection() → selects and returns data (excluding id, created_at, updated_at)
+
+headings() → defines column headers in the Excel sheet
+
+
+
+Step 4: Create route
+In web.php:
+	Route::get('/export-products', [ProductController::class, 'export'])->name('export.products');
+
+
+Step 5: Create controller method(App\Exports\ProductsExport এর ডাটা ডাউনলোড হবে।)
+	
+
+	public function export()
+	{
+		return Excel::download(new ProductsExport, 'products.xlsx');
+	}
+	purpose: This triggers the export and sends the file download (products.xlsx) to the user’s browser.
+	
+ 
+
+
