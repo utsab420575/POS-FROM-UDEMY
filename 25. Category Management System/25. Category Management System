@@ -26,3 +26,17 @@ $php artisan migrate
 4.make view
 	$php artisan make:view backend.category.all_category
 	
+	
+	
+	
+
+-----------------------------------2. Category Management System Part 2---------------------------
+এখানে category store করার জন্য একটা button আছে all_category.blade এ এখানে ক্লিক করলে একটা modal open হবে এবং category store হবে 
+submit click করলে।
+
+1.route:
+	Route::post('/store/category','StoreCategory')->name('category.store');
+	
+2.modal made:
+	all_category.blade এ modal open এবং modal design এবং route call এর কাজ করা হয়। 
+	
