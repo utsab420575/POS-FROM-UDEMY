@@ -44,3 +44,19 @@ $php artisan migrate
 	3.give store route link to button:
 		<form method="post" action="{{ route('expense.store') }}" enctype="multipart/form-data">
 		
+		
+		
+
+
+--------------------------------------2.1 Manage Inventory Expense Part 2------------------------
+এখানে today তে যেসকল expense হয়েছে সেগুলো show করব।
+
+1.route:
+	 Route::get('/today/expense','TodayExpense')->name('today.expense');
+
+2.controller method:
+	public function TodayExpense(){}
+
+3.blade for showing expenses:
+	php artisan make:view backend.expense.today_expense
+		
