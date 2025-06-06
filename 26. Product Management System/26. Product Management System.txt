@@ -65,6 +65,31 @@ submit click করলে।
 2.controller:
 	 public function StoreProduct(Request $request){}
 	 
+	 
+	 
+	 
+	 
+	 
+-------------------------------5. Product Management System Part 4-----------------------
+এখানে edit,delete এর কাজ করা হবে।
+
+1.route:
+	  Route::get('/edit/product/{id}','EditProduct')->name('edit.product');
+        Route::post('/update/product','UdateProduct')->name('product.update');
+        Route::get('/delete/product/{id}','DeleteProduct')->name('delete.product');
+
+2.controller:
+	public function EditProduct($id){}
+	public function UdateProduct(Request $request){}
+	public function DeleteProduct($id){}
+	
+2.view make:
+	php artisan make:view backend.product.edit_product
+	
+
+
+
+	 
 
  
 
