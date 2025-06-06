@@ -27,3 +27,12 @@
 	@endphp
 	<h3> {!! $generator->getBarcode($product->product_code,$generator::TYPE_CODE_128)  !!} </h3>
 	
+	
+	
+
+
+-------------------------------------------2. How to Auto Generator Id For Product Code---------------------
+এখানে আমরা ‍composer দিয়ে use Haruncpi\LaravelIdGenerator\IdGenerator; ‍automatically code generate করব।
+এখানে এটা ensure করে যে একটা টেবিল এ একটা আইডি generate হবে একটা প্রোডাক্ট এর জন্য।
+
+
