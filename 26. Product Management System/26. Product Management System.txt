@@ -56,6 +56,19 @@ submit click করলে।
 
 
 
+
+------------------------------4. Product Management System Part 3---------------------------
+এখানে add_product.blade এর submit button এ ক্লিক করলে ডাটা স্টোর হবে ডাটাবেসে।
+
+1.route:
+	Route::post('/store/product','StoreProduct')->name('product.store');
+2.controller:
+	 public function StoreProduct(Request $request){}
+	 
+
+ 
+
+
 	
 	
 	
