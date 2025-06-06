@@ -1,0 +1,31 @@
+**********************************26. Product Management System*****************************
+
+
+-----------------------------------1. Product Management System Part 1---------------------------------
+1.model(model এর ভিতরে fillable করব অবশ্যই),migration,controller বানাব।
+php artisan make:model Product  -m
+
+$ php artisan make:controller ProductController
+
+$php artisan migrate
+
+2.attendance show এর জন্য route বানাব
+	route:
+		 Route::controller(ProductController::class)->group(function(){
+			Route::get('/all/product','AllProduct')->name('all.product');
+		});
+	controller:
+		 public function AllProduct(){
+			$product = Product::latest()->get();
+			return view('backend.product.all_product',compact('product'));
+		} // End Method
+	
+3.sidebar এ ‍attendent list show এর মেনু add করব।
+		<li>
+			<a href="{{ route('all.product') }}">All Product </a>
+		</li>
+4.make view
+	php artisan make:view backend.product.all_product
+	
+	
+	
