@@ -1,0 +1,29 @@
+******************************27. Product BarCode And Id Generator****************************
+
+
+-------------------------------------1. Create Product BarCode---------------------------------
+এখানে আমরা barcode generate করব।all_product এ একটা button বানাব সেখানে ক্লিক করলে নতুন বার কোড তৈরি হবে।
+
+
+1.barcode install:
+	composer require picqer/php-barcode-generator
+2.route:(all_product এ 'code' নামে বাটন থাকবে;যেখানে ক্লিক করলে এই bar কোড তৈরি হবে।)
+	Route::get('/barcode/product/{id}','BarcodeProduct')->name('barcode.product');
+3.update in all_product blade:
+	 <a href="{{ route('barcode.product',$item->id) }}" class="btn btn-info rounded-pill waves-effect waves-light">Code</a>
+
+4.controller:
+	public function BarcodeProduct($id){
+        $product = Product::findOrFail($id);
+        return view('backend.product.barcode_product',compact('product'));
+    }// End Method
+
+5.make view for showing barcode:
+	 php artisan make:view backend.product.barcode_product
+
+6.barcode_product.blade file এ বার কোড generate করলাম: 
+	@php
+		$generator = new Picqer\Barcode\BarcodeGeneratorHTML();
+	@endphp
+	<h3> {!! $generator->getBarcode($product->product_code,$generator::TYPE_CODE_128)  !!} </h3>
+	
