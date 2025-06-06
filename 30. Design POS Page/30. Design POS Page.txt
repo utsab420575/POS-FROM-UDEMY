@@ -1,0 +1,34 @@
+*****************************************30. Design POS Page************************************
+
+
+----------------------------------------1. Design POS Page Part 1------------------------------
+এখানে একটা নতুন মেনু তৈরি করব , এখানে ক্লিক করলে product list show হবে right এ।
+
+1.controller make:
+	php artisan make:controller PosController
+	
+
+2.route:
+	Route::controller(PosController::class)->group(function(){
+        Route::get('/pos','Pos')->name('pos');
+    });
+	
+3.sidebar
+		<li>
+			<a href="{{ route('pos') }}">
+				<span class="badge bg-pink float-end">Hot</span>
+				<i class="mdi mdi-view-dashboard-outline"></i>
+				<span> POS </span>
+			</a>
+		</li>
+		
+
+4.controller
+	public function Pos(){
+        $product = Product::latest()->get();
+        return view('backend.pos.pos_page',compact('product'));
+    } // End Method
+	
+5.make view:
+	php artisan make:view backend.pos.pos_page
+
