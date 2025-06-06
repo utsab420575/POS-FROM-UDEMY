@@ -194,3 +194,181 @@ Step 5: Create controller method(App\Exports\ProductsExport এর ডাটা 
 
 
 
+
+
+********************************************import excel file********************************
+এখানে import এর কাজ করব:
+
+1.step1:Install Laravel Excel package(if already install no need:app/Imports/ProductsImport.php এখানে ক্লাসটি তৈরি হবে।)
+composer require maatwebsite/excel
+
+2.step2: Create an Import Class(কোন টেবিল এ ডাটা import হবে তা দিয়ে ProductsImport class বানাব:)
+	php artisan make:import ProductsImport --model=Product
+	
+	purpose:Creates a PHP class that will handle how each row from the Excel sheet is converted into a Product record
+	
+
+3.step3. Define the Import Logic(excel file এ heading আছে তাই এখানে heading গুলো দিয়ি দিছি;
+	heading না থাকলে/না দিলে $row[0],$row[1] এভাবে দিব column ০,১,,,,এর জন্য।)
+	Open app/Imports/ProductsImport.php and update like this:
+	
+	<?php
+
+		namespace App\Imports;
+
+		use App\Models\Product;
+		use Maatwebsite\Excel\Concerns\ToModel;
+		use Maatwebsite\Excel\Concerns\WithHeadingRow;
+
+		class ProductsImport implements ToModel, WithHeadingRow
+		{
+			/**
+			* @param array $row
+			*
+			* @return \Illuminate\Database\Eloquent\Model|null
+			*/
+			public function model(array $row)
+			{
+				return new Product([
+					'product_name'     => $row['product_name'],
+					'category_id'      => $row['category_id'],
+					'supplier_id'      => $row['supplier_id'],
+					'product_code'     => $row['product_code'],
+					'product_garage'   => $row['product_garage'],
+					'product_image'    => $row['product_image'],
+					'product_store'    => $row['product_store'],
+					'buying_date'      => $row['buying_date'],
+					'expire_date'      => $row['expire_date'],
+					'buying_price'     => $row['buying_price'],
+					'selling_price'    => $row['selling_price'],
+				]);
+			}
+		}
+		
+3.route :
+	Route::post('/import','Import')->name('import');
+	
+4.controller method:
+	use App\Imports\ProductsImport;
+	public function Import(Request $request){
+        $request->validate([
+            'import_file' => 'required|mimes:xlsx,xls,csv'
+        ]);
+
+        Excel::import(new ProductsImport, $request->file('import_file'));
+
+        $notification = array(
+            'message' => 'Product Added Successfully',
+            'alert-type' => 'success'
+        );
+
+        return redirect()->route('all.product')->with($notification);
+
+    }
+
+
+5.blade এ route দিয়ে দিব:
+	<form id="myForm" method="post" action="{{ route('import') }}" enctype="multipart/form-data">
+	
+	
+
+
+
+***********************if we want not duplicate entry not push into database*******************************
+<?php
+
+namespace App\Imports;
+
+use App\Models\Product;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Concerns\ToCollection;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\SkipsOnFailure;
+use Maatwebsite\Excel\Concerns\SkipsFailures;
+use Maatwebsite\Excel\Concerns\SkipsErrors;
+use Maatwebsite\Excel\Concerns\WithValidation;
+use Maatwebsite\Excel\Concerns\SkipsOnError;
+use Throwable;
+
+class ProductsImport implements ToCollection, WithHeadingRow, SkipsOnFailure, SkipsOnError, WithValidation
+{
+    use SkipsFailures, SkipsErrors;
+
+    public function collection(Collection $rows)
+    {
+        DB::beginTransaction();
+
+        try {
+            foreach ($rows as $row) {
+                $productCode = $row['product_code'];
+
+                // Check duplicate in DB
+                if (Product::where('product_code', $productCode)->exists()) {
+                    throw new \Exception("Duplicate product_code found: $productCode");
+                }
+
+                // Create product
+                Product::create([
+                    'product_name'     => $row['product_name'],
+                    'category_id'      => $row['category_id'],
+                    'supplier_id'      => $row['supplier_id'],
+                    'product_code'     => $productCode,
+                    'product_garage'   => $row['product_garage'],
+                    'product_image'    => $row['product_image'],
+                    'product_store'    => $row['product_store'],
+                    'buying_date'      => $row['buying_date'],
+                    'expire_date'      => $row['expire_date'],
+                    'buying_price'     => $row['buying_price'],
+                    'selling_price'    => $row['selling_price'],
+                ]);
+            }
+
+            DB::commit();
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e; // Let the controller catch and show message
+        }
+    }
+
+
+	//should give this;It validates each row of the Excel file before inserting it into the database.
+    public function rules(): array
+    {
+        return [
+            '*.product_code' => ['required'],
+            '*.product_name' => ['required'],
+        ];
+    }
+}
+
+//controller udpate:
+	public function Import(Request $request)
+    {
+        $request->validate([
+            'import_file' => 'required|mimes:xlsx,xls,csv'
+        ]);
+
+        try {
+            Excel::import(new ProductsImport, $request->file('import_file'));
+        } catch (\Exception $e) {
+            $notification = [
+                'message' => 'Import failed: ' . $e->getMessage(),
+                'alert-type' => 'error'
+            ];
+            return redirect()->back()->with($notification);
+        }
+
+        $notification = [
+            'message' => 'Products Imported Successfully',
+            'alert-type' => 'success'
+        ];
+
+        return redirect()->route('all.product')->with($notification);
+    }
+
+
+
+
+
