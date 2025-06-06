@@ -50,4 +50,9 @@ submit click করলে।
 	php artisan make:view backend.product.add_product
 	
 	
+
+------------------------------3. Add JavaScript Validation in Product Page--------------------------
+এখানে validation এর কাজ করা হয়েছে।
+	
+	
 	
