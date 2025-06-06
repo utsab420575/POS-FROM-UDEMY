@@ -98,5 +98,28 @@ controller:
     }// End Method
 view:(এখানে ডাউনলোড,আপলোড অপশন থাকবে।)
 	php artisan make:view backend.product.import_product
+	
+	
+	
+	
+
+------------------------------------------------------4. How to Import and Export Product Part 2------------------
+এখানে আমরা export(download) button এর কাজ করব:
+
+1.route:
+	Route::get('/export','Export')->name('export');
+2.controller method:
+	 public function Export(){
+        return Excel::download(new ProductExport,'products.xlsx');
+    }// End Method
+	
+3.blade এ route দিয়ে দিব:
+	 <a href="{{ route('export') }}" class="btn btn-primary rounded-pill waves-effect waves-light">Download Xlsx</a>
+	 
+	 
+	 
+
+
+	
 
 
