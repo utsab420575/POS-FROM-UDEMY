@@ -29,3 +29,25 @@ $php artisan migrate
 	
 	
 	
+	
+
+
+----------------------------2. Product Management System Part 2---------------------------------
+এখানে product store করার জন্য একটা button আছে all_category.blade এ এখানে ক্লিক করলে একটা form open হবে এবং product store হবে 
+submit click করলে।
+
+[here i made model relation also;Product,Category,Supplier]
+
+1.route:
+	 Route::get('/add/product','AddProduct')->name('add.product');
+2.controller method:
+	public function AddProduct(){
+        $category = Category::latest()->get();
+        $supplier = Supplier::latest()->get();
+        return view('backend.product.add_product',compact('category','supplier'));
+    }// End Method
+3.view create
+	php artisan make:view backend.product.add_product
+	
+	
+	
