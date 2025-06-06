@@ -60,3 +60,27 @@ $php artisan migrate
 3.blade for showing expenses:
 	php artisan make:view backend.expense.today_expense
 		
+
+
+-----------------------------------4. Manage Inventory Expense Part 4----------------------------
+এখানে today_expense.blade এর edit,update এর কাজ হবে।
+
+1.route:
+	Route::get('/edit/expense/{id}','EditExpense')->name('edit.expense');
+    Route::post('/update/expense','UpdateExpense')->name('expense.update');
+	
+2.controller method:
+	 public function EditExpense($id){
+        $expense = Expense::findOrFail($id);
+        return view('backend.expense.edit_expense',compact('expense'));
+
+    }// End Method
+	
+	public function UpdateExpense(Request $request){}
+
+3.view 
+	$ php artisan make:view backend.expense.edit_expense
+
+
+4.give route link for edit in today_expense.blade
+	 <a href="{{ route('edit.expense',$item->id) }}" class="btn btn-blue rounded-pill waves-effect waves-light">Edit</a>
