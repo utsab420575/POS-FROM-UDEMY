@@ -39,6 +39,37 @@ submit click করলে।
 	
 2.modal made:
 	all_category.blade এ modal open এবং modal design এবং route call এর কাজ করা হয়।
+	
+	
+	
+---------------------------------3. Category Management System Part 3---------------------------------------
+all_category.blade এ edit,delete এর কাজ করতে হবে।
 
+1.route:
+	Route::get('/edit/category/{id}','EditCategory')->name('edit.category');More actions
+	Route::post('/update/category','UpdateCategory')->name('category.update'); 
+	Route::get('/delete/category/{id}','DeleteCategory')->name('delete.category');
+	
+2.for category edit open blade file for editing:
+	$ php artisan make:view backend.category.edit_category
+2.controller method:
+	  public function EditCategory($id){
+        $category = Category::findOrFail($id);
+        return view('backend.category.edit_category',compact('category'));
+
+    }// End Method
+
+
+    public function UpdateCategory(Request $request){}
+	
+3.route update in all_category in update and delete
+	<a href="{{ route('edit.category',$item->id) }}" class="btn btn-blue rounded-pill waves-effect waves-light">Edit</a>More actions
+	<a href="{{ route('delete.category',$item->id) }}" class="btn btn-danger rounded-pill waves-effect waves-light" id="delete">Delete</a>
+
+4.delete work :
+	controller method:
+		public function DeleteCategory($id){
+
+		}// End Method
 	
 	
