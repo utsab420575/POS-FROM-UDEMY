@@ -87,3 +87,16 @@ Step 5: Create controller method(App\Exports\ProductsExport এর ডাটা 
  
 
 
+-----------------------------------------------------------3. How to Import and Export Product Part 1--------------
+এখানে import/export করার জন্য blade(excel file upload option থাকবে,export option থাকবে)বানাব:
+
+route:
+	Route::get('/import/product','ImportProduct')->name('import.product');
+controller:
+	public function ImportProduct(){
+        return view('backend.product.import_product');
+    }// End Method
+view:(এখানে ডাউনলোড,আপলোড অপশন থাকবে।)
+	php artisan make:view backend.product.import_product
+
+
