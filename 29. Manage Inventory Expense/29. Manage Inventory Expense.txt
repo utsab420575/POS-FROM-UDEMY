@@ -1,0 +1,26 @@
+*******************************************29. Manage Inventory Expense************************
+
+
+--------------------------------------1. Manage Inventory Expense Part 1--------------------
+1.model(model এর ভিতরে fillable করব অবশ্যই),migration,controller বানাব।
+php artisan make:model Expense -m
+
+$ php artisan make:controller ExpenseController 
+
+$php artisan migrate
+
+2.attendance show এর জন্য route বানাব
+	route:
+		Route::controller(ExpenseController::class)->group(function(){
+			Route::get('/add/expense','AddExpense')->name('add.expense');
+		});
+	controller:
+		public function AddExpense(){
+			return view('backend.expense.add_expense');
+		} // End Method
+		
+3.sidebar এ ‍expense show এর মেনু add করব।
+	
+4.make view
+	php artisan make:view backend.expense.add_expense
+	
