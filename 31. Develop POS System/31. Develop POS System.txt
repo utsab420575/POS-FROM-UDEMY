@@ -27,6 +27,67 @@ STEP 2: Publish config (optional):
 (installation done)
 
 
+----------------------------------2. Develop POS System Part 2--------------------------------------
+এখানে '+' button এ ক্লিক করলে product store হবে cart এ ।
+ডিফল্ট মেথড আছে সেগুলো কল করতে হবে:
+	Cart::add(['id' => '293ad', 'name' => 'Product 1', 'qty' => 1, 'price' => 9.99, 'options' => ['size' => 'large']]);
+	
+
+1.route:(for call controller method)
+	Route::post('/add-cart','AddCart');
+
+
+2.give submit button in each row:
+	 @foreach($product as $key=> $item)
+		<tr>
+			<form method="post" action="{{ url('/add-cart') }}">More actions
+				@csrf
+
+				<input type="hidden" name="id" value="{{ $item->id }}">
+				<input type="hidden" name="name" value="{{ $item->product_name }}">
+				<input type="hidden" name="qty" value="1">
+				<input type="hidden" name="price" value="{{ $item->selling_price }}">
+				<td>{{ $key+1 }}</td>
+				<td><img src="{{ asset($item->product_image) }}"
+						 style="width:50px; height: 40px;"></td>
+				<td>{{ $item->product_name }}</td>
+				<td>
+					<button type="submit" style="font-size: 20px; color: #000;"><i
+							class="fas fa-plus-square"></i></button>
+				</td>
+			</form>
+		</tr>
+	@endforeach
+
+
+3.controller method(for adding cart):
+	public function AddCart(Request $request){
+
+        Cart::add([
+            'id' => $request->id,
+            'name' => $request->name,
+            'qty' => $request->qty,
+            'price' => $request->price,
+            'weight' => 20,
+            'options' => ['size' => 'large']]);
+
+         $notification = array(
+             'message' => 'Product Added Successfully',
+             'alert-type' => 'success'
+         );
+
+        return redirect()->back()->with($notification);
+
+    } // End Method
+	
+
+
+
+	
+
+
+
+
 
 	
 	
