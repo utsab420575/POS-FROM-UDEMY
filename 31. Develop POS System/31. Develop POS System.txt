@@ -126,6 +126,59 @@ now show cart data in pos blade:
 
 
 
+-------------------------------------4. Develop POS System Part 4-------------------------------
+Cart::subtotal()
+Cart::update($rowId, $product); // Will update the id, name and price
+
+
+predefined method use করে cart update করব। input এ item সংখ্যা বাড়ালে automatically price,item বাড়বে।
+
+{"rowId":"d03799238849fee2b4ce5bf19f70b53a","id":"9","name":"Rice","qty":"1","price":684,"options":{"size":"large"},"tax":"143.64","isSaved":false,"subtotal":"684.00"},"49b94e7c1fec3ef5540a81145e603955":
+1.route:(প্রত্যেক product table এর id এর জন্য cart এর আইডি generate হয়,সেটা দিয়ে cart আপডেট করতে হবে।)
+	Route::post('/cart-update/{rowId}','CartUpdate');
+
+2.controller method:
+	public function CartUpdate(Request $request,$rowId){More actions
+
+        $qty = $request->qty;
+		 // Will update the price,quantity/
+        $update = Cart::update($rowId,$qty);
+         
+         $notification = array(
+            'message' => 'Cart Updated Successfully',
+            'alert-type' => 'success'
+        );
+
+        return redirect()->back()->with($notification);
+
+    } // End Method 
+	
+
+3.update in pos blade:(from here we update cart item value)
+	
+	<td>
+		<form method="post" action="{{ url('/cart-update/'.$cart->rowId) }}">
+			@csrf
+				<input type="number" name="qty" value="{{ $cart->qty }}" style="width:40px;" min="1">
+				<button type="submit" class="btn btn-sm btn-success" style="margin-top:-2px ;"> <i class="fas fa-check"></i> </button>
+		</form>
+	</td>
+	
+
+
+4.we can see vat,total,total product
+	<div class="bg-primary">
+		<br>
+		<p style="font-size:18px; color:#fff"> Quantity : {{ Cart::count() }} </p>
+		<p style="font-size:18px; color:#fff"> SubTotal : {{ Cart::subtotal() }} </p>
+		<p style="font-size:18px; color:#fff"> Vat : {{ Cart::tax() }} </p>
+		<p><h2 class="text-white"> Total </h2> <h1 class="text-white"> {{ Cart::total() }}</h1>   </p>
+		<br>
+	</div>
+
+
+
+
 
 
 	
