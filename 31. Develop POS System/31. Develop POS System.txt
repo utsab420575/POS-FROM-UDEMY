@@ -1,0 +1,33 @@
+*********************************31. Develop POS System**************************
+
+
+-----------------------------------1. Install Bumbummen ShoppingCart----------------------------
+https://packagist.org/packages/hardevine/shoppingcart
+
+
+STEP 1: Install the Package
+	composer require hardevine/shoppingcart
+
+
+STEP 2: Publish config (optional):
+	php artisan vendor:publish --provider="Gloudemans\Shoppingcart\ShoppingcartServiceProvider"
+	
+	output(no need to run this: POS/Config/Cart.php file will generate):
+	 'tax' => 21,
+	  'format' => [
+
+        'decimals' => 2,
+
+        'decimal_point' => '.',
+
+        'thousand_seperator' => ','
+
+    ],
+
+(installation done)
+
+
+
+	
+	
+	
