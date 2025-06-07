@@ -180,6 +180,31 @@ predefined method use করে cart update করব। input এ item সং�
 
 
 
+-----------------------------------------5. Develop POS System Part 5----------------------------
+এখানে আমরা cart থেকে আইটেম  remove করব , cart এর rowId দিয়ে ।
+
+1.route:
+	Route::get('/cart-remove/{rowId}','CartRemove');
+
+2.controller method:	
+	 public function CartRemove($rowId){
+        Cart::remove($rowId);
+        $notification = array(
+            'message' => 'Cart Remove Successfully',
+            'alert-type' => 'success'
+        );
+
+        return redirect()->back()->with($notification);
+
+    } // End Method 
+	
+
+3.give route link to delete button:
+	<td> <a href="{{url('/cart-remove/'.$cart->rowId)}}"><i class="fas fa-trash-alt" style="color:#ffffff"></i></a> </td>
+
+
+
+
 
 	
 	
