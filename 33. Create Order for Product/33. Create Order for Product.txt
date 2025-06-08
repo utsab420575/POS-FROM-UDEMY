@@ -214,7 +214,26 @@ php artisan make:controller OrderController
 	
 
 	
-	
+
+
+
+---------------------------------------7. Create Order  System Part 7----------------------------
+এখানে complete order গুলো দেখাব।
+
+1.route:
+	Route::get('/complete/order','CompleteOrder')->name('complete.order');
+
+
+2.controller:
+	 public function CompleteOrder(){More actions
+
+        $orders = Order::where('order_status','complete')->get();
+        return view('backend.order.complete_order',compact('orders'));
+
+    }// End Method 
+
+3.blade:
+	php artisan make:view backend.order.complete_order
 	
 	
 	
