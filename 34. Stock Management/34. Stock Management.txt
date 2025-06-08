@@ -1,0 +1,55 @@
+*************************************34. Stock Management***********************************
+
+
+
+------------------------------------34. Stock Management------------------------------------
+এখানে product table এর ডাটা show করাব।
+এবং এখানে কোন product কতগুলো stock এ আছে তা দেখতে পারব।
+এবং এখানে আমরা পূর্বের orderdetial.blade থেকে order complete করলে product stock কমায় দিব যেগুলো ডেলিভারি দিয়েছি।
+
+1.stock কমানোর কাজ করি:
+	public function OrderStatusUpdate(Request $request)
+    {
+
+        $order_id = $request->id;
+
+        // 1. Update order status
+        Order::findOrFail($order_id)->update(['order_status' => 'complete']);
+
+        // 2. Get all related OrderDetails
+        $orderItems = OrderDetail::where('order_id', $order_id)->get();
+
+        // 3. Loop through each item and reduce product stock
+        foreach ($orderItems as $item) {
+            $product = Product::find($item->product_id);
+            if ($product) {
+                $product->product_store = $product->product_store - $item->quantity;
+                $product->save();
+            }
+        }
+
+        $notification = array(
+            'message' => 'Order Done Successfully',
+            'alert-type' => 'success'
+        );
+
+        return redirect()->route('pending.order')->with($notification);
+
+
+    }// End Method
+	
+
+
+
+2.route:
+	Route::get('/stock','StockManage')->name('stock.manage');
+
+3.controller:
+	public function StockManage(){
+
+    $product = Product::latest()->get();
+    return view('backend.stock.all_stock',compact('product'));
+
+    }// End Method
+4.blade:
+	php artisan make:view backend.stock.all_stock
