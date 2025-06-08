@@ -34,3 +34,12 @@
 এখানে পূর্বের মত আলাদাভাবে controller এ vat,total calculate করা হয় নাই,সবকিছু blade এ করা হয়েছে।
 
 
+
+
+----------------------------------3. Create Invoice System Part 3---------------------------------
+এখানে ‘submit’ button কে ‘create Invoice’ নিব। এখানে click করলে একটা modal show হবে। যার মাধ্যমে পেমেন্ট অপশন দেখাবে এবং সাবমিট হবে order।
+
+
+
+
+
