@@ -169,6 +169,47 @@ php artisan make:controller OrderController
 
 4.show data in view:
 	php artisan make:view backend.order.order_details
+	
+	
+	
+	
+
+
+-----------------------------------------6. Create Order  System Part 6------------------------------------------
+এখানে order_details এর complete order এ ক্লিক করলে payment status='pending' থেকে udpate হয়ে ‘complete’ হবে।
+এবং এখানে order কৃত product গুলোও দেখাব 
+
+
+1.order কৃত product দেখাব:
+	@foreach($orderItem as $item)
+		<tr>
+			<td> <img src="{{ asset($item->product->product_image) }}" style="width:50px; height: 40px;"> </td>
+			<td>{{ $item->product->product_name }}</td>
+			<td>{{ $item->product->product_code }}</td>
+			<td>{{ $item->quantity }}</td>
+			<td>{{ $item->product->selling_price }}</td>
+			<td>{{ $item->total }}</td>
+		</tr>
+	@endforeach
+	
+
+2.update এর জন্য route:
+	Route::post('/order/status/update','OrderStatusUpdate')->name('order.status.update');
+
+
+3.controller method:
+
+	public function OrderDetails($order_id){
+
+        $order = Order::where('id',$order_id)->first();
+
+        //$orderItem = OrderDetail::with('product')->where('order_id',$order_id)->orderBy('id','DESC')->get();
+        $orderItem = OrderDetail::where('order_id',$order_id)->orderBy('id','DESC')->get();
+        //return $orderItem;
+        return view('backend.order.order_details',compact('order','orderItem'));
+
+    }// End Method
+
 
 	
 
