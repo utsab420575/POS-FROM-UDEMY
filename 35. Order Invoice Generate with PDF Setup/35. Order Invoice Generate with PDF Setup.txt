@@ -51,3 +51,24 @@
 
 	step4.blade open/made:
 		php artisan make:view backend.order.order_invoice
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-----------------------------2. Create Invoice PDF  Part 2--------------------------
+এখানে controller থেকে পাঠানো ডাটাগুলো show করছি।
