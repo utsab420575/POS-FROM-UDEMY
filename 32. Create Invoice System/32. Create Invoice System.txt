@@ -23,3 +23,14 @@
 	
 4.form route change in pos page:
 	 <form method="POST" action="{{url('/create-invoice')}}">
+	 
+	 
+	 
+	 
+
+
+-----------------------------------2. Create Invoice System Part 2-------------------------------
+এখানে , invoice এর ডাটা গুলো show করা হয়েছে।
+এখানে পূর্বের মত আলাদাভাবে controller এ vat,total calculate করা হয় নাই,সবকিছু blade এ করা হয়েছে।
+
+
