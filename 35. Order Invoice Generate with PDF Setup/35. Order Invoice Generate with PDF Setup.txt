@@ -1,0 +1,53 @@
+**************************35. Order Invoice Generate with PDF Setup******************************
+
+-----------------------------------1. Create Invoice PDF  Part 1--------------------------------
+ Route::get('/complete/order','CompleteOrder')->name('complete.order');
+ এখানে complete_order.blade এর PDF invoice এ ক্লিক করলে pdf generate হবে।
+ 
+ DOMPDF INSTALL:
+	Step 1: Install DOMPDF Package
+		composer require barryvdh/laravel-dompdf
+	Step2 :create route: 
+		Route::get('/order/invoice-download/{order_id}','OrderInvoice');
+		[purpose: Defines an endpoint where the PDF can be generated and downloaded/viewed.]
+		
+	step3.controller:
+		/*Loads a Blade view (resources/views/pdf/invoice.blade.php).
+		Passes data into the view.
+
+		Renders it as a PDF.
+
+		Returns the PDF for download.*/
+
+
+		use Barryvdh\DomPDF\Facade\Pdf;
+
+		public function OrderInvoice($order_id)
+		{
+			// Fetch the order with details
+			$order = Order::findOrFail($order_id);
+
+			// Fetch order items along with product information
+			$orderItem = Orderdetails::with('product')
+				->where('order_id', $order_id)
+				->orderBy('id', 'DESC')
+				->get();
+
+			// Generate PDF using the view
+			$pdf = Pdf::loadView('backend.order.order_invoice', compact('order', 'orderItem'))
+				->setPaper('a4');
+
+			// Optional: Set options (only if needed for file path issues)
+			// DOMPDF uses these if your view includes images or fonts from `public/`
+			$pdf->setOptions([
+				'tempDir' => public_path(),
+				'chroot'  => public_path(),
+			]);
+
+			// Download the PDF
+			return $pdf->download('invoice.pdf');
+		}
+
+
+	step4.blade open/made:
+		php artisan make:view backend.order.order_invoice

@@ -157,3 +157,160 @@ Blade:
 
 Demo Data:
 Customer Object with orders: [Order Object (invoice_no: EPOS12345678), Order Object (invoice_no: EPOS87654321)]
+
+=============================
+8. Nested Objects from Relationships
+=============================
+//it retrieve all record from OrderDetail where order_id=5 
+//inside OrderDetail data it also retrieve product information
+ 
+Blade:
+@foreach ($orderItem as $item)
+    Product: {{ $item->product->name }} <br>
+    Quantity: {{ $item->quantity }} <br>
+    Unit Cost: {{ $item->unitcost }} <br>
+    Total: {{ $item->total }} <br>
+@endforeach
+
+$orderItem = OrderDetail::with('product')->where('order_id',$order_id)->orderBy('id','DESC')->get();
+
+[
+    App\Models\OrderDetail {
+        id: 10,
+        order_id: 5,
+        product_id: 3,
+        quantity: 2,
+        unitcost: 500,
+        total: 1000,
+        product: App\Models\Product {
+            id: 3,
+            name: "Laptop",
+            price: 500,
+            // other product fields
+        }
+    },
+    App\Models\OrderDetail {
+        id: 9,
+        order_id: 5,
+        product_id: 1,
+        quantity: 1,
+        unitcost: 300,
+        total: 300,
+        product: App\Models\Product {
+            id: 1,
+            name: "Mouse",
+            price: 300,
+            // other product fields
+        }
+    }
+]
+
+
+------------same:
+[
+  {
+    "id": 4,
+    "order_id": 3,
+    "product_id": 11,
+    "quantity": 1,
+    "unitcost": "684.00",
+    "total": "684.00",
+    "created_at": "2025-06-08T10:13:10.000000Z",
+    "updated_at": "2025-06-08T10:13:10.000000Z",
+    "product": {
+      "id": 11,
+      "product_name": "Computer",
+      "category_id": 2,
+      "supplier_id": 3,
+      "product_code": "PC-05",
+      "product_garage": "Voluptatum in quia d",
+      "product_image": "upload/product/1834282389795902.jpg",
+      "product_store": "Ipsum sit earum qui",
+      "buying_date": "1985-04-03",
+      "expire_date": "2000-04-10",
+      "buying_price": "1000",
+      "selling_price": "2000",
+      "created_at": "2025-06-08T10:16:16.000000Z",
+      "updated_at": "2025-06-08T10:16:16.000000Z"
+    }
+  },
+  {
+    "id": 3,
+    "order_id": 3,
+    "product_id": 12,
+    "quantity": 3,
+    "unitcost": "684.00",
+    "total": "2052.00",
+    "created_at": "2025-06-08T10:13:10.000000Z",
+    "updated_at": "2025-06-08T10:13:10.000000Z",
+    "product": {
+      "id": 12,
+      "product_name": "Mouse",
+      "category_id": 2,
+      "supplier_id": 3,
+      "product_code": "PC-06",
+      "product_garage": "Voluptatum in quia d",
+      "product_image": "upload/product/1834282399131027.jpg",
+      "product_store": "Ipsum sit earum qui",
+      "buying_date": "1985-04-03",
+      "expire_date": "2000-04-10",
+      "buying_price": "800",
+      "selling_price": "1000",
+      "created_at": "2025-06-08T10:16:06.000000Z",
+      "updated_at": "2025-06-08T10:16:06.000000Z"
+    }
+  }
+]
+
+
+
+
+----------------------------------------------DOMPDF---------------------------------------------------------
+
+DOMPDF INSTALL:
+	Step 1: Install DOMPDF Package
+		composer require barryvdh/laravel-dompdf
+	Step2 :create route: 
+		Route::get('/order/invoice-download/{order_id}','OrderInvoice');
+		[purpose: Defines an endpoint where the PDF can be generated and downloaded/viewed.]
+		
+	step3.controller:
+		/*Loads a Blade view (resources/views/pdf/invoice.blade.php).
+		Passes data into the view.
+
+		Renders it as a PDF.
+
+		Returns the PDF for download.*/
+
+
+		use Barryvdh\DomPDF\Facade\Pdf;
+
+		public function OrderInvoice($order_id)
+		{
+			// Fetch the order with details
+			$order = Order::findOrFail($order_id);
+
+			// Fetch order items along with product information
+			$orderItem = Orderdetails::with('product')
+				->where('order_id', $order_id)
+				->orderBy('id', 'DESC')
+				->get();
+
+			// Generate PDF using the view
+			$pdf = Pdf::loadView('backend.order.order_invoice', compact('order', 'orderItem'))
+				->setPaper('a4');
+
+			// Optional: Set options (only if needed for file path issues)
+			// DOMPDF uses these if your view includes images or fonts from `public/`
+			$pdf->setOptions([
+				'tempDir' => public_path(),
+				'chroot'  => public_path(),
+			]);
+
+			// Download the PDF
+			return $pdf->download('invoice.pdf');
+		}
+
+
+	step4.blade open/made:
+		php artisan make:view backend.order.order_invoice
