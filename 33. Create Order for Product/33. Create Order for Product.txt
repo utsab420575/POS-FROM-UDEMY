@@ -1,0 +1,27 @@
+***********************************************33. Create Order for Product***********************************
+
+
+----------------------------1. Create Order  System Part 1-------------------------------
+here we made:
+	orders table : (This is one row per sale, regardless of how many products were in that sale.)
+	(per sale এ একটা রেকর্ড স্টোর হবে , সব product মিলে কত টাকা paid,due ইত্যাদি তথ্য রাখবে।)
+	
+	orderdetails table – stores product-level breakdown (line items)
+	There are multiple rows per order, depending on how many different products were bought.
+	(orderdetails: প্রত্যেকটা order এ যে সকল product থাকবে তাদের তথ্য রাখবে; per sale এ একটা অর্ডার এর সকল product রাখবে।)
+	
+
+
+1.model,controller বানাব।
+
+php artisan make:model Order  -m
+php artisan make:model OrderDetail  -m
+
+
+php artisan make:controller OrderController  
+
+
+
+2.model relation created
+
+	

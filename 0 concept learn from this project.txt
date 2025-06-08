@@ -68,13 +68,14 @@ http://127.0.0.1:8000/
 
 Laravel Naming Conventions Recap
 
-| Type                | Example                      | Notes                                |
-|---------------------|-------------------------------|------------------------------------ |
-| Model class         | AdvanceSalary                | PascalCase (studly caps)             |
-| Table name          | advance_salaries             | snake_case plural                    |
-| Relationship method | advanceSalaries()            | camelCase plural (for hasMany)       |
-| BelongsTo method    | employee()                   | camelCase singular                   |
-| has method          | attendance()                 | camelCase singular                   |
+************************Naming Convention Model/Table/Model Method***********************
+
+| Case               | Use For                       | Example                          |
+|--------------------|-------------------------------|----------------------------------|
+| PascalCase         | Model Name                    | OrderDetail/Customer             |
+| snake_case_plural  | Table Name                    | order_details                    |
+| camelCase_plural   | hasMany Relationship Method   | orderDetails()/employees()       |
+| camelCase_singular | belongsTo Relationship Method | order()/customer()               |
 
 
 
@@ -367,6 +368,278 @@ class ProductsImport implements ToCollection, WithHeadingRow, SkipsOnFailure, Sk
 
         return redirect()->route('all.product')->with($notification);
     }
+
+
+
+
+
+
+
+
+
+---------------------------------------6.own cart make-----------------------------------------
+
+ Step 0: Use Laravel Session to Store Cart Data
+	You'll store cart items in the session using Laravel's session() helper.
+	[
+		'id' => 1,
+		'name' => 'Product Name',
+		'qty' => 2,
+		'price' => 100,
+		'subtotal' => 200,
+	]
+Step 0: Design the Cart Structure in Session(এটাই মূলত cart যেখানে cart এর আইটেম গুলো স্টোর হবে)
+	{
+		"12(product id)": {
+			"id": "12",
+			"name": "Mouse",
+			"qty": "1",
+			"price": "684",
+			"subtotal": 684
+		},
+		"11": {
+			"id": "11",
+			"name": "Computer",
+			"qty": "1",
+			"price": "684",
+			"subtotal": 684
+		}
+	}
+
+
+
+step1:create all route(cart data show,cart add, cart update,cart remove):
+
+	// POS with own made cart (prefix: own)
+    Route::prefix('own')->controller(PosController::class)->group(function () {
+        Route::get('/pos', 'OwnPos')->name('own.pos');
+        Route::post('/add-cart', 'OwnAddCart')->name('own.add.cart');
+        Route::post('/cart-update/{productId}', 'OwnCartUpdate')->name('own.cart.update');
+        Route::get('/cart-remove/{productId}', 'OwnCartRemove')->name('own.cart.remove');
+
+
+        //this route for testing ; showing cart items
+        Route::get('/allitem','OwnAllItem');
+        //for destroy cart item
+        Route::get('/cart-destroy', 'OwnDestroyCart')->name('own.cart.destroy');
+    });
+	
+
+step2:controller method;
+
+	//this will show all product,customer,all cart data if exit;
+	//here we calculate cart total item,total item price,total vat everything
+	public function OwnPos() {
+        $product = Product::latest()->get();
+        $customer = Customer::latest()->get();
+        $cart = session()->get('own_cart', []);
+
+        $cartTotalQty = 0;
+        $cartSubTotal = 0;
+
+        foreach ($cart as $item) {
+            $cartTotalQty += $item['qty'];
+            $cartSubTotal += $item['qty'] * $item['price'];
+        }
+
+        $vat = $cartSubTotal * 0.05;
+        $total = $cartSubTotal + $vat;
+
+        return view('backend.pos.own_pos_page', compact(
+            'product',
+            'customer',
+            'cart',
+            'cartTotalQty',
+            'cartSubTotal',
+            'vat',
+            'total'
+        ));
+    }
+
+
+step3: make pos_page.blade file for showing all product,cart added item
+	see blade(own_pos_page.blade.php)
+	//add item in cart
+	 @foreach($product as $key => $item)
+		<tr>
+			<form method="POST" action="{{ route('own.add.cart') }}">
+				@csrf
+				<input type="hidden" name="id" value="{{ $item->id }}">
+				<input type="hidden" name="name" value="{{ $item->product_name }}">
+				<input type="hidden" name="qty" value="1">
+				<input type="hidden" name="price" value="{{ $item->selling_price }}">
+				<td>{{ $key + 1 }}</td>
+				<td><img src="{{ asset($item->product_image) }}" style="width:50px; height:40px;"></td>
+				<td>{{ $item->product_name }}</td>
+				<td>
+					<button type="submit" class="btn btn-outline-primary btn-sm">
+						<i class="fas fa-plus-square"></i>
+					</button>
+				</td>
+			</form>
+		</tr>
+	@endforeach
+	
+	//show item from cart
+	<tbody>
+		@php
+			$ownCart = session('own_cart', []);
+		@endphp
+
+
+		/*12": {
+			"id": "12",
+			"name": "Mouse",
+			"qty": "1",
+			"price": "684",
+			"subtotal": 684
+		}
+		
+		$productId=12
+		$item={
+			"id": "12",
+			"name": "Mouse",
+			"qty": "1",
+			"price": "684",
+			"subtotal": 684
+		}
+		*/
+		@if(count($ownCart) > 0)
+			@foreach(session('own_cart') as $productId => $item)
+				@php
+					$subTotal = $item['price'] * $item['qty'];
+				@endphp
+				<tr>
+					<td>{{ $item['name'] }}</td>
+					<td>
+						<form method="POST" action="{{ route('own.cart.update', $productId) }}">
+							@csrf
+							<input type="number" name="qty" value="{{ $item['qty'] }}" style="width: 50px;" min="1">
+							<button type="submit" class="btn btn-sm btn-success"><i class="fas fa-check"></i></button>
+						</form>
+					</td>
+					<td>{{ $item['price'] }}</td>
+					<td>{{ $subTotal }}</td>
+					<td>
+						<a href="{{ route('own.cart.remove', $productId) }}" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></a>
+					</td>
+				</tr>
+			@endforeach
+		@else
+			<tr>
+				<td colspan="5">Cart is empty.</td>
+			</tr>
+		@endif
+	</tbody>
+	
+
+step4:add item in cart
+	<form method="POST" action="{{ route('own.add.cart') }}">
+	যখন item submit করা হবে product list থেকে তখন cart এ আইটেম add হবে।
+	
+	
+	//this will add item in cart
+    public function OwnAddCart(Request $request) {
+        //$cart = session()->get('cart', []);
+        $cart = session()->get('own_cart', []);
+
+        $productId = $request->id;
+
+        // If item already in cart, increase qty
+        if (isset($cart[$productId])) {
+            $cart[$productId]['qty'] += $request->qty;
+            $cart[$productId]['subtotal'] = $cart[$productId]['qty'] * $cart[$productId]['price'];
+        } else {
+            $cart[$productId] = [
+                'id' => $productId,
+                'name' => $request->name,
+                'qty' => $request->qty,
+                'price' => $request->price,
+                'subtotal' => $request->qty * $request->price,
+            ];
+        }
+
+        //session()->put('cart', $cart);
+        session()->put('own_cart', $cart);//give own cart name; not to interfere with global cart
+
+        return redirect()->back()->with('success', 'Product added to cart successfully.');
+    }
+
+
+
+step5:update cart item
+	<form method="POST" action="{{ route('own.cart.update', $productId) }}">
+	যখন counter increase করে udpate button এ ক্লিক করবে তখন cart ডাটা আপডেট হবে।
+	
+	
+	//this will update cart item,price
+    public function OwnCartUpdate(Request $request, $productId) {
+        //$cart = session()->get('cart', []);
+        $cart = session()->get('own_cart', []);//own cart; for not conflict with global cart
+
+        if (isset($cart[$productId])) {
+            $cart[$productId]['qty'] = $request->qty;
+            $cart[$productId]['subtotal'] = $request->qty * $cart[$productId]['price'];
+            //session()->put('cart', $cart);
+            session()->put('own_cart', $cart);//give own cart name; not to interfere with global cart
+        }
+
+        return redirect()->back()->with('success', 'Cart updated successfully.');
+    }
+	
+
+
+
+step6:item remove from cart
+	<td>
+		<a href="{{ route('own.cart.remove', $productId) }}" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></a>
+	</td>
+	
+যখন item remove করা হবে তখন item টি cart থেকে চলে যাবে।
+
+//this will remove item from cart
+    public function OwnCartRemove($productId) {
+        //$cart = session()->get('cart', []);
+        $cart = session()->get('own_cart', []);//give own cart name; not to interfere with global cart
+        unset($cart[$productId]);
+        //session()->put('cart', $cart);
+        session()->put('own_cart', $cart);//give own cart name; not to interfere with global cart
+
+        return redirect()->back()->with('success', 'Cart item removed successfully.');
+    }
+	
+	
+	
+
+step7:testing
+	
+	এর মাধ্যমে শুধুমাত্র cart এর ডাটা গুলো দেখব:
+	
+	//testing puropose; showing cart data
+    public function OwnAllItem(){
+        //$product_item = session()->get('cart', []);
+        $product_item = session()->get('own_cart', []);//give own cart name; not to interfere with global cart
+
+
+        return view('backend.pos.own_text_item',compact('product_item'));
+
+    } // End Method More actions
+
+
+step8:cart destroy
+	public function OwnDestroyCart()
+    {
+        //session()->forget('cart'); // Remove the entire cart session
+        //session()->forget('own_cart'); // Remove the entire cart session
+
+        $notification = array(
+            'message' => 'All Cart Items Removed Successfully',
+            'alert-type' => 'success'
+        );
+
+        return redirect()->back()->with($notification);
+    }
+
 
 
 
