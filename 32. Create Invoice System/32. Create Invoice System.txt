@@ -1,0 +1,25 @@
+*******************************************32. Create Invoice System******************************
+
+
+-------------------------------------------1. Create Invoice System Part 1------------------------
+এখানে pos page থেকে create invoice এ ক্লিক করলে invoice page create হবে।
+
+
+1.route:
+	Route::post('/create-invoice','CreateInvoice');
+	
+2.controller method:(sent all data to invoice blade)
+	 public function CreateInvoice(Request $request){More actions
+
+         $contents = Cart::content();
+         $cust_id = $request->customer_id;
+         $customer = Customer::where('id',$cust_id)->first();
+         return view('backend.invoice.product_invoice',compact('contents','customer'));
+
+    } // End Method 
+
+3.make blade:
+	 php artisan make:view backend.invoice.product_invoice
+	
+4.form route change in pos page:
+	 <form method="POST" action="{{url('/create-invoice')}}">
