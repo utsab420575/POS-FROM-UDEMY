@@ -141,6 +141,36 @@ php artisan make:controller OrderController
 	
 	
 	
+	
+
+
+----------------------------------------------5. Create Order  System Part 5--------------------------------------
+এখানে আমরা pending_order.blade এর প্রত্যেকটি order এর detail দেখব যখন single order এ ক্লিক করবে:
+	
+
+1.route:
+	Route::get('/order/details/{order_id}','OrderDetails')->name('order.details');
+	
+2.route change:
+	<a href="{{ route('order.details',$item->id) }}" class="btn btn-blue rounded-pill waves-effect waves-light"> Details </a>
+	
+	
+	
+3.controller method:
+	 public function OrderDetails($order_id){More actions
+
+        $order = Order::where('id',$order_id)->first();
+
+        $orderItem = Orderdetails::with('product')->where('order_id',$order_id)->orderBy('id','DESC')->get();
+        return view('backend.order.order_details',compact('order','orderItem'));
+
+    }// End Method 
+
+
+4.show data in view:
+	php artisan make:view backend.order.order_details
+
+	
 
 	
 	
