@@ -111,6 +111,34 @@ php artisan make:controller OrderController
 		
  }
 
+
+
+
+
+-------------------------------------4. Create Order  System Part 4------------------------------
+এখানে আমরা pending , complete order গুলো দেখাব।
+
+
+
+1.sidebar add menu:
+		<li>
+			<a href="{{ route('pending.order') }}">Pending Orders </a>
+		</li>
+		
+2.create route:
+	Route::get('/pending/order','PendingOrder')->name('pending.order');
+
+
+3.controller method(show all pending order):
+	public function PendingOrder(){
+        $orders = Order::where('order_status','pending')->get();
+        return view('backend.order.pending_order',compact('orders'));
+    }// End Method
+	
+
+4.make view(showing all pending order):
+	php artisan make:view backend.order.pending_order
+	
 	
 	
 

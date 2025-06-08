@@ -1,0 +1,159 @@
+
+=============================
+1. Indexed Array (Numeric Array)
+=============================
+Controller:
+$colors = ['Red', 'Green', 'Blue'];
+return view('example', compact('colors'));
+
+Blade:
+@foreach ($colors as $index => $color)
+    {{ $index }} - {{ $color }}
+@endforeach
+
+Demo Data:
+['Red', 'Green', 'Blue']
+
+
+=============================
+2. Associative Array
+=============================
+Controller:
+$user = [
+    'name' => 'Utsab',
+    'email' => 'utsab@example.com',
+    'department' => 'CSE',
+];
+return view('example', compact('user'));
+
+Blade:
+@foreach ($user as $key => $value)
+    {{ ucfirst($key) }}: {{ $value }}
+@endforeach
+
+Demo Data:
+['name' => 'Utsab', 'email' => 'utsab@example.com', 'department' => 'CSE']
+
+
+=============================
+3. Array of Associative Arrays
+=============================
+Controller:
+$products = [
+    ['name' => 'Keyboard', 'price' => 500],
+    ['name' => 'Mouse', 'price' => 300],
+];
+return view('example', compact('products'));
+
+Blade:
+@foreach ($products as $product)
+    {{ $product['name'] }} - {{ $product['price'] }} TK
+@endforeach
+
+Demo Data:
+[{'name': 'Keyboard', 'price': 500}, {'name': 'Mouse', 'price': 300}]
+
+
+=============================
+4. Array of Objects (Eloquent Collection)
+=============================
+Controller:
+$orders = Order::all();
+return view('example', compact('orders'));
+
+Blade:
+@foreach ($orders as $key => $order)
+    {{ $key }} - {{ $order->invoice_no }} - {{ $order->total }}
+@endforeach
+
+Demo Data:
+[Order Object (invoice_no: EPOS12345678, total: 2872.80), Order Object (invoice_no: EPOS87654321, total: 1500.00)]
+
+
+=============================
+5. Object (Single Row from Model)
+=============================
+Controller:
+$order = Order::find(1);
+return view('example', compact('order'));
+
+Blade:
+Invoice: {{ $order->invoice_no }}
+Total: {{ $order->total }}
+
+Demo Data:
+Order Object (invoice_no: EPOS12345678, total: 2872.80)
+
+
+=============================
+6. Collection with Grouping or Nesting
+=============================
+Controller:
+$grouped = [
+    'Electronics' => [
+        ['name' => 'Keyboard', 'price' => 500],
+        ['name' => 'Mouse', 'price' => 300],
+    ],
+    'Stationery' => [
+        ['name' => 'Pen', 'price' => 20],
+        ['name' => 'Notebook', 'price' => 100],
+    ],
+];
+return view('example', compact('grouped'));
+
+Blade:
+@foreach ($grouped as $category => $items)
+    <h4>{{ $category }}</h4>
+    <ul>
+    @foreach ($items as $item)
+        <li>{{ $item['name'] }} - {{ $item['price'] }} TK</li>
+    @endforeach
+    </ul>
+@endforeach
+
+Demo Data:
+{'Electronics': [{'name': 'Keyboard', 'price': 500}, {'name': 'Mouse', 'price': 300}],
+ 'Stationery': [{'name': 'Pen', 'price': 20}, {'name': 'Notebook', 'price': 100}]}
+
+
+=============================
+7. JSON Decoded Array/Object
+=============================
+Controller:
+$json = '[{"name": "Keyboard", "price": 500}, {"name": "Mouse", "price": 300}]';
+$data = json_decode($json); // object type
+$dataArray = json_decode($json, true); // associative array
+return view('example', compact('data', 'dataArray'));
+
+Blade:
+{{-- Object Version --}}
+@foreach ($data as $item)
+    {{ $item->name }} - {{ $item->price }}
+@endforeach
+
+{{-- Associative Array Version --}}
+@foreach ($dataArray as $item)
+    {{ $item['name'] }} - {{ $item['price'] }}
+@endforeach
+
+Demo Data:
+'[{"name": "Keyboard", "price": 500}, {"name": "Mouse", "price": 300}]'
+
+
+=============================
+8. Nested Objects from Relationships
+=============================
+Controller:
+$customers = Customer::with('orders')->get();
+return view('example', compact('customers'));
+
+Blade:
+@foreach ($customers as $customer)
+    <h4>{{ $customer->name }}</h4>
+    @foreach ($customer->orders as $order)
+        Invoice: {{ $order->invoice_no }}<br>
+    @endforeach
+@endforeach
+
+Demo Data:
+Customer Object with orders: [Order Object (invoice_no: EPOS12345678), Order Object (invoice_no: EPOS87654321)]
