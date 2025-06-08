@@ -24,4 +24,53 @@ php artisan make:controller OrderController
 
 2.model relation created
 
+
+
+
+
+
+-------------------------2. Create Order  System Part 2----------------------------
+এখানে product_invoice.blade এ modal এ ‍'complete order' button এ ক্লিক করলে ডাটা ডাটাবেসে স্টোর হবে।
+
+
+
+1.route(for data store):
+	///Order All Route More actions
+    Route::controller(OrderController::class)->group(function(){
+
+        Route::post('/final-invoice','FinalInvoice');
+    });
+	 
+2.send data to product_invoice.blade we calculate vat,total etc. in controller
+	 $contents = session()->get('own_cart', []);
+        $subTotal = 0;
+        $totalProducts = 0;
+
+        foreach ($contents as $item) {
+            $subTotal += $item['subtotal'];  // use 'subtotal' directly
+            $totalProducts += $item['qty'];  // make sure qty is integer
+        }
+
+        $vat = $subTotal * 0.05;
+        $total = $subTotal + $vat;
+	
+3.add input field in modal(product_invoice.blade.php) for send data to controller(OrderController) method:
+	<form class="px-3" method="post" action="{{ url('/final-invoice') }}">
+	
+		<input type="hidden" name="customer_id" value="{{ $customer->id }}">
+		<input type="hidden" name="order_date" value="{{ date('d-F-Y') }}">
+		<input type="hidden" name="order_status" value="pending">
+		<input type="hidden" name="total_products" value="{{ $totalProducts }}">
+		<input type="hidden" name="sub_total" value="{{ number_format($subTotal, 2, '.', '') }}">
+		<input type="hidden" name="vat" value="{{ number_format($vat, 2, '.', '') }}">
+		<input type="hidden" name="total" value="{{ number_format($total, 2, '.', '') }}">
+	
+	
+
+	
+	
+	
+	
+	
+
 	
