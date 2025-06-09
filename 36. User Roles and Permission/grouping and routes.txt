@@ -17,7 +17,7 @@
 |                         | `employee.attendance.view`       | View attendance by date 
 
 
-      |
+      
 | `customer`              | `customer.all`                   | View all customers            |
 |                         | `customer.add`                   | Add customer                  |
 |                         | `customer.store`                 | Store customer                |
@@ -35,29 +35,33 @@
 |                         | `supplier.update`                | Update supplier               |
 |                         | `supplier.delete`                | Delete supplier               |
 |                         | `supplier.details`               | View supplier details         |
-| `salary`                | `salary.advance.add`             | Add advance salary            |
 
 
 
 
-|                         | `salary.advance.store`           | Store advance salary          |
-|                         | `salary.advance.all`             | List advance salary           |
-|                         | `salary.advance.edit`            | Edit advance salary           |
-|                         | `salary.advance.update`          | Update advance salary         |
-|                         | `salary.advance.delete`          | Delete advance salary         |
-|                         | `salary.pay`                     | Pay salary                    |
-|                         | `salary.pay.now`                 | Pay salary to one employee    |
-|                         | `salary.pay.store`               | Store paid salary             |
+| employee_salary      | employee.salary.advance.add         | Add advance salary            |
+| 		       | employee.salary.advance.store       | Store advance salary          |
+| 		       | employee.salary.advance.all         | List advance salary           |
+| 		       | employee.salary.advance.edit        | Edit advance salary           |
+| 		       | employee.salary.advance.update      | Update advance salary         |
+| 		       | employee.salary.advance.delete      | Delete advance salary         |
+| 		       | employee.salary.pay                 | Pay salary                    |
+| 		       | employee.salary.pay.now             | Pay salary to one employee    |
+| 		       | employee.salary.pay.store           | Store paid salary             |
+
+
+
+
 | `category`              | `category.all`                   | View all categories           |
-
-
-
-
-
 |                         | `category.store`                 | Store new category            |
 |                         | `category.edit`                  | Edit category                 |
 |                         | `category.update`                | Update category               |
 |                         | `category.delete`                | Delete category               |
+
+
+
+
+
 | `product`               | `product.all`                    | View all products             |
 |                         | `product.add`                    | Add product                   |
 |                         | `product.store`                  | Store product                 |

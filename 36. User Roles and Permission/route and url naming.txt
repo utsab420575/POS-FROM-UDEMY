@@ -1,0 +1,22 @@
+-------------------------------------------------groupname  যেমন employee / এরপর add/edit/delete/update------------------------------
+
+| Element             | Rule / Format                             | Example                                    |
+| ------------------- | ----------------------------------------- | ------------------------------------------ |
+| **resource\_group** | Always singular or logical entity name    | `category`, `employee`, `student`          |
+| **action**          | Use consistent verbs (see below)          | `all`, `store`, `edit`, `update`, `delete` |
+| **route name**      | Use `.` dot notation                      | `category.edit`                            |
+| **URL path**        | Use `/` slashes, lowercase, no camelCase  | `/category/edit/{id}`                      |
+| **Controller**      | Group logically using `Route::controller` | `CategoryController::class`                |
+
+
+
+
+| Action   | Purpose                    | Route Name        | URL Path                |
+| -------- | -------------------------- | ----------------- | ----------------------- |
+| `all`    | Show list of items         | `category.all`    | `/category/all`         |
+| `store`  | Save new item (POST)       | `category.store`  | `/category/store`       |
+| `edit`   | Edit form (GET)            | `category.edit`   | `/category/edit/{id}`   |
+| `update` | Update existing (POST)     | `category.update` | `/category/update`      |
+| `delete` | Delete item (GET)          | `category.delete` | `/category/delete/{id}` |
+| `add`    | Form for adding (optional) | `category.add`    | `/category/add`         |
+| `view`   | View single item           | `category.view`   | `/category/view/{id}`   |

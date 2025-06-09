@@ -181,6 +181,64 @@ permission গুলো permission table এ store হবে।
 
 
 
+------------------------------here we send all permission to database using database seeder---------------------
+1.seeder
+	php artisan make:seeder PermissionSeeder
+This will create a file at:
+	database/seeders/PermissionSeeder.php
+	
+
+2.সব permission গুলো PermissionSeeder.php তে দিয়ে দিব:
+	class PermissionSeeder extends Seeder
+	{
+		public function run(): void
+		{
+			$permissions = [
+				// Employee
+				['name' => 'employee.all', 'group_name' => 'employee'],
+				['name' => 'employee.add', 'group_name' => 'employee'],
+				['name' => 'employee.store', 'group_name' => 'employee'],
+				['name' => 'employee.edit', 'group_name' => 'employee'],
+				['name' => 'employee.update', 'group_name' => 'employee'],
+				['name' => 'employee.delete', 'group_name' => 'employee'],
+				
+				---
+				---
+			
+			foreach ($permissions as $permission) {
+				Permission::create([
+					'name' => $permission['name'],
+					'group_name' => $permission['group_name'],
+					'guard_name' => 'web',
+					'created_at' => Carbon::now(),
+				]);
+			}
+		}
+	}
+	
+
+
+3.run:
+	php artisan db:seed --class=PermissionSeeder
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
