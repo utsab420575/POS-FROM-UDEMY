@@ -128,5 +128,52 @@ Illuminate\Support\Collection {
 	
 	
 
+--------------------------------------------3. Setup User Permission Part 2-----------------------------------
+এখানে all_permission.blade এ থাকা 'Add Permission' এ ক্লিক করলে নতুন একটি blade open হবে এবং এখান থেকে সব permission দেয়া যাবে।
+permission গুলো permission table এ store হবে।
+
+
+1.route :
+	Route::get('/add/permission','AddPermission')->name('add.permission');
+	Route::post('/store/permission','StorePermission')->name('permission.store');
+
+2.controller method:
+	
+	//permission group name show
+	public function AddPermission(){
+        return view('backend.pages.permission.add_permission');
+    } // End Method
+
+
+	//after selecting group name,permission name data store into permission table
+    public function StorePermission(Request $request){
+
+
+		//this method from spaite for create permission
+        $role = Permission::create([
+            'name' => $request->name,
+            'group_name' => $request->group_name,
+
+        ]);
+
+        $notification = array(
+            'message' => 'Permission Added Successfully',
+            'alert-type' => 'success'
+        );
+
+        return redirect()->route('all.permission')->with($notification);
+
+    }// End Method
+	
+
+3.make view:(এখান থেকে মূলত permission গুলো প্রদর্শন এবং স্টোর এর কাজ করব।)
+	 php artisan make:view backend.pages.permission.add_permission
+
+
+
+
+
+
+
 
 
