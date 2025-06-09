@@ -168,6 +168,15 @@ permission গুলো permission table এ store হবে।
 
 3.make view:(এখান থেকে মূলত permission গুলো প্রদর্শন এবং স্টোর এর কাজ করব।)
 	 php artisan make:view backend.pages.permission.add_permission
+	 
+	 
+
+
+
+----------------------------------------------------------------------------------
+এখানে আমরা web.php file কে আপডেট করছি।যাতে করে গ্রুপিং সহজে করা যায়।
+সব project এ আমরা এভাবে routing করব।
+
 
 
 
