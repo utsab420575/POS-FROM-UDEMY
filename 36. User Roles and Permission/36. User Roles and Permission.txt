@@ -351,8 +351,76 @@ This will create a file at:
 	php artisan make:view backend.pages.roles.add_roles
 	
 	
+	
 
 
+
+
+
+
+
+--------------------------------------------6.1 Setup User Roles Part 2-----------------------------
+এখানে আমরা Role edit,delete এর কাজ করব।
+
+1.route:
+Route::get('/roles/edit/{id}', 'EditPermission')->name('roles.edit');
+Route::post('/roles/update', 'UpdatePermission')->name('roles.update');
+Route::get('/roles/delete/{id}', 'DeletePermission')->name('roles.delete');
+
+
+2.controller method:
+	public function EditRoles($id){More actions
+
+        $roles = Role::findOrFail($id);
+        return view('backend.pages.roles.edit_roles',compact('roles'));
+
+    }// End Method 
+
+     public function UpdateRoles(Request $request){
+
+        $role_id = $request->id;
+
+        Role::findOrFail($role_id)->update([
+            'name' => $request->name, 
+
+        ]);
+
+        $notification = array(
+            'message' => 'Role Updated Successfully',
+            'alert-type' => 'success'
+        );
+
+        return redirect()->route('roles.all')->with($notification);
+
+    }// End Method 
+
+
+     public function DeleteRoles($id){
+
+        Role::findOrFail($id)->delete();
+
+        $notification = array(
+            'message' => 'Role Deleted Successfully',
+            'alert-type' => 'success'
+        );
+
+        return redirect()->back()->with($notification);
+
+    }// End Method 
+	
+	
+3.blade:(এখানে role edit হবে।)
+	php artisan make:view backend.pages.roles.edit_roles
+
+
+4.change route in all_roles files for edit , delete
+	 <td>
+		<a href="{{ route('roles.edit',$item->id) }}"
+		   class="btn btn-blue rounded-pill waves-effect waves-light">Edit</a>
+		<a href="{{ route('roles.delete',$item->id) }}"
+		   class="btn btn-danger rounded-pill waves-effect waves-light" id="delete">Delete</a>
+
+	</td>
 
 
 
