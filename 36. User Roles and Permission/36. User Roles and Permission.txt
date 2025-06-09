@@ -286,6 +286,71 @@ This will create a file at:
 
 	</td>
 	
+	
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------------5. Setup User Roles Part 1---------------------------------------------
+এখানে permission এর মত Role Add করা হবে। যেহেতু এখানে শুধুমাত্র 'name' field add করতে হবে তাই Blade দিয়ে add করব।
+
+
+
+1.route:
+	Route::get('/all/roles','AllRoles')->name('all.roles');More actions
+	Route::get('/add/roles','AddRoles')->name('add.roles');
+	Route::post('/store/roles','StoreRoles')->name('roles.store');
+	
+
+
+2.controller method:
+	public function AllRoles()
+    {
+
+        $roles = Role::all();
+        return view('backend.pages.roles.all_roles', compact('roles'));
+
+    }// End Method
+
+
+    public function AddRoles()
+    {
+
+        return view('backend.pages.roles.add_roles');
+
+    }// End Method
+
+
+    public function StoreRoles(Request $request)
+    {
+
+        $role = Role::create([
+            'name' => $request->name,
+
+        ]);
+
+        $notification = array(
+            'message' => 'Role Added Successfully',
+            'alert-type' => 'success'
+        );
+
+        return redirect()->route('roles.all')->with($notification);
+
+    }// End Method
+
+
+3.blade make(এখানে আমরা সব Role দেখাব , role add করতে পারব):
+	php artisan make:view backend.pages.roles.all_roles
+	
+	php artisan make:view backend.pages.roles.add_roles
+	
+	
 
 
 
