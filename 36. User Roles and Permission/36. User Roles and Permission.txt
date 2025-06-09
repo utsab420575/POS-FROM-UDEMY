@@ -431,6 +431,35 @@ Route::get('/roles/delete/{id}', 'DeletePermission')->name('roles.delete');
 
 
 
+--------------------------------------------7. Add Roles in Permission Part 1-----------------------------
+এখানে আমরা Role গুলো কোন কোন permission(মানে, কোন কোন route) access করতে পারবে তা দিব।এখানে জাস্ট blade টা দেখানো হয়েছে
+পরের ভিডিওতে actual কাজ করা হয়েছে।
+
+
+1.route:
+	Route::get('/roles/permissions/add', 'AddRolesPermission')->name('roles.permissions.add');
+
+
+3.controller method:
+	 public function AddRolesPermission(){More actions
+
+        $roles = Role::all();
+        $permissions = Permission::all();
+        return view('backend.pages.roles.add_roles_permission',compact('roles','permissions'));
+
+    }// End Method 
+	
+
+
+3.blade make:
+	php artisan make:view backend.pages.roles.add_roles_permission
+
+
+
+
+
+
+
 
 
 
