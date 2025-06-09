@@ -1,0 +1,115 @@
+| **Module / Group Name** | **Permission Name (route name)** | **Description**               |
+| ----------------------- | -------------------------------- | ----------------------------- |
+| `employee`              | `employee.all`                   | View all employees            |
+|                         | `employee.add`                   | Add new employee              |
+|                         | `employee.store`                 | Store new employee            |
+|                         | `employee.edit`                  | Edit employee info            |
+|                         | `employee.update`                | Update employee info          |
+|                         | `employee.delete`                | Delete an employee            |
+
+
+
+| `employee_attendance`   | `employee.attendance.list`       | View employee attendance list |
+|                         | `employee.attendance.add`        | Add attendance                |
+|                         | `employee.attendance.store`      | Store attendance              |
+|                         | `employee.attendance.edit`       | Edit attendance               |
+|                         | `employee.attendance.update`     | Update attendance             |
+|                         | `employee.attendance.view`       | View attendance by date 
+
+
+      |
+| `customer`              | `customer.all`                   | View all customers            |
+|                         | `customer.add`                   | Add customer                  |
+|                         | `customer.store`                 | Store customer                |
+|                         | `customer.edit`                  | Edit customer                 |
+|                         | `customer.update`                | Update customer               |
+|                         | `customer.delete`                | Delete customer               |
+
+
+
+
+| `supplier`              | `supplier.all`                   | View all suppliers            |
+|                         | `supplier.add`                   | Add supplier                  |
+|                         | `supplier.store`                 | Store supplier                |
+|                         | `supplier.edit`                  | Edit supplier                 |
+|                         | `supplier.update`                | Update supplier               |
+|                         | `supplier.delete`                | Delete supplier               |
+|                         | `supplier.details`               | View supplier details         |
+| `salary`                | `salary.advance.add`             | Add advance salary            |
+
+
+
+
+|                         | `salary.advance.store`           | Store advance salary          |
+|                         | `salary.advance.all`             | List advance salary           |
+|                         | `salary.advance.edit`            | Edit advance salary           |
+|                         | `salary.advance.update`          | Update advance salary         |
+|                         | `salary.advance.delete`          | Delete advance salary         |
+|                         | `salary.pay`                     | Pay salary                    |
+|                         | `salary.pay.now`                 | Pay salary to one employee    |
+|                         | `salary.pay.store`               | Store paid salary             |
+| `category`              | `category.all`                   | View all categories           |
+
+
+
+
+
+|                         | `category.store`                 | Store new category            |
+|                         | `category.edit`                  | Edit category                 |
+|                         | `category.update`                | Update category               |
+|                         | `category.delete`                | Delete category               |
+| `product`               | `product.all`                    | View all products             |
+|                         | `product.add`                    | Add product                   |
+|                         | `product.store`                  | Store product                 |
+|                         | `product.edit`                   | Edit product                  |
+|                         | `product.update`                 | Update product                |
+|                         | `product.delete`                 | Delete product                |
+|                         | `product.barcode`                | Generate barcode              |
+|                         | `product.import.view`            | View import page              |
+|                         | `product.import`                 | Import products               |
+|                         | `product.export`                 | Export products               |
+
+
+
+| `expense`               | `expense.add`                    | Add expense                   |
+|                         | `expense.store`                  | Store expense                 |
+|                         | `expense.today`                  | View today's expenses         |
+|                         | `expense.month`                  | View this month's expenses    |
+|                         | `expense.year`                   | View this year's expenses     |
+|                         | `expense.edit`                   | Edit expense                  |
+|                         | `expense.update`                 | Update expense                |
+
+
+
+| `pos`                   | `pos.index`                      | View POS page                 |
+|                         | `pos.cart.add`                   | Add item to cart              |
+|                         | `pos.cart.items`                 | View cart items               |
+|                         | `pos.cart.update`                | Update cart item              |
+|                         | `pos.cart.remove`                | Remove cart item              |
+
+
+
+| `own_pos`               | `own.pos.index`                  | View own POS                  |
+|                         | `own.pos.cart.add`               | Add item to own cart          |
+|                         | `own.pos.cart.update`            | Update own cart item          |
+|                         | `own.pos.cart.remove`            | Remove from own cart          |
+|                         | `own.pos.cart.items`             | View own cart items           |
+|                         | `own.pos.cart.destroy`           | Destroy own cart              |
+|                         | `own.pos.invoice.create`         | Create own invoice            |
+
+
+
+| `order`                 | `order.invoice.final`            | Finalize invoice              |
+|                         | `order.pending`                  | View pending orders           |
+|                         | `order.details`                  | View order details            |
+|                         | `order.status.update`            | Update order status           |
+|                         | `order.complete`                 | View completed orders         |
+|                         | `order.invoice.download`         | Download invoice              |
+
+
+| `stock`                 | `stock.manage`                   | Manage stock                  |
+
+
+| `permission`            | `permission.all`                 | View all permissions          |
+|                         | `permission.add`                 | Add permission                |
+|                         | `permission.store`               | Store permission              |
