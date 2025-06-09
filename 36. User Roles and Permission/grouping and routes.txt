@@ -114,6 +114,6 @@
 | `stock`                 | `stock.manage`                   | Manage stock                  |
 
 
-| `permission`            | `permission.all`                 | View all permissions          |
+| `roles`                 | `permission.all`                 | View all permissions          |
 |                         | `permission.add`                 | Add permission                |
 |                         | `permission.store`               | Store permission              |
