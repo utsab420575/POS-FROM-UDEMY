@@ -1,0 +1,25 @@
+**********************************************************36. User Roles and Permission************************************************
+
+--------------------------------------------------------1. Install Laravel Spatie Permission-------------------------------------------
+step1: 1. Install the Package
+	composer require spatie/laravel-permission
+
+step2: 2. Publish Config & Migrations
+	php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
+
+This will create:
+	config/permission.php
+
+	Migrations for roles, permissions, and pivot tables
+	
+step3: 3. Run Migrations
+	php artisan migrate
+	
+##############################################installation done#################################################
+
+
+
+
+
+
+
