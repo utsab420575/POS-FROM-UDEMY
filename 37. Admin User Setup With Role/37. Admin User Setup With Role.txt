@@ -1,0 +1,25 @@
+*****************************************37. Admin User Setup With Role*********************************************
+
+-----------------------------------------1. Admin User Setup With Role Part 1---------------------------------------
+এখানে আমরা সকল user কে দেখাব (পরবর্তীতে user দেরকে role assign করব।)
+
+
+1.route:
+	///Admin User All Route More actions
+    Route::controller(RoleAssignmentController::class)->group(function(){
+        Route::get('/all/admin','AllAdmin')->name('all.admin');
+
+    });
+	
+2.controller method:
+	public function index(){
+        $allUsers = User::latest()->get();
+        return view('backend.role_assign.all_users',compact('allUsers'));
+    }
+
+3.make view:
+	$ php artisan make:view backend.role_assign.all_users
+	
+
+
+	
