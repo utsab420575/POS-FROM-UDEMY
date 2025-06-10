@@ -20,6 +20,25 @@
 3.make view:
 	$ php artisan make:view backend.role_assign.all_users
 	
+	
+
+
+----------------------------------------2. Admin User Setup With Role Part 2---------------------------------------
+এখানে আমরা all_users.blade এ থাকা add User এর কাজ করব।
+
+1.route:
+	Route::get('/role/assignments/add','AddRoleAssignments')->name('role.assignments.add');
+
+2.controller method:
+	public function AddRoleAssignments(){
+        $roles = Role::all();
+        return view('backend.role_assign.add_user',compact('roles'));
+    }
+
+3.balde make:
+	php artisan make:view backend.role_assign.add_user
+	
+
 
 
 	
