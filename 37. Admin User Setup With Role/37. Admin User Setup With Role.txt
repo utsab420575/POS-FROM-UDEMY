@@ -60,6 +60,36 @@
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasRoles;
 	
+	
+----------------------------------------4. Admin User Setup With Role Part 4,5. Admin User Setup With Role Part 5--------------------------------------
+এখানে আমরা edit,delete user/role assignment এর কাজ করব।
+
+1.route:
+	Route::post('/role/assignments/edit/{id}','EditRoleAssignments')->name('role.assignments.edit');
+	Route::post('/role/assignments/update','UpdateRoleAssignments')->name('role.assignments.update');
+	Route::post('/role/assignments/delete/{id}','DeleteRoleAssignments')->name('role.assignments.delete');
+
+
+2.controller method:
+	(i)Edit Blade open:
+	public function EditRoleAssignments($id){
+
+        $roles = Role::all();
+        $adminuser = User::findOrFail($id);
+        return view('backend.role_assign.edit_user',compact('roles','adminuser'));
+
+    }// End Method
+	
+	blade make:
+		php artisan make:view backend.role_assign.edit_user
+	
+	
+	(ii)Update means store into database:
+	public function UpdateRoleAssignments(Request $request){}
+	
+	
+	(iii)DeleteRoleAssignments
+	 public function DeleteRoleAssignments($id){}
 
 
 
