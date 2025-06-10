@@ -548,8 +548,109 @@ Route::get('/roles/delete/{id}', 'DeletePermission')->name('roles.delete');
 3.change route link in form:
 	<form id="myForm" method="post" action="{{  route('role.permission.store') }}"
 	
-	
 
+
+
+
+
+
+
+---------------------------------10. Add Roles in Permission Part 4-----------------------------------
+এখানে Role গুলোর জন্য কি কি permission দেয়া হয়েছে তা ‍show করাব।
+
+1.route:
+	Route::get('roles/permission/all','AllRolesPermission')->name('roles.permission.all');
+	
+2.controller:
+	public function AllRolesPermission(){
+        $roles = Role::all();
+        return view('backend.pages.roles.all_roles_permission',compact('roles'));
+
+    } // End Method 
+	
+	
+	/*$roles → Laravel Collection of Role objects.
+
+	Each Role object → has a permissions property.
+
+	permissions → Collection of Permission objects (from the pivot table role_has_permissions).
+
+
+	this will return:
+	[
+		Role{
+			"id": 1,
+			"name": "SuperAdmin",
+			"guard_name": "web",
+			"created_at": "2025-06-09T16:27:54.000000Z",
+			"updated_at": "2025-06-09T16:27:54.000000Z",
+			"permissions": [
+			  {
+				"id": 7,
+				"name": "employee.all",
+				"group_name": "employee",
+				"guard_name": "web",
+				"created_at": "2025-06-09T15:43:43.000000Z",
+				"updated_at": "2025-06-09T15:43:43.000000Z",
+				"pivot": {
+				  "role_id": 1,
+				  "permission_id": 7
+				}
+			  },
+			  {
+				"id": 8,
+				"name": "employee.add",
+				"group_name": "employee",
+				"guard_name": "web",
+				"created_at": "2025-06-09T15:43:43.000000Z",
+				"updated_at": "2025-06-09T15:43:43.000000Z",
+				"pivot": {
+				  "role_id": 1,
+				  "permission_id": 8
+				}
+			  }
+			]
+		},
+		Role{
+			"id": 4,
+			"name": "Manager",
+			"guard_name": "web",
+			"created_at": "2025-06-09T16:28:52.000000Z",
+			"updated_at": "2025-06-09T16:28:52.000000Z",
+			"permissions": []
+	    },
+	    Role{
+			"id": 6,
+			"name": "Test",
+			"guard_name": "web",
+			"created_at": "2025-06-09T16:45:47.000000Z",
+			"updated_at": "2025-06-09T16:45:47.000000Z",
+			"permissions": []
+	    }
+	]*/
+	
+3.blade make:
+	php artisan make:view backend.pages.roles.all_roles_permission
+	
+	 <tbody>
+		@foreach($roles as $index => $role)
+			<tr>
+				<td>{{ $index+1 }}</td>
+				<td>{{ $role->name }}</td>
+				<td>
+					@foreach($role->permissions as $perm)
+						<span class="badge rounded-pill bg-danger"> {{ $perm->name }} </span>
+					@endforeach
+
+				</td>
+				<td width="18%">
+					<a href="{{ route('permission.edit',$role->id) }}" class="btn btn-blue rounded-pill waves-effect waves-light">Edit</a>
+                    <a href="{{ route('permission.delete',$role->id) }}" class="btn btn-danger rounded-pill waves-effect waves-light" id="delete">Delete</a>
+
+				</td>
+			</tr>
+		@endforeach
+	
 
 
 
