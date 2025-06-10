@@ -38,6 +38,28 @@
 3.balde make:
 	php artisan make:view backend.role_assign.add_user
 	
+	
+
+
+-----------------------------------------3. Admin User Setup With Role Part 3-----------------------------------------
+এখানে আমরা user কে store করাব ডাটাবেসে। এবং role ও দিয়ে দিব।
+
+
+1.route:
+	Route::post('/role/assignments/store','StoreRoleAssignments')->name('role.assignments.store');
+
+2.controller method:
+	  public function StoreRoleAssignments(Request $request){}
+	  
+3.change route link in all_user.blade:
+	<a href="{{ route('role.assignments.add') }}" class="btn btn-primary rounded-pill waves-effect waves-light">Add User </a>
+	
+4.important :user এ role assign করার জন্য HasRole লাগবে user model এ।
+	class User extends Authenticatable
+	{
+    /** @use HasFactory<\Database\Factories\UserFactory> */
+    use HasFactory, Notifiable, HasRoles;
+	
 
 
 
