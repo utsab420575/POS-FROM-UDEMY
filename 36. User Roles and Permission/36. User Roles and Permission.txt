@@ -656,6 +656,54 @@ Route::get('/roles/delete/{id}', 'DeletePermission')->name('roles.delete');
 
 
 
+
+----------------------------------------------------11. Add Roles in Permission Part 5--------------------------
+এখানে edit। role এর permission গুলো edit , delete করা যাবে।
+
+1.route:
+	Route::get('roles/permission/edit/{id}','AdminEditRoles')->name('role.permission.store.edit');
+	
+2.controller:
+	public function EditRolePermissions($id){
+
+        $role = Role::findOrFail($id);
+        $permissions = Permission::all()->groupBy('group_name');
+        return view('backend.pages.roles.edit_roles_permission',compact('role','permissions','permissions'));
+
+    } // End Method
+	
+3.blade make for edit:(edit তৈরি করব add(backend.pages.roles.add_roles_permission.blade.php) কে কপি করে।)
+	php artisan make:view backend.pages.roles.edit_roles_permission
+	
+	//যদি সবগুলো selected থাকে তাহলে select all selected থাকবে।
+	@php
+		$allPermissions = \Spatie\Permission\Models\Permission::pluck('id');
+		$rolePermissionIds = $role->permissions->pluck('id');
+		$isAllSelected = $allPermissions->diff($rolePermissionIds)->isEmpty(); // means all are assigned
+	@endphp
+	<div class="form-check mb-2 form-check-primary">
+		<input class="form-check-input" type="checkbox" value="" id="select_all" {{ $isAllSelected ? 'checked' : '' }}>
+		<label class="form-check-label" for="select_all">Primary</label>
+	</div>
+	
+	
+	//যদি  group এর সবগুলো ‍selected থাকে তাহলে group selected থাকবে।
+	@php
+		$allPermissions = \Spatie\Permission\Models\Permission::pluck('id');
+		$rolePermissionIds = $role->permissions->pluck('id');
+		$isAllSelected = $allPermissions->diff($rolePermissionIds)->isEmpty(); // means all are assigned
+	@endphp
+	<div class="form-check mb-2 form-check-primary">
+		<input class="form-check-input" type="checkbox" value="" id="select_all" {{ $isAllSelected ? 'checked' : '' }}>
+		<label class="form-check-label" for="select_all">Select All</label>
+	</div>
+	
+
+
+
+	
+	
+
 	
 					
 						
