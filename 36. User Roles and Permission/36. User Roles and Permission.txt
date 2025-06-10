@@ -453,6 +453,111 @@ Route::get('/roles/delete/{id}', 'DeletePermission')->name('roles.delete');
 
 3.blade make:
 	php artisan make:view backend.pages.roles.add_roles_permission
+	
+	
+
+
+
+
+
+
+
+----------------------------------8. Add Roles in Permission Part 2  ---------------------------
+এখানে আমরা Role গুলোর জন্য সকল permission গুলো show করেছি এবং role এর permission গুলো ডাটাবেসে ঢুকাইছি।
+
+1.এখানে controller টা পরিবর্তন করা হয়েছে:গ্রুপ আকারে permission গুলো blade এ পাঠানো হয়েছে।
+	employee গ্রুপ এর সকল permission গুলো পাঠানো হয়েছে,user গ্রুপ এর সকল permission পাঠানো হয়েছে,,,,,,,,,,,
+	যার ফলে সহজেই গ্রুপ এর নাম গুলো Left এ দেখাব, permission এর নাম গুলো right এ দেখাব।
+
+	public function AddRolesPermission(){
+        //need all role and all permission
+        $roles = Role::all();
+      
+		/*Collection {
+			'employee' => Collection [
+				Permission { id: 1, name: 'employee.all', group_name: 'employee' },
+				Permission { id: 2, name: 'employee.add', group_name: 'employee' },
+			],
+			'user' => Collection [
+				Permission { id: 3, name: 'user.view', group_name: 'user' },
+				Permission { id: 4, name: 'user.reset', group_name: 'user' },
+			],
+			'student' => Collection [
+				Permission { id: 5, name: 'student.list', group_name: 'student' },
+				Permission { id: 6, name: 'student.add', group_name: 'student' },
+			]
+		}*/
+        $permissions = Permission::all()->groupBy('group_name');
+        return view('backend.pages.roles.add_roles_permission',compact('roles','permissions'));
+    }// End Method
+	
+2.blade এর কাজ:
+		@foreach($permissions as $groupName => $groupPermissions)
+			 <div class="col-3">
+				group name
+			 </div>
+			 
+				<div class="col-9">
+					@foreach($groupPermissions as $permission)
+						permission name
+					@endforeach
+				</div>
+		@endforeach
+		
+
+
+3.<script> দিয়ে auto selection এর কাজ করা হয়েছে।
+
+
+
+
+------------------------------------9. Add Roles in Permission Part 3--------------------------
+এখানে permission গুলো ডাটাবেসে ঢুকাব।
+
+1.route:
+	 Route::post('/role/permission/store','StoreRolesPermission')->name('role.permission.store');
+2.controller method:
+	public function StoreRolesPermission(Request $request){
+        $request->validate([
+            'role_id' => 'required|exists:roles,id',
+            'permission' => 'required|array',
+            'permission.*' => 'exists:permissions,id',
+        ]);
+
+        //dd($request->role_id);
+        // Get the role
+        $role = Role::findOrFail($request->role_id);
+
+        // Clear old permissions for this role(optional)
+        $role->revokePermissionTo(Permission::all());
+
+        // Assign new permissions using loop
+        foreach ($request->permission as $permId) {
+            $permission = Permission::findById($permId);
+            $role->givePermissionTo($permission);
+        }
+
+        $notification = array(
+            'message' => 'Role Permission Added Successfully',
+            'alert-type' => 'success'
+        );
+
+        return redirect()->route('roles.all')->with($notification);
+    }
+
+3.change route link in form:
+	<form id="myForm" method="post" action="{{  route('role.permission.store') }}"
+	
+	
+
+
+
+
+
+
+	
+					
+						
 
 
 
