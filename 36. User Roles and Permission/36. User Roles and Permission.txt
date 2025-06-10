@@ -705,7 +705,44 @@ Route::get('/roles/delete/{id}', 'DeletePermission')->name('roles.delete');
 	
 
 	
-					
+------------------------------------------------12. Add Roles in Permission Part 6-----------------------
+এখানে udpate এর কাজ করব।backend.pages.roles.edit_roles_permission এর update button এর কাজ করব।
+
+1.route:
+	Route::post('/role/permission/update/{id}','RolePermissionUpdate')->name('role.permission.update');
+	
+2.controller method:
+	public function UpdateRolePermission(Request $request){
+
+        //return $request->id;
+        $request->validate([
+            'permission' => 'required|array',
+            'permission.*' => 'exists:permissions,id',
+        ]);
+        $role = Role::findOrFail($request->id);
+        $permissions = $request->permission;
+
+		/* $role->syncPermissions($permissionModels); eqivalent to :
+				DELETE FROM role_has_permissions WHERE role_id = ?
+				INSERT INTO role_has_permissions (role_id, permission_id) VALUES (?, ?), (?, ?), ...*/
+				
+        if (!empty($permissions)) {
+            $permissionModels = Permission::whereIn('id', $permissions)->get();
+            $role->syncPermissions($permissionModels);
+        }
+
+         $notification = array(
+             'message' => 'Role Permission Updated Successfully',
+             'alert-type' => 'success'
+         );
+
+        return redirect()->route('roles.permission.all')->with($notification);
+
+    }// End Method
+	
+
+3.route link in edit role permission:
+	  <form id="myForm" method="post" action="{{  route('role.permission.update') }}"
 						
 
 
