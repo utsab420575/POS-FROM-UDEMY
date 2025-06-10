@@ -658,7 +658,7 @@ Route::get('/roles/delete/{id}', 'DeletePermission')->name('roles.delete');
 
 
 ----------------------------------------------------11. Add Roles in Permission Part 5--------------------------
-এখানে edit। role এর permission গুলো edit , delete করা যাবে।
+এখানে edit(এখানে edit এর page show হয়েছে)। role এর permission গুলো edit , delete করা যাবে।
 
 1.route:
 	Route::get('roles/permission/edit/{id}','AdminEditRoles')->name('role.permission.store.edit');
@@ -706,7 +706,7 @@ Route::get('/roles/delete/{id}', 'DeletePermission')->name('roles.delete');
 
 	
 ------------------------------------------------12. Add Roles in Permission Part 6-----------------------
-এখানে udpate এর কাজ করব।backend.pages.roles.edit_roles_permission এর update button এর কাজ করব।
+এখানে edit page open হওযার পর udpate এর কাজ করব।backend.pages.roles.edit_roles_permission এর update button এর কাজ করব।
 
 1.route:
 	Route::post('/role/permission/update/{id}','RolePermissionUpdate')->name('role.permission.update');
@@ -744,6 +744,53 @@ Route::get('/roles/delete/{id}', 'DeletePermission')->name('roles.delete');
 3.route link in edit role permission:
 	  <form id="myForm" method="post" action="{{  route('role.permission.update') }}"
 						
+
+
+
+------------------------------------------------13. Add Roles in Permission Part 7-----------------------
+update এর কাজ র্পূর্বেই করছি।
+
+
+------------------------------------------------14. Add Roles in Permission Part 8-------------
+এখানে delete এর কাজ করব।
+
+1.route:
+	 Route::post('/role/permission/delete/{id}','StoreRolesPermission')->name('role.permission.delete');
+	
+2.controller:
+	public function DeleteRolesPermission($id){
+
+
+        $role = Role::findOrFail($id);
+
+        //return $role;
+        Log::info('role', $role->toArray());
+        if (!is_null($role)) {
+            Log::info('inside role permission', $role->toArray());
+            // Remove all permissions from this role
+            $role->syncPermissions([]); // Equivalent to "detach all"
+        }
+
+        $notification = [
+            'message' => 'All Permissions Removed from Role Successfully',
+            'alert-type' => 'success'
+        ];
+
+        return redirect()->back()->with($notification);
+
+    }// End Method
+	
+3.route link change in all_role_permission blade
+	<a href="{{ route('role.permission.delete',$role->id) }}" class="btn btn-danger rounded-pill waves-effect waves-light" id="delete">Delete</a>
+
+
+
+
+
+
+
+
+
 
 
 
