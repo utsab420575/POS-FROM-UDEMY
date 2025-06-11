@@ -1,0 +1,18 @@
+***********************************************************40. Laravel How to Backup Database From Backend*************************************
+
+
+-------------------------------------------------------1. How to Backup Database Part 1----------------------------------------------------
+https://spatie.be/docs/laravel-backup/v8/introduction
+
+
+1. Install the Package
+	composer require spatie/laravel-backup
+
+
+2. Publish the Configuration File
+php artisan vendor:publish --tag=backup-config
+[file created in : C:\xampp\htdocs\POS\config\backup.php]
+
+
+3.
+
