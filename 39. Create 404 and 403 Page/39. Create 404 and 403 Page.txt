@@ -1,0 +1,18 @@
+***********************************39. Create 404 and 403 Page*****************************
+
+
+---------------------------------------------------1. How to Create 404 Page-------------------------------
+এখানে যদি web.php তে route নাই এমন কোন url কে hit করলে 404 error page show করানোর কাজ করব।
+
+এক্ষেত্রে :
+1.view create:
+	php artisan make:view errors.404
+
+2.blade make from theme:
+	
+automatically এই পেইজ show হবে route না পেলে।
+
+
+
+
+
