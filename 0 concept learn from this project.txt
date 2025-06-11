@@ -65,6 +65,37 @@ http://127.0.0.1:8000/
 
 
 
+--------------------------------------------------CRUD-----------------------------------------------------
+
+For CRUD:
+Route Name Formuala:
+	group name/operation
+	Route::method('/group-name/operation', 'ControllerMethod')->name('group-name.operation');
+
+Read এর কাজ:
+	 Route::get('/customer/all', 'AllCustomer')->name('customer.all')->middleware('permission:customer.all');
+	(এখানে edit,delete এর লিংক থাকবে।)
+Add এর জন্য:
+	Route::get('/customer/add', 'AddCustomer')->name('customer.add')->middleware('permission:customer.add');
+        Route::post('/customer/store', 'StoreCustomer')->name('customer.store')->middleware('permission:customer.store');
+Update এর জন্য:
+	Route::get('/customer/edit/{id}', 'EditCustomer')->name('customer.edit')->middleware('permission:customer.edit');
+        Route::post('/customer/update', 'UpdateCustomer')->name('customer.update')->middleware('permission:customer.update');
+Delete এর জন্য:
+	Route::get('/customer/delete/{id}', 'DeleteCustomer')->name('customer.delete')->middleware('permission:customer.delete');
+
+
+// Customer
+    Route::controller(CustomerController::class)->group(function () {
+        Route::get('/customer/all', 'AllCustomer')->name('customer.all')->middleware('permission:customer.all');
+        Route::get('/customer/add', 'AddCustomer')->name('customer.add')->middleware('permission:customer.add');
+        Route::post('/customer/store', 'StoreCustomer')->name('customer.store')->middleware('permission:customer.store');
+        Route::get('/customer/edit/{id}', 'EditCustomer')->name('customer.edit')->middleware('permission:customer.edit');
+        Route::post('/customer/update', 'UpdateCustomer')->name('customer.update')->middleware('permission:customer.update');
+        Route::get('/customer/delete/{id}', 'DeleteCustomer')->name('customer.delete')->middleware('permission:customer.delete');
+    });
+
+
 
 Laravel Naming Conventions Recap
 
@@ -122,6 +153,8 @@ This will create a file at:
 
 2.3.run:
 	php artisan db:seed --class=AssignAccountRoleSeeder
+
+
 
 
 
