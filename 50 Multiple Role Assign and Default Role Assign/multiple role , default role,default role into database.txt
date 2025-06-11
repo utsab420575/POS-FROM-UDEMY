@@ -1,0 +1,43 @@
+
+
+-----------------------------------1.give default role into database table-----------------------------
+এখানে user table এর প্রত্যেক user কে default role ='Account' দিয়ে দিব যদি কোন role assign করা না থাকে।
+(চাইলে মেইলও করা যায়।)
+
+
+1.User table এ Has Role লাগবে।
+class User extends Authenticatable
+{
+    /** @use HasFactory<\Database\Factories\UserFactory> */
+    use  HasRoles;
+	
+	
+2.Database Seeder দিয়ে সকল user কে role assign করে দিব।
+
+------------------------------here we send all permission to database using database seeder---------------------
+2.1.seeder
+	php artisan make:seeder AssignAccountRoleSeeder
+This will create a file at:
+	database/seeders/AssignAccountRoleSeeder.php
+	
+
+2.2.সব permission গুলো PermissionSeeder.php তে দিয়ে দিব:
+	class AssignAccountRoleSeeder extends Seeder
+	{
+		public function run(): void
+		{
+			$users = User::doesntHave('roles')->get();
+
+			foreach ($users as $user) {
+				$user->assignRole('Account');
+			}
+
+			echo "Role assignment completed.\n";
+		}
+	}
+	
+
+2.3.run:
+	php artisan db:seed --class=AssignAccountRoleSeeder
+
+
