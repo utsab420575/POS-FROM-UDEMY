@@ -41,3 +41,51 @@ This will create a file at:
 	php artisan db:seed --class=AssignAccountRoleSeeder
 
 
+
+
+
+
+
+-----------------------------------2.give role when new user create using 'when user register'(using breeze)-----------------------------
+
+1.go to auth.php
+
+2.go to RegisteredUserController(use App\Http\Controllers\Auth\RegisteredUserController;)
+
+
+		
+
+4.store method এ role দিয়ে দিব।
+	public function store(Request $request): RedirectResponse
+    {
+		------
+		------
+		$user = User::create([
+			'name' => $request->name,
+			'email' => $request->email,
+			'password' => Hash::make($request->password),
+		]);
+
+		// Assign default role
+		$user->assignRole('Account');
+		-------
+		-------
+	}
+		
+	
+5.User table এ HasRole থাকতে হবে।
+	class User extends Authenticatable
+	{
+		/** @use HasFactory<\Database\Factories\UserFactory> */
+		use  HasRoles;
+		
+		
+Note:আমার url গুলো চাইলে role দিয়ে proect করতে পারব:(এটা পরে দেখতেছি।)
+(এর মাধ্যমে সব route এ একটা একটা middleware দেয়া থেকে বাচতে পারব।)
+
+	Route::middleware(['auth', 'role:Account'])->group(function () {
+		Route::get('/account-dashboard', [AccountController::class, 'index']);
+	});
+	
+	
+	
