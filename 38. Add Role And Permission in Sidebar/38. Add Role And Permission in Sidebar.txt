@@ -39,3 +39,23 @@ http://127.0.0.1:8000/roles/permission/all এ গিয়ে role গুলোর
 		@endif
 		
 	
+	
+	
+
+
+
+
+
+
+--------------------------------------------3. Add Role And Permission for Admin User Part 2------------------
+প্রত্যেকটি route কে protect করার জন্য url কে protect করতে হবে।
+
+ // Employee
+    Route::controller(EmployeeController::class)->group(function () {
+        Route::get('/employee/all', 'AllEmployee')->name('employee.all')->middleware('permission:employee.all');
+        Route::get('/employee/add', 'AddEmployee')->name('employee.add')->middleware('permission:employee.add');
+        Route::post('/employee/store', 'StoreEmployee')->name('employee.store')->middleware('permission:permission:employee.store');
+        Route::get('/employee/edit/{id}', 'EditEmployee')->name('employee.edit')->middleware('permission:permission:employee.edit');
+        Route::post('/employee/update', 'UpdateEmployee')->name('employee.update')->middleware('permission:employee.update');
+        Route::get('/employee/delete/{id}', 'DeleteEmployee')->name('employee.delete')->middleware('permission:employee.delete');
+    });
