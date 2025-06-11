@@ -48,7 +48,7 @@ http://127.0.0.1:8000/roles/permission/all এ গিয়ে role গুলোর
 
 
 --------------------------------------------3. Add Role And Permission for Admin User Part 2------------------
-প্রত্যেকটি route কে protect করার জন্য url কে protect করতে হবে।
+প্রত্যেকটি route কে protect করার জন্য middleware add করতে হবে।
 
  // Employee
     Route::controller(EmployeeController::class)->group(function () {
@@ -59,3 +59,15 @@ http://127.0.0.1:8000/roles/permission/all এ গিয়ে role গুলোর
         Route::post('/employee/update', 'UpdateEmployee')->name('employee.update')->middleware('permission:employee.update');
         Route::get('/employee/delete/{id}', 'DeleteEmployee')->name('employee.delete')->middleware('permission:employee.delete');
     });
+	
+
+################some change#################
+/bootstrap/app.php এর ভিতর middleware assign করতে হবে।
+
+ ->withMiddleware(function (Middleware $middleware) {
+        $middleware->alias([
+            'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+            'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+            'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
+        ]);
+    })
