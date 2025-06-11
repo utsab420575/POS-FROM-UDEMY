@@ -16,3 +16,15 @@ automatically এই পেইজ show হবে route না পেলে।
 
 
 
+
+-------------------------------------------------2. How to Create 403 Page-------------------------------------
+এখানে : যদি access নাই এমন route/url এ ‍access করতে চাই তাহলে 403 page show হবে automatically.( theme থেকে ‍এই পেইজ বানাব। )
+
+
+1.view create:
+	php artisan make:view errors.403
+
+
+
+
+
