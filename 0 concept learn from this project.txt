@@ -103,6 +103,28 @@ composer require picqer/php-barcode-generator
  <h3> {!! $generator->getBarcode($product->product_code,$generator::TYPE_CODE_128)  !!} </h3>
 
 
+------------------------------Database Seeder----------------------------
+------------------------------here we send all permission to database using database seeder---------------------
+2.1.seeder
+	php artisan make:seeder AssignAccountRoleSeeder
+This will create a file at:
+	database/seeders/AssignAccountRoleSeeder.php
+	
+
+2.2.সব permission গুলো PermissionSeeder.php তে দিয়ে দিব:
+	class AssignAccountRoleSeeder extends Seeder
+	{
+		public function run(): void
+		{
+		}
+	}
+	
+
+2.3.run:
+	php artisan db:seed --class=AssignAccountRoleSeeder
+
+
+
 
 
 

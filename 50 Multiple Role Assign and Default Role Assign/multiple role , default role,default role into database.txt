@@ -89,3 +89,36 @@ Note:আমার url গুলো চাইলে role দিয়ে proect ক�
 	
 	
 	
+
+
+
+-----------------------------------------multiple role assign-----------------------------------------------
+1.শুরুতে multiple role recive এর জন্য form ঠিক করলাম(roles[],multiple)।(add,edit এর জন্য।)
+		<div class="col-md-6">
+			<div class="form-group mb-3">
+				<label for="firstname" class="form-label">Asign Roles </label>
+				<select name="roles[]" class="form-select" id="example-select" multiple>
+					<option selected disabled value="">Select Roles </option>
+					@foreach($roles as $role)
+						<option value="{{ $role->id }}">{{ $role->name }}</option>
+					@endforeach
+				</select>
+
+			</div>
+		</div>
+		
+		
+2.এরপর controller ঠিক করলাম।
+	 if ($request->roles) {
+		/*$role = Role::findById($request->roles);
+		$user->syncRoles([$role]);*/
+		$roles = Role::whereIn('id', $request->roles)->get();
+		$user->syncRoles($roles); // Pass Role instances instead of IDs
+	}
+
+	
+3.config/permission.php:
+
+'defaults' => [
+        'guard_name' => 'web',
+    ],
